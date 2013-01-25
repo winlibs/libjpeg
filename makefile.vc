@@ -12,7 +12,7 @@
 !include <win32.mak>
 
 # You may want to adjust these compiler options:
-CFLAGS= $(cflags) $(cdebug) $(cvars) -I. /MD
+CFLAGS= $(cflags) $(cdebug) $(cvars) -I.
 # Generally, we recommend defining any configuration symbols in jconfig.h,
 # NOT via -D switches here.
 
@@ -71,9 +71,9 @@ MKFILES= configure Makefile.in makefile.ansi makefile.unix makefile.bcc \
 CONFIGFILES= jconfig.cfg jconfig.bcc jconfig.mc6 jconfig.dj jconfig.wat \
         jconfig.vc jconfig.mac jconfig.st jconfig.manx jconfig.sas \
         jconfig.vms
-CONFIGUREFILES= config.guess config.sub install-sh ltmain.sh depcomp missing
-OTHERFILES= jconfig.txt ckconfig.c ansi2knr.c ansi2knr.1 jmemdosa.asm \
-        libjpeg.map
+CONFIGUREFILES= config.guess config.sub install-sh ltmain.sh depcomp \
+        missing ar-lib
+OTHERFILES= jconfig.txt ckconfig.c jmemdosa.asm libjpeg.map
 TESTFILES= testorig.jpg testimg.ppm testimg.bmp testimg.jpg testprog.jpg \
         testimgp.jpg
 DISTFILES= $(DOCS) $(MKFILES) $(CONFIGFILES) $(SOURCES) $(INCLUDES) \
@@ -91,7 +91,7 @@ DLIBOBJECTS= jdapimin.obj jdapistd.obj jdarith.obj jdtrans.obj jdatasrc.obj \
         jdcoefct.obj jdpostct.obj jddctmgr.obj jidctfst.obj jidctflt.obj \
         jidctint.obj jdsample.obj jdcolor.obj jquant1.obj jquant2.obj \
         jdmerge.obj
-# These objectfiles are included in libjpeg_a.lib
+# These objectfiles are included in libjpeg.lib
 LIBOBJECTS= $(CLIBOBJECTS) $(DLIBOBJECTS) $(COMOBJECTS)
 # object files for sample applications (excluding library files)
 COBJECTS= cjpeg.obj rdppm.obj rdgif.obj rdtarga.obj rdrle.obj rdbmp.obj \
@@ -105,20 +105,20 @@ TROBJECTS= jpegtran.obj rdswitch.obj cdjpeg.obj transupp.obj
 	$(cc) $(CFLAGS) $*.c
 
 
-all: libjpeg_a.lib cjpeg.exe djpeg.exe jpegtran.exe rdjpgcom.exe wrjpgcom.exe
+all: libjpeg.lib cjpeg.exe djpeg.exe jpegtran.exe rdjpgcom.exe wrjpgcom.exe
 
-libjpeg_a.lib: $(LIBOBJECTS)
-	$(RM) libjpeg_a.lib
-	lib -out:libjpeg_a.lib  $(LIBOBJECTS)
+libjpeg.lib: $(LIBOBJECTS)
+	$(RM) libjpeg.lib
+	lib -out:libjpeg.lib  $(LIBOBJECTS)
 
-cjpeg.exe: $(COBJECTS) libjpeg_a.lib
-	$(link) $(LDFLAGS) -out:cjpeg.exe $(COBJECTS) libjpeg_a.lib $(LDLIBS)
+cjpeg.exe: $(COBJECTS) libjpeg.lib
+	$(link) $(LDFLAGS) -out:cjpeg.exe $(COBJECTS) libjpeg.lib $(LDLIBS)
 
-djpeg.exe: $(DOBJECTS) libjpeg_a.lib
-	$(link) $(LDFLAGS) -out:djpeg.exe $(DOBJECTS) libjpeg_a.lib $(LDLIBS)
+djpeg.exe: $(DOBJECTS) libjpeg.lib
+	$(link) $(LDFLAGS) -out:djpeg.exe $(DOBJECTS) libjpeg.lib $(LDLIBS)
 
-jpegtran.exe: $(TROBJECTS) libjpeg_a.lib
-	$(link) $(LDFLAGS) -out:jpegtran.exe $(TROBJECTS) libjpeg_a.lib $(LDLIBS)
+jpegtran.exe: $(TROBJECTS) libjpeg.lib
+	$(link) $(LDFLAGS) -out:jpegtran.exe $(TROBJECTS) libjpeg.lib $(LDLIBS)
 
 rdjpgcom.exe: rdjpgcom.obj
 	$(link) $(LDFLAGS) -out:rdjpgcom.exe rdjpgcom.obj $(LDLIBS)
@@ -128,7 +128,7 @@ wrjpgcom.exe: wrjpgcom.obj
 
 
 clean:
-	$(RM) *.obj *.exe libjpeg_a.lib
+	$(RM) *.obj *.exe libjpeg.lib
 	$(RM) testout*
 
 setup-vc6:
