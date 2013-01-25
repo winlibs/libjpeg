@@ -12,7 +12,7 @@
 !include <win32.mak>
 
 # You may want to adjust these compiler options:
-CFLAGS= $(cflags) $(cdebug) $(cvars) -I.
+CFLAGS= $(cflags) $(cdebug) $(cvars) -I. /MD
 # Generally, we recommend defining any configuration symbols in jconfig.h,
 # NOT via -D switches here.
 
