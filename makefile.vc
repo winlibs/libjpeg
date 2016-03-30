@@ -57,17 +57,17 @@ INCLUDES= jdct.h jerror.h jinclude.h jmemsys.h jmorecfg.h jpegint.h \
 DOCS= README install.txt usage.txt cjpeg.1 djpeg.1 jpegtran.1 rdjpgcom.1 \
         wrjpgcom.1 wizard.txt example.c libjpeg.txt structure.txt \
         coderules.txt filelist.txt change.log
-MKFILES= configure Makefile.in makefile.ansi makefile.unix makefile.bcc \
-        makefile.mc6 makefile.dj makefile.wat makefile.vc makejdsw.vc6 \
-        makeadsw.vc6 makejdep.vc6 makejdsp.vc6 makejmak.vc6 makecdep.vc6 \
-        makecdsp.vc6 makecmak.vc6 makeddep.vc6 makeddsp.vc6 makedmak.vc6 \
-        maketdep.vc6 maketdsp.vc6 maketmak.vc6 makerdep.vc6 makerdsp.vc6 \
-        makermak.vc6 makewdep.vc6 makewdsp.vc6 makewmak.vc6 makejsln.v10 \
-        makeasln.v10 makejvcx.v10 makejfil.v10 makecvcx.v10 makecfil.v10 \
-        makedvcx.v10 makedfil.v10 maketvcx.v10 maketfil.v10 makervcx.v10 \
-        makerfil.v10 makewvcx.v10 makewfil.v10 makeproj.mac makcjpeg.st \
-        makdjpeg.st makljpeg.st maktjpeg.st makefile.manx makefile.sas \
-        makefile.mms makefile.vms makvms.opt
+MKFILES= configure Makefile.in makefile.ansi makefile.unix makefile.b32 \
+        makefile.bcc makefile.mc6 makefile.dj makefile.wat makefile.vc \
+        makejdsw.vc6 makeadsw.vc6 makejdep.vc6 makejdsp.vc6 makejmak.vc6 \
+        makecdep.vc6 makecdsp.vc6 makecmak.vc6 makeddep.vc6 makeddsp.vc6 \
+        makedmak.vc6 maketdep.vc6 maketdsp.vc6 maketmak.vc6 makerdep.vc6 \
+        makerdsp.vc6 makermak.vc6 makewdep.vc6 makewdsp.vc6 makewmak.vc6 \
+        makejsln.v10 makeasln.v10 makejvcx.v10 makejfil.v10 makecvcx.v10 \
+        makecfil.v10 makedvcx.v10 makedfil.v10 maketvcx.v10 maketfil.v10 \
+        makervcx.v10 makerfil.v10 makewvcx.v10 makewfil.v10 makeproj.mac \
+        makcjpeg.st makdjpeg.st makljpeg.st maktjpeg.st makefile.manx \
+        makefile.sas makefile.mms makefile.vms makvms.opt
 CONFIGFILES= jconfig.cfg jconfig.bcc jconfig.mc6 jconfig.dj jconfig.wat \
         jconfig.vc jconfig.mac jconfig.st jconfig.manx jconfig.sas \
         jconfig.vms
@@ -91,7 +91,7 @@ DLIBOBJECTS= jdapimin.obj jdapistd.obj jdarith.obj jdtrans.obj jdatasrc.obj \
         jdcoefct.obj jdpostct.obj jddctmgr.obj jidctfst.obj jidctflt.obj \
         jidctint.obj jdsample.obj jdcolor.obj jquant1.obj jquant2.obj \
         jdmerge.obj
-# These objectfiles are included in libjpeg.lib
+# These objectfiles are included in libjpeg_a.lib
 LIBOBJECTS= $(CLIBOBJECTS) $(DLIBOBJECTS) $(COMOBJECTS)
 # object files for sample applications (excluding library files)
 COBJECTS= cjpeg.obj rdppm.obj rdgif.obj rdtarga.obj rdrle.obj rdbmp.obj \
@@ -105,20 +105,20 @@ TROBJECTS= jpegtran.obj rdswitch.obj cdjpeg.obj transupp.obj
 	$(cc) $(CFLAGS) $*.c
 
 
-all: libjpeg.lib cjpeg.exe djpeg.exe jpegtran.exe rdjpgcom.exe wrjpgcom.exe
+all: libjpeg_a.lib cjpeg.exe djpeg.exe jpegtran.exe rdjpgcom.exe wrjpgcom.exe
 
-libjpeg.lib: $(LIBOBJECTS)
-	$(RM) libjpeg.lib
-	lib -out:libjpeg.lib  $(LIBOBJECTS)
+libjpeg_a.lib: $(LIBOBJECTS)
+	$(RM) libjpeg_a.lib
+	lib -out:libjpeg_a.lib  $(LIBOBJECTS)
 
-cjpeg.exe: $(COBJECTS) libjpeg.lib
-	$(link) $(LDFLAGS) -out:cjpeg.exe $(COBJECTS) libjpeg.lib $(LDLIBS)
+cjpeg.exe: $(COBJECTS) libjpeg_a.lib
+	$(link) $(LDFLAGS) -out:cjpeg.exe $(COBJECTS) libjpeg_a.lib $(LDLIBS)
 
-djpeg.exe: $(DOBJECTS) libjpeg.lib
-	$(link) $(LDFLAGS) -out:djpeg.exe $(DOBJECTS) libjpeg.lib $(LDLIBS)
+djpeg.exe: $(DOBJECTS) libjpeg_a.lib
+	$(link) $(LDFLAGS) -out:djpeg.exe $(DOBJECTS) libjpeg_a.lib $(LDLIBS)
 
-jpegtran.exe: $(TROBJECTS) libjpeg.lib
-	$(link) $(LDFLAGS) -out:jpegtran.exe $(TROBJECTS) libjpeg.lib $(LDLIBS)
+jpegtran.exe: $(TROBJECTS) libjpeg_a.lib
+	$(link) $(LDFLAGS) -out:jpegtran.exe $(TROBJECTS) libjpeg_a.lib $(LDLIBS)
 
 rdjpgcom.exe: rdjpgcom.obj
 	$(link) $(LDFLAGS) -out:rdjpgcom.exe rdjpgcom.obj $(LDLIBS)
@@ -128,7 +128,7 @@ wrjpgcom.exe: wrjpgcom.obj
 
 
 clean:
-	$(RM) *.obj *.exe libjpeg.lib
+	$(RM) *.obj *.exe libjpeg_a.lib
 	$(RM) testout*
 
 setup-vc6:
