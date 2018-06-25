@@ -1,36 +1,35 @@
 # Makefile for Independent JPEG Group's software
 
-# This makefile is for Microsoft C for MS-DOS, version 6.00A and up.
-# Use NMAKE, not Microsoft's brain-damaged MAKE.
-# Thanks to Alan Wright and Chris Turner of Olivetti Research Ltd.
+# This makefile is for Microsoft Visual C++ on Windows NT (and 95?).
+# It builds the IJG library as a statically linkable library (.LIB),
+# and builds the sample applications as console-mode apps.
+# Thanks to Xingong Chang, Raymond Everly and others.
 
 # Read installation instructions before saying "nmake" !!
+# To build an optimized library without debug info, say "nmake nodebug=1".
 
-# You may need to adjust these compiler options:
-CFLAGS = -AM -Oecigt -Gs -W3
-# -AM medium memory model (or use -AS for small model, if you remove features)
-# -Oecigt -Gs  maximum safe optimisation (-Ol has bugs in MSC 6.00A)
-# -W3 warning level 3
-# You might also want to add -G2 if you have an 80286, etc.
+# Pull in standard variable definitions
+#!include <win32.mak>
+
+# You may want to adjust these compiler options:
+CFLAGS= $(cflags) $(cdebug) $(cvars) -I.
 # Generally, we recommend defining any configuration symbols in jconfig.h,
 # NOT via -D switches here.
 
-# Jan-Herman Buining suggests the following switches for MS C 8.0 and a 486:
-# CFLAGS = /AM /f- /FPi87 /G3 /Gs /Gy /Ob1 /Oc /Oe /Og /Oi /Ol /On /Oo /Ot \
-#          /OV4 /W3
-# except for jquant1.c, which must be compiled with /Oo- to avoid a compiler
-# crash.
+# Link-time options:
+LDFLAGS= $(ldebug) $(conlflags)
 
-# Ingar Steinsland suggests the following switches when building
-# a 16-bit Windows DLL:
-# CFLAGS = -ALw -Gsw -Zpe -W3 -O2 -Zi -Zd
+# To link any special libraries, add the necessary commands here.
+LDLIBS= $(conlibs)
 
 # Put here the object file name for the correct system-dependent memory
-# manager file.  For DOS, we recommend jmemdos.c and jmemdosa.asm.
-# (But not for Windows; see install.txt if you use this makefile for Windows.)
-SYSDEPMEM= jmemdos.obj jmemdosa.obj
-# SYSDEPMEMLIB must list the same files with "+" signs for the librarian.
-SYSDEPMEMLIB= +jmemdos.obj +jmemdosa.obj
+# manager file.  For NT we suggest jmemnobs.obj, which expects the OS to
+# provide adequate virtual memory.
+SYSDEPMEM= jmemnobs.obj
+
+# miscellaneous OS-dependent stuff
+# file deletion command
+RM= del
 
 # End of configurable options.
 
@@ -101,80 +100,100 @@ DOBJECTS= djpeg.obj wrppm.obj wrgif.obj wrtarga.obj wrrle.obj wrbmp.obj \
         rdcolmap.obj cdjpeg.obj
 TROBJECTS= jpegtran.obj rdswitch.obj cdjpeg.obj transupp.obj
 
-# need linker response file because file list > 128 chars
-RFILE = libjpeg.ans
+# Template command for compiling .c to .obj
+.c.obj:
+	$(cc) $(CFLAGS) $*.c
 
 
 all: libjpeg.lib cjpeg.exe djpeg.exe jpegtran.exe rdjpgcom.exe wrjpgcom.exe
 
-libjpeg.lib: $(LIBOBJECTS) $(RFILE)
-	del libjpeg.lib
-	lib @$(RFILE)
-
-# linker response file for building libjpeg.lib
-$(RFILE) : makefile
-	del $(RFILE)
-	echo libjpeg.lib >$(RFILE)
-# silly want-to-create-it prompt:
-	echo y >>$(RFILE)
-	echo +jcapimin.obj +jcapistd.obj +jcarith.obj +jctrans.obj & >>$(RFILE)
-	echo +jcparam.obj +jdatadst.obj +jcinit.obj +jcmaster.obj & >>$(RFILE)
-	echo +jcmarker.obj +jcmainct.obj +jcprepct.obj & >>$(RFILE)
-	echo +jccoefct.obj +jccolor.obj +jcsample.obj +jchuff.obj & >>$(RFILE)
-	echo +jcdctmgr.obj +jfdctfst.obj +jfdctflt.obj & >>$(RFILE)
-	echo +jfdctint.obj +jdapimin.obj +jdapistd.obj & >>$(RFILE)
-	echo +jdarith.obj +jdtrans.obj +jdatasrc.obj +jdmaster.obj & >>$(RFILE)
-	echo +jdinput.obj +jdmarker.obj +jdhuff.obj +jdmainct.obj & >>$(RFILE)
-	echo +jdcoefct.obj +jdpostct.obj +jddctmgr.obj & >>$(RFILE)
-	echo +jidctfst.obj +jidctflt.obj +jidctint.obj & >>$(RFILE)
-	echo +jdsample.obj +jdcolor.obj +jquant1.obj & >>$(RFILE)
-	echo +jquant2.obj +jdmerge.obj +jaricom.obj +jcomapi.obj & >>$(RFILE)
-	echo +jutils.obj +jerror.obj +jmemmgr.obj & >>$(RFILE)
-	echo $(SYSDEPMEMLIB) ; >>$(RFILE)
+libjpeg.lib: $(LIBOBJECTS)
+	$(RM) libjpeg.lib
+	lib -out:libjpeg.lib  $(LIBOBJECTS)
 
 cjpeg.exe: $(COBJECTS) libjpeg.lib
-	echo $(COBJECTS) >cjpeg.lst
-	link /STACK:4096 /EXEPACK @cjpeg.lst, cjpeg.exe, , libjpeg.lib, ;
-	del cjpeg.lst
+	$(link) $(LDFLAGS) -out:cjpeg.exe $(COBJECTS) libjpeg.lib $(LDLIBS)
 
 djpeg.exe: $(DOBJECTS) libjpeg.lib
-	echo $(DOBJECTS) >djpeg.lst
-	link /STACK:4096 /EXEPACK @djpeg.lst, djpeg.exe, , libjpeg.lib, ;
-	del djpeg.lst
+	$(link) $(LDFLAGS) -out:djpeg.exe $(DOBJECTS) libjpeg.lib $(LDLIBS)
 
 jpegtran.exe: $(TROBJECTS) libjpeg.lib
-	link /STACK:4096 /EXEPACK $(TROBJECTS), jpegtran.exe, , libjpeg.lib, ;
+	$(link) $(LDFLAGS) -out:jpegtran.exe $(TROBJECTS) libjpeg.lib $(LDLIBS)
 
-rdjpgcom.exe: rdjpgcom.c
-	$(CC) -AS -O -W3 rdjpgcom.c
+rdjpgcom.exe: rdjpgcom.obj
+	$(link) $(LDFLAGS) -out:rdjpgcom.exe rdjpgcom.obj $(LDLIBS)
 
-# wrjpgcom needs large model so it can malloc a 64K chunk
-wrjpgcom.exe: wrjpgcom.c
-	$(CC) -AL -O -W3 wrjpgcom.c
+wrjpgcom.exe: wrjpgcom.obj
+	$(link) $(LDFLAGS) -out:wrjpgcom.exe wrjpgcom.obj $(LDLIBS)
 
-jconfig.h: jconfig.txt
-	echo You must prepare a system-dependent jconfig.h file.
-	echo Please read the installation directions in install.txt.
-	exit 1
 
 clean:
-	del *.obj
-	del libjpeg.lib
-	del cjpeg.exe
-	del djpeg.exe
-	del jpegtran.exe
-	del rdjpgcom.exe
-	del wrjpgcom.exe
-	del testout*.*
+	$(RM) *.obj *.exe libjpeg.lib
+	$(RM) testout*
 
-test: cjpeg.exe djpeg.exe jpegtran.exe
-	del testout*.*
-	djpeg -dct int -ppm -outfile testout.ppm  testorig.jpg
-	djpeg -dct int -bmp -colors 256 -outfile testout.bmp  testorig.jpg
-	cjpeg -dct int -outfile testout.jpg  testimg.ppm
-	djpeg -dct int -ppm -outfile testoutp.ppm testprog.jpg
-	cjpeg -dct int -progressive -opt -outfile testoutp.jpg testimg.ppm
-	jpegtran -outfile testoutt.jpg testprog.jpg
+setup-vc6:
+	ren jconfig.vc jconfig.h
+	ren makejdsw.vc6 jpeg.dsw
+	ren makeadsw.vc6 apps.dsw
+	ren makejmak.vc6 jpeg.mak
+	ren makejdep.vc6 jpeg.dep
+	ren makejdsp.vc6 jpeg.dsp
+	ren makecmak.vc6 cjpeg.mak
+	ren makecdep.vc6 cjpeg.dep
+	ren makecdsp.vc6 cjpeg.dsp
+	ren makedmak.vc6 djpeg.mak
+	ren makeddep.vc6 djpeg.dep
+	ren makeddsp.vc6 djpeg.dsp
+	ren maketmak.vc6 jpegtran.mak
+	ren maketdep.vc6 jpegtran.dep
+	ren maketdsp.vc6 jpegtran.dsp
+	ren makermak.vc6 rdjpgcom.mak
+	ren makerdep.vc6 rdjpgcom.dep
+	ren makerdsp.vc6 rdjpgcom.dsp
+	ren makewmak.vc6 wrjpgcom.mak
+	ren makewdep.vc6 wrjpgcom.dep
+	ren makewdsp.vc6 wrjpgcom.dsp
+
+setup-v15:
+	ren jconfig.vc jconfig.h
+	ren makejsln.v15 jpeg.sln
+	ren makeasln.v15 apps.sln
+	ren makejvcx.v15 jpeg.vcxproj
+	ren makejfil.v15 jpeg.vcxproj.filters
+	ren makecvcx.v15 cjpeg.vcxproj
+	ren makecfil.v15 cjpeg.vcxproj.filters
+	ren makedvcx.v15 djpeg.vcxproj
+	ren makedfil.v15 djpeg.vcxproj.filters
+	ren maketvcx.v15 jpegtran.vcxproj
+	ren maketfil.v15 jpegtran.vcxproj.filters
+	ren makervcx.v15 rdjpgcom.vcxproj
+	ren makerfil.v15 rdjpgcom.vcxproj.filters
+	ren makewvcx.v15 wrjpgcom.vcxproj
+	ren makewfil.v15 wrjpgcom.vcxproj.filters
+
+test:
+	IF EXIST testout* $(RM) testout*
+	.\djpeg -dct int -ppm -outfile testout.ppm  testorig.jpg
+	.\djpeg -dct int -bmp -colors 256 -outfile testout.bmp  testorig.jpg
+	.\cjpeg -dct int -outfile testout.jpg  testimg.ppm
+	.\djpeg -dct int -ppm -outfile testoutp.ppm testprog.jpg
+	.\cjpeg -dct int -progressive -opt -outfile testoutp.jpg testimg.ppm
+	.\jpegtran -outfile testoutt.jpg testprog.jpg
+	fc /b testimg.ppm testout.ppm
+	fc /b testimg.bmp testout.bmp
+	fc /b testimg.jpg testout.jpg
+	fc /b testimg.ppm testoutp.ppm
+	fc /b testimgp.jpg testoutp.jpg
+	fc /b testorig.jpg testoutt.jpg
+
+test-build:
+	IF EXIST testout* $(RM) testout*
+	.\djpeg\Release\djpeg -dct int -ppm -outfile testout.ppm  testorig.jpg
+	.\djpeg\Release\djpeg -dct int -bmp -colors 256 -outfile testout.bmp  testorig.jpg
+	.\cjpeg\Release\cjpeg -dct int -outfile testout.jpg  testimg.ppm
+	.\djpeg\Release\djpeg -dct int -ppm -outfile testoutp.ppm testprog.jpg
+	.\cjpeg\Release\cjpeg -dct int -progressive -opt -outfile testoutp.jpg testimg.ppm
+	.\jpegtran\Release\jpegtran -outfile testoutt.jpg testprog.jpg
 	fc /b testimg.ppm testout.ppm
 	fc /b testimg.bmp testout.bmp
 	fc /b testimg.jpg testout.jpg
@@ -252,5 +271,3 @@ rdbmp.obj: rdbmp.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h c
 wrbmp.obj: wrbmp.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h
 rdrle.obj: rdrle.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h
 wrrle.obj: wrrle.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h
-jmemdosa.obj : jmemdosa.asm
-	masm /mx $*;
