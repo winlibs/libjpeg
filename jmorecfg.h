@@ -30,6 +30,8 @@
  * in all cases (see below).
  */
 
+#include "win32_exports.h"
+
 #define BITS_IN_JSAMPLE  8	/* use 8, 9, 10, 11, or 12 */
 
 
@@ -245,7 +247,8 @@ typedef unsigned int JDIMENSION;
 /* a function referenced thru EXTERNs: */
 #define GLOBAL(type)		type
 /* a reference to a GLOBAL function: */
-#define EXTERN(type)		extern type
+
+#define EXTERN(type)		extern LIBJPEG_EXPORT_API type
 
 
 /* This macro is used to declare a "method", that is, a function pointer.
