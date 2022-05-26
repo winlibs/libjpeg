@@ -1,0 +1,16 @@
+ CMakeLists.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 10a198f..81a42f4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -597,6 +597,8 @@ if(ENABLE_STATIC)
+     ${SIMD_OBJS})
+   if(NOT MSVC)
+     set_target_properties(jpeg-static PROPERTIES OUTPUT_NAME jpeg)
++  else()
++    set_target_properties(jpeg-static PROPERTIES OUTPUT_NAME libjpeg_a)
+   endif()
+ endif()
+ 
