@@ -597,6 +597,8 @@ if(ENABLE_STATIC)
     ${SIMD_OBJS})
   if(NOT MSVC)
     set_target_properties(jpeg-static PROPERTIES OUTPUT_NAME jpeg)
+  else()
+    set_target_properties(jpeg-static PROPERTIES OUTPUT_NAME libjpeg_a)
   endif()
 endif()
 
