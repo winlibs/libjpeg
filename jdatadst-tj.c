@@ -5,7 +5,7 @@
  * Copyright (C) 1994-1996, Thomas G. Lane.
  * Modified 2009-2012 by Guido Vollbeding.
  * libjpeg-turbo Modifications:
- * Copyright (C) 2011, 2014, 2016, 2019, D. R. Commander.
+ * Copyright (C) 2011, 2014, 2016, 2019, 2022-2023, D. R. Commander.
  * For conditions of distribution and use, see the accompanying README.ijg
  * file.
  *
@@ -23,12 +23,8 @@
 #include "jpeglib.h"
 #include "jerror.h"
 
-#ifndef HAVE_STDLIB_H           /* <stdlib.h> should declare malloc(),free() */
-extern void *malloc(size_t size);
-extern void free(void *ptr);
-#endif
 void jpeg_mem_dest_tj(j_compress_ptr cinfo, unsigned char **outbuffer,
-                      unsigned long *outsize, boolean alloc);
+                      size_t *outsize, boolean alloc);
 
 
 #define OUTPUT_BUF_SIZE  4096   /* choose an efficiently fwrite'able size */
@@ -40,7 +36,7 @@ typedef struct {
   struct jpeg_destination_mgr pub; /* public fields */
 
   unsigned char **outbuffer;    /* target buffer */
-  unsigned long *outsize;
+  size_t *outsize;
   unsigned char *newbuffer;     /* newly allocated buffer */
   JOCTET *buffer;               /* start of buffer */
   size_t bufsize;
@@ -101,7 +97,7 @@ empty_mem_output_buffer(j_compress_ptr cinfo)
   if (nextbuffer == NULL)
     ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 10);
 
-  MEMCOPY(nextbuffer, dest->buffer, dest->bufsize);
+  memcpy(nextbuffer, dest->buffer, dest->bufsize);
 
   free(dest->newbuffer);
 
@@ -132,7 +128,7 @@ term_mem_destination(j_compress_ptr cinfo)
   my_mem_dest_ptr dest = (my_mem_dest_ptr)cinfo->dest;
 
   if (dest->alloc) *dest->outbuffer = dest->buffer;
-  *dest->outsize = (unsigned long)(dest->bufsize - dest->pub.free_in_buffer);
+  *dest->outsize = dest->bufsize - dest->pub.free_in_buffer;
 }
 
 
@@ -149,7 +145,7 @@ term_mem_destination(j_compress_ptr cinfo)
 
 GLOBAL(void)
 jpeg_mem_dest_tj(j_compress_ptr cinfo, unsigned char **outbuffer,
-                 unsigned long *outsize, boolean alloc)
+                 size_t *outsize, boolean alloc)
 {
   boolean reused = FALSE;
   my_mem_dest_ptr dest;

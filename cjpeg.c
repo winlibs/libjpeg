@@ -4,8 +4,10 @@
  * This file was part of the Independent JPEG Group's software:
  * Copyright (C) 1991-1998, Thomas G. Lane.
  * Modified 2003-2011 by Guido Vollbeding.
+ * Lossless JPEG Modifications:
+ * Copyright (C) 1999, Ken Murchison.
  * libjpeg-turbo Modifications:
- * Copyright (C) 2010, 2013-2014, 2017, 2019-2021, D. R. Commander.
+ * Copyright (C) 2010, 2013-2014, 2017, 2019-2022, 2024, D. R. Commander.
  * For conditions of distribution and use, see the accompanying README.ijg
  * file.
  *
@@ -27,27 +29,16 @@
  * works regardless of which command line style is used.
  */
 
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_DEPRECATE
+#endif
+
 #ifdef CJPEG_FUZZER
 #define JPEG_INTERNALS
 #endif
 #include "cdjpeg.h"             /* Common decls for cjpeg/djpeg applications */
 #include "jversion.h"           /* for version message */
 #include "jconfigint.h"
-
-#ifndef HAVE_STDLIB_H           /* <stdlib.h> should declare malloc(),free() */
-extern void *malloc(size_t size);
-extern void free(void *ptr);
-#endif
-
-#ifdef USE_CCOMMAND             /* command-line reader for Macintosh */
-#ifdef __MWERKS__
-#include <SIOUX.h>              /* Metrowerks needs this */
-#include <console.h>            /* ... and this */
-#endif
-#ifdef THINK_C
-#include <console.h>            /* Think declares it here */
-#endif
-#endif
 
 
 /* Create the add-on message string table. */
@@ -114,11 +105,31 @@ select_file_type(j_compress_ptr cinfo, FILE *infile)
 #endif
 #ifdef GIF_SUPPORTED
   case 'G':
-    return jinit_read_gif(cinfo);
+    if (cinfo->data_precision == 16) {
+#ifdef C_LOSSLESS_SUPPORTED
+      return j16init_read_gif(cinfo);
+#else
+      ERREXIT1(cinfo, JERR_BAD_PRECISION, cinfo->data_precision);
+      break;
+#endif
+    } else if (cinfo->data_precision == 12)
+      return j12init_read_gif(cinfo);
+    else
+      return jinit_read_gif(cinfo);
 #endif
 #ifdef PPM_SUPPORTED
   case 'P':
-    return jinit_read_ppm(cinfo);
+    if (cinfo->data_precision == 16) {
+#ifdef C_LOSSLESS_SUPPORTED
+      return j16init_read_ppm(cinfo);
+#else
+      ERREXIT1(cinfo, JERR_BAD_PRECISION, cinfo->data_precision);
+      break;
+#endif
+    } else if (cinfo->data_precision == 12)
+      return j12init_read_ppm(cinfo);
+    else
+      return jinit_read_ppm(cinfo);
 #endif
 #ifdef TARGA_SUPPORTED
   case 0x00:
@@ -145,8 +156,9 @@ select_file_type(j_compress_ptr cinfo, FILE *infile)
 static const char *progname;    /* program name for error messages */
 static char *icc_filename;      /* for -icc switch */
 static char *outfilename;       /* for -outfile switch */
-boolean memdst;                 /* for -memdst switch */
-boolean report;                 /* for -report switch */
+static boolean memdst;          /* for -memdst switch */
+static boolean report;          /* for -report switch */
+static boolean strict;          /* for -strict switch */
 
 
 #ifdef CJPEG_FUZZER
@@ -165,7 +177,7 @@ void my_error_exit(j_common_ptr cinfo)
   longjmp(myerr->setjmp_buffer, 1);
 }
 
-static void my_emit_message(j_common_ptr cinfo, int msg_level)
+static void my_emit_message_fuzzer(j_common_ptr cinfo, int msg_level)
 {
   if (msg_level < 0)
     cinfo->err->num_warnings++;
@@ -214,6 +226,16 @@ usage(void)
   fprintf(stderr, "  -targa         Input file is Targa format (usually not needed)\n");
 #endif
   fprintf(stderr, "Switches for advanced users:\n");
+  fprintf(stderr, "  -precision N   Create JPEG file with N-bit data precision\n");
+#ifdef C_LOSSLESS_SUPPORTED
+  fprintf(stderr, "                 (N is 8, 12, or 16; default is 8; if N is 16, then -lossless\n");
+  fprintf(stderr, "                 must also be specified)\n");
+#else
+  fprintf(stderr, "                 (N is 8 or 12; default is 8)\n");
+#endif
+#ifdef C_LOSSLESS_SUPPORTED
+  fprintf(stderr, "  -lossless psv[,Pt]  Create lossless JPEG file\n");
+#endif
 #ifdef C_ARITH_CODING_SUPPORTED
   fprintf(stderr, "  -arithmetic    Use arithmetic coding\n");
 #endif
@@ -236,10 +258,9 @@ usage(void)
 #endif
   fprintf(stderr, "  -maxmemory N   Maximum memory to use (in kbytes)\n");
   fprintf(stderr, "  -outfile name  Specify name for output file\n");
-#if JPEG_LIB_VERSION >= 80 || defined(MEM_SRCDST_SUPPORTED)
   fprintf(stderr, "  -memdst        Compress to memory instead of file (useful for benchmarking)\n");
-#endif
   fprintf(stderr, "  -report        Report compression progress\n");
+  fprintf(stderr, "  -strict        Treat all warnings as fatal\n");
   fprintf(stderr, "  -verbose  or  -debug   Emit debug output\n");
   fprintf(stderr, "  -version       Print version information and exit\n");
   fprintf(stderr, "Switches for wizards:\n");
@@ -268,6 +289,9 @@ parse_switches(j_compress_ptr cinfo, int argc, char **argv,
 {
   int argn;
   char *arg;
+#ifdef C_LOSSLESS_SUPPORTED
+  int psv, pt = 0;
+#endif
   boolean force_baseline;
   boolean simple_progressive;
   char *qualityarg = NULL;      /* saves -quality parm if any */
@@ -285,6 +309,7 @@ parse_switches(j_compress_ptr cinfo, int argc, char **argv,
   outfilename = NULL;
   memdst = FALSE;
   report = FALSE;
+  strict = FALSE;
   cinfo->err->trace_level = 0;
 
   /* Scan command line options, adjust parameters */
@@ -336,7 +361,8 @@ parse_switches(j_compress_ptr cinfo, int argc, char **argv,
       if (!printed_version) {
         fprintf(stderr, "%s version %s (build %s)\n",
                 PACKAGE_NAME, VERSION, BUILD);
-        fprintf(stderr, "%s\n\n", JCOPYRIGHT);
+        fprintf(stderr, JCOPYRIGHT1);
+        fprintf(stderr, JCOPYRIGHT2 "\n");
         fprintf(stderr, "Emulating The Independent JPEG Group's software, version %s\n\n",
                 JVERSION);
         printed_version = TRUE;
@@ -362,6 +388,27 @@ parse_switches(j_compress_ptr cinfo, int argc, char **argv,
       if (++argn >= argc)       /* advance to next argument */
         usage();
       icc_filename = argv[argn];
+
+    } else if (keymatch(arg, "lossless", 1)) {
+      /* Enable lossless mode. */
+#ifdef C_LOSSLESS_SUPPORTED
+      char ch = ',', *ptr;
+
+      if (++argn >= argc)       /* advance to next argument */
+        usage();
+      if (sscanf(argv[argn], "%d%c", &psv, &ch) < 1 || ch != ',')
+        usage();
+      ptr = argv[argn];
+      while (*ptr && *ptr++ != ','); /* advance to next segment of arg
+                                        string */
+      if (*ptr)
+        sscanf(ptr, "%d", &pt);
+      jpeg_enable_lossless(cinfo, psv, pt);
+#else
+      fprintf(stderr, "%s: sorry, lossless output was not compiled\n",
+              progname);
+      exit(EXIT_FAILURE);
+#endif
 
     } else if (keymatch(arg, "maxmemory", 3)) {
       /* Maximum memory in Kb (or Mb with 'm'). */
@@ -392,7 +439,23 @@ parse_switches(j_compress_ptr cinfo, int argc, char **argv,
         usage();
       outfilename = argv[argn]; /* save it away for later use */
 
-    } else if (keymatch(arg, "progressive", 1)) {
+    } else if (keymatch(arg, "precision", 3)) {
+      /* Set data precision. */
+      int val;
+
+      if (++argn >= argc)       /* advance to next argument */
+        usage();
+      if (sscanf(argv[argn], "%d", &val) != 1)
+        usage();
+#ifdef C_LOSSLESS_SUPPORTED
+      if (val != 8 && val != 12 && val != 16)
+#else
+      if (val != 8 && val != 12)
+#endif
+        usage();
+      cinfo->data_precision = val;
+
+    } else if (keymatch(arg, "progressive", 3)) {
       /* Select simple progressive mode. */
 #ifdef C_PROGRESSIVE_SUPPORTED
       simple_progressive = TRUE;
@@ -405,13 +468,7 @@ parse_switches(j_compress_ptr cinfo, int argc, char **argv,
 
     } else if (keymatch(arg, "memdst", 2)) {
       /* Use in-memory destination manager */
-#if JPEG_LIB_VERSION >= 80 || defined(MEM_SRCDST_SUPPORTED)
       memdst = TRUE;
-#else
-      fprintf(stderr, "%s: sorry, in-memory destination manager was not compiled in\n",
-              progname);
-      exit(EXIT_FAILURE);
-#endif
 
     } else if (keymatch(arg, "quality", 1)) {
       /* Quality ratings (quantization table scaling factors). */
@@ -493,6 +550,9 @@ parse_switches(j_compress_ptr cinfo, int argc, char **argv,
         usage();
       cinfo->smoothing_factor = val;
 
+    } else if (keymatch(arg, "strict", 2)) {
+      strict = TRUE;
+
     } else if (keymatch(arg, "targa", 1)) {
       /* Input file is Targa format. */
       is_targa = TRUE;
@@ -540,6 +600,19 @@ parse_switches(j_compress_ptr cinfo, int argc, char **argv,
 }
 
 
+METHODDEF(void)
+my_emit_message(j_common_ptr cinfo, int msg_level)
+{
+  if (msg_level < 0) {
+    /* Treat warning as fatal */
+    cinfo->err->error_exit(cinfo);
+  } else {
+    if (cinfo->err->trace_level >= msg_level)
+      cinfo->err->output_message(cinfo);
+  }
+}
+
+
 /*
  * The main program.
  */
@@ -565,11 +638,6 @@ main(int argc, char **argv)
   unsigned char *outbuffer = NULL;
   unsigned long outsize = 0;
   JDIMENSION num_scanlines;
-
-  /* On Mac, fetch a command line. */
-#ifdef USE_CCOMMAND
-  argc = ccommand(&argv);
-#endif
 
   progname = argv[0];
   if (progname == NULL || progname[0] == 0)
@@ -599,6 +667,9 @@ main(int argc, char **argv)
    */
 
   file_index = parse_switches(&cinfo, argc, argv, 0, FALSE);
+
+  if (strict)
+    jerr.emit_message = my_emit_message;
 
 #ifdef TWO_FILE_COMMANDLINE
   if (!memdst) {
@@ -677,7 +748,7 @@ main(int argc, char **argv)
 
 #ifdef CJPEG_FUZZER
   jerr.error_exit = my_error_exit;
-  jerr.emit_message = my_emit_message;
+  jerr.emit_message = my_emit_message_fuzzer;
   if (setjmp(myerr.setjmp_buffer))
     HANDLE_ERROR()
 #endif
@@ -704,11 +775,9 @@ main(int argc, char **argv)
   file_index = parse_switches(&cinfo, argc, argv, 0, TRUE);
 
   /* Specify data destination for compression */
-#if JPEG_LIB_VERSION >= 80 || defined(MEM_SRCDST_SUPPORTED)
   if (memdst)
     jpeg_mem_dest(&cinfo, &outbuffer, &outsize);
   else
-#endif
     jpeg_stdio_dest(&cinfo, output_file);
 
 #ifdef CJPEG_FUZZER
@@ -723,9 +792,25 @@ main(int argc, char **argv)
     jpeg_write_icc_profile(&cinfo, icc_profile, (unsigned int)icc_len);
 
   /* Process data */
-  while (cinfo.next_scanline < cinfo.image_height) {
-    num_scanlines = (*src_mgr->get_pixel_rows) (&cinfo, src_mgr);
-    (void)jpeg_write_scanlines(&cinfo, src_mgr->buffer, num_scanlines);
+  if (cinfo.data_precision == 16) {
+#ifdef C_LOSSLESS_SUPPORTED
+    while (cinfo.next_scanline < cinfo.image_height) {
+      num_scanlines = (*src_mgr->get_pixel_rows) (&cinfo, src_mgr);
+      (void)jpeg16_write_scanlines(&cinfo, src_mgr->buffer16, num_scanlines);
+    }
+#else
+    ERREXIT1(&cinfo, JERR_BAD_PRECISION, cinfo.data_precision);
+#endif
+  } else if (cinfo.data_precision == 12) {
+    while (cinfo.next_scanline < cinfo.image_height) {
+      num_scanlines = (*src_mgr->get_pixel_rows) (&cinfo, src_mgr);
+      (void)jpeg12_write_scanlines(&cinfo, src_mgr->buffer12, num_scanlines);
+    }
+  } else {
+    while (cinfo.next_scanline < cinfo.image_height) {
+      num_scanlines = (*src_mgr->get_pixel_rows) (&cinfo, src_mgr);
+      (void)jpeg_write_scanlines(&cinfo, src_mgr->buffer, num_scanlines);
+    }
   }
 
   /* Finish compression and release memory */

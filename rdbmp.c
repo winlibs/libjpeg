@@ -6,7 +6,7 @@
  * Modified 2009-2017 by Guido Vollbeding.
  * libjpeg-turbo Modifications:
  * Modified 2011 by Siarhei Siamashka.
- * Copyright (C) 2015, 2017-2018, 2021, D. R. Commander.
+ * Copyright (C) 2015, 2017-2018, 2021-2023, D. R. Commander.
  * For conditions of distribution and use, see the accompanying README.ijg
  * file.
  *
@@ -39,7 +39,7 @@ typedef unsigned char U_CHAR;
 
 
 #define ReadOK(file, buffer, len) \
-  (JFREAD(file, buffer, len) == ((size_t)(len)))
+  (fread(buffer, 1, len, file) == ((size_t)(len)))
 
 static int alpha_index[JPEG_NUMCS] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, 3, 0, 0, -1
@@ -125,7 +125,8 @@ read_colormap(bmp_source_ptr sinfo, int cmaplen, int mapentrysize)
     break;
   }
 
-  if (sinfo->cinfo->in_color_space == JCS_UNKNOWN && gray)
+  if ((sinfo->cinfo->in_color_space == JCS_UNKNOWN ||
+       sinfo->cinfo->in_color_space == JCS_RGB) && gray)
     sinfo->cinfo->in_color_space = JCS_GRAYSCALE;
 
   if (sinfo->cinfo->in_color_space == JCS_GRAYSCALE && !gray)
@@ -245,7 +246,7 @@ get_24bit_row(j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
    */
   outptr = source->pub.buffer[0];
   if (cinfo->in_color_space == JCS_EXT_BGR) {
-    MEMCOPY(outptr, inptr, source->row_width);
+    memcpy(outptr, inptr, source->row_width);
   } else if (cinfo->in_color_space == JCS_CMYK) {
     for (col = cinfo->image_width; col > 0; col--) {
       JSAMPLE b = *inptr++, g = *inptr++, r = *inptr++;
@@ -309,7 +310,7 @@ get_32bit_row(j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   outptr = source->pub.buffer[0];
   if (cinfo->in_color_space == JCS_EXT_BGRX ||
       cinfo->in_color_space == JCS_EXT_BGRA) {
-    MEMCOPY(outptr, inptr, source->row_width);
+    memcpy(outptr, inptr, source->row_width);
   } else if (cinfo->in_color_space == JCS_CMYK) {
     for (col = cinfo->image_width; col > 0; col--) {
       JSAMPLE b = *inptr++, g = *inptr++, r = *inptr++;
@@ -522,11 +523,9 @@ start_input_bmp(j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 
   if (biWidth <= 0 || biHeight <= 0)
     ERREXIT(cinfo, JERR_BMP_EMPTY);
-#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
   if (sinfo->max_pixels &&
       (unsigned long long)biWidth * biHeight > sinfo->max_pixels)
-    ERREXIT(cinfo, JERR_WIDTH_OVERFLOW);
-#endif
+    ERREXIT1(cinfo, JERR_IMAGE_TOO_BIG, sinfo->max_pixels);
   if (biPlanes != 1)
     ERREXIT(cinfo, JERR_BMP_BADPLANES);
 
@@ -669,6 +668,9 @@ jinit_read_bmp(j_compress_ptr cinfo, boolean use_inversion_array)
 {
   bmp_source_ptr source;
 
+  if (cinfo->data_precision != 8)
+    ERREXIT1(cinfo, JERR_BAD_PRECISION, cinfo->data_precision);
+
   /* Create module interface object */
   source = (bmp_source_ptr)
     (*cinfo->mem->alloc_small) ((j_common_ptr)cinfo, JPOOL_IMAGE,
@@ -677,9 +679,7 @@ jinit_read_bmp(j_compress_ptr cinfo, boolean use_inversion_array)
   /* Fill in method ptrs, except get_pixel_rows which start_input sets */
   source->pub.start_input = start_input_bmp;
   source->pub.finish_input = finish_input_bmp;
-#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
   source->pub.max_pixels = 0;
-#endif
 
   source->use_inversion_array = use_inversion_array;
 

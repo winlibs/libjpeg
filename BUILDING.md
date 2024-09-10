@@ -10,35 +10,26 @@ Build Requirements
 
 - [CMake](http://www.cmake.org) v2.8.12 or later
 
-- [NASM](http://www.nasm.us) or [YASM](http://yasm.tortall.net)
+- [NASM](http://www.nasm.us) or [Yasm](http://yasm.tortall.net)
   (if building x86 or x86-64 SIMD extensions)
   * If using NASM, 2.13 or later is required.
-  * If using YASM, 1.2.0 or later is required.
-  * If building on macOS, NASM or YASM can be obtained from
+  * If using Yasm, 1.2.0 or later is required.
+  * NASM 2.15 or later is required if building libjpeg-turbo with Intel
+    Control-flow Enforcement Technology (CET) support.
+  * If building on macOS, NASM or Yasm can be obtained from
     [MacPorts](http://www.macports.org/) or [Homebrew](http://brew.sh/).
      - NOTE: Currently, if it is desirable to hide the SIMD function symbols in
        Mac executables or shared libraries that statically link with
-       libjpeg-turbo, then NASM 2.14 or later or YASM must be used when
+       libjpeg-turbo, then NASM 2.14 or later or Yasm must be used when
        building libjpeg-turbo.
-  * If building on Windows, **nasm.exe**/**yasm.exe** should be in your `PATH`.
-  * NASM and YASM are located in the CRB (Code Ready Builder) repository on
-    Red Hat Enterprise Linux 8 and in the PowerTools repository on CentOS 8,
-    which is not enabled by default.
-
-  The binary RPMs released by the NASM project do not work on older Linux
-  systems, such as Red Hat Enterprise Linux 5.  On such systems, you can easily
-  build and install NASM from a source RPM by downloading one of the SRPMs from
-
-  <http://www.nasm.us/pub/nasm/releasebuilds>
-
-  and executing the following as root:
-
-        ARCH=`uname -m`
-        rpmbuild --rebuild nasm-{version}.src.rpm
-        rpm -Uvh /usr/src/redhat/RPMS/$ARCH/nasm-{version}.$ARCH.rpm
-
-  NOTE: the NASM build will fail if texinfo is not installed.
-
+  * If NASM or Yasm is not in your `PATH`, then you can specify the full path
+    to the assembler by using either the `CMAKE_ASM_NASM_COMPILER` CMake
+    variable or the `ASM_NASM` environment variable.  On Windows, use forward
+    slashes rather than backslashes in the path (for example,
+    **c:/nasm/nasm.exe**).
+  * NASM and Yasm are located in the CRB (Code Ready Builder) or PowerTools
+    repository on Red Hat Enterprise Linux 8+ and derivatives, which is not
+    enabled by default.
 
 ### Un*x Platforms (including Linux, Mac, FreeBSD, Solaris, and Cygwin)
 
@@ -90,6 +81,14 @@ Build Requirements
   * If using JDK 11 or later, CMake 3.10.x or later must also be used.
 
 
+Sub-Project Builds
+------------------
+
+The libjpeg-turbo build system does not support being included as a sub-project
+using the CMake `add_subdirectory()` function.  Use the CMake
+`ExternalProject_Add()` function instead.
+
+
 Out-of-Tree Builds
 ------------------
 
@@ -106,8 +105,9 @@ directory.  For in-tree builds, these directories are the same.
 Ninja
 -----
 
-In all of the procedures and recipes below, replace `make` with `ninja` and
-`Unix Makefiles` with `Ninja` if using Ninja.
+If using Ninja, then replace `make` or `nmake` with `ninja`, and replace the
+CMake generator (specified with the `-G` option) with `Ninja`, in all of the
+procedures and recipes below.
 
 
 Build Procedure
@@ -290,15 +290,6 @@ API/ABI-compatible with libjpeg v8.  See [README.md](README.md) for more
 information about libjpeg v7 and v8 emulation.
 
 
-### In-Memory Source/Destination Managers
-
-When using libjpeg v6b or v7 API/ABI emulation, add `-DWITH_MEM_SRCDST=0` to
-the CMake command line to build a version of libjpeg-turbo that lacks the
-`jpeg_mem_src()` and `jpeg_mem_dest()` functions.  These functions were not
-part of the original libjpeg v6b and v7 APIs, so removing them ensures strict
-conformance with those APIs.  See [README.md](README.md) for more information.
-
-
 ### Arithmetic Coding Support
 
 Since the patent on arithmetic coding has expired, this functionality has been
@@ -374,8 +365,12 @@ located (usually **/usr/bin**.)  Next, execute the following commands:
 
     cd {build_directory}
     cmake -G"Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake \
+      -DCMAKE_INSTALL_PREFIX={install_path} \
       [additional CMake flags] {source_directory}
     make
+
+*{install\_path}* is the path under which the libjpeg-turbo binaries should be
+installed.
 
 
 ### 64-bit MinGW Build on Un*x (including Mac and Cygwin)
@@ -393,8 +388,12 @@ located (usually **/usr/bin**.)  Next, execute the following commands:
 
     cd {build_directory}
     cmake -G"Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake \
+      -DCMAKE_INSTALL_PREFIX={install_path} \
       [additional CMake flags] {source_directory}
     make
+
+*{install\_path}* is the path under which the libjpeg-turbo binaries should be
+installed.
 
 
 Building libjpeg-turbo for iOS
@@ -430,6 +429,10 @@ iPhone 5S/iPad Mini 2/iPad Air and newer.
       -DCMAKE_OSX_SYSROOT=${IOS_SYSROOT[0]} \
       [additional CMake flags] {source_directory}
     make
+
+Replace `iPhoneOS` with `iPhoneSimulator` and `-miphoneos-version-min` with
+`-miphonesimulator-version-min` to build libjpeg-turbo for the iOS simulator on
+Macs with Apple silicon CPUs.
 
 
 Building libjpeg-turbo for Android
@@ -603,15 +606,6 @@ directory variable contains the name of another directory variable in angle
 brackets, then its final value will depend on the final value of that other
 variable.  For instance, the default value of `CMAKE_INSTALL_MANDIR` is
 **\<CMAKE\_INSTALL\_DATAROOTDIR\>/man**.
-
-NOTE: If setting one of these directory variables to a relative path using the
-CMake command line, you must specify that the variable is of type `PATH`.
-For example:
-
-    cmake -G"{generator type}" -DCMAKE_INSTALL_LIBDIR:PATH=lib {source_directory}
-
-Otherwise, CMake will assume that the path is relative to the build directory
-rather than the install directory.
 
 
 Creating Distribution Packages
