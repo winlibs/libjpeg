@@ -5,7 +5,7 @@
  * Copyright (C) 1991-1996, Thomas G. Lane.
  * Modified 2009 by Guido Vollbeding.
  * libjpeg-turbo Modifications:
- * Copyright (C) 2017, 2019-2020, D. R. Commander.
+ * Copyright (C) 2017, 2019-2020, 2022, D. R. Commander.
  * For conditions of distribution and use, see the accompanying README.ijg
  * file.
  *
@@ -22,7 +22,8 @@
 #include "cmyk.h"
 #include "cdjpeg.h"             /* Common decls for cjpeg/djpeg applications */
 
-#ifdef PPM_SUPPORTED
+#if defined(PPM_SUPPORTED) && \
+    (BITS_IN_JSAMPLE != 16 || defined(D_LOSSLESS_SUPPORTED))
 
 
 /*
@@ -58,7 +59,7 @@
 
 
 /*
- * When JSAMPLE is the same size as char, we can just fwrite() the
+ * When _JSAMPLE is the same size as char, we can just fwrite() the
  * decompressed data to the PPM or PGM file.
  */
 
@@ -70,9 +71,9 @@ typedef struct {
 
   /* Usually these two pointers point to the same place: */
   char *iobuffer;               /* fwrite's I/O buffer */
-  JSAMPROW pixrow;              /* decompressor output buffer */
+  _JSAMPROW pixrow;             /* decompressor output buffer */
   size_t buffer_width;          /* width of I/O buffer */
-  JDIMENSION samples_per_row;   /* JSAMPLEs per output row */
+  JDIMENSION samples_per_row;   /* _JSAMPLEs per output row */
 } ppm_dest_struct;
 
 typedef ppm_dest_struct *ppm_dest_ptr;
@@ -92,7 +93,7 @@ put_pixel_rows(j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
 {
   ppm_dest_ptr dest = (ppm_dest_ptr)dinfo;
 
-  (void)JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
+  fwrite(dest->iobuffer, 1, dest->buffer_width, dest->pub.output_file);
 }
 
 
@@ -107,21 +108,21 @@ copy_pixel_rows(j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
 {
   ppm_dest_ptr dest = (ppm_dest_ptr)dinfo;
   register char *bufferptr;
-  register JSAMPROW ptr;
+  register _JSAMPROW ptr;
 #if BITS_IN_JSAMPLE != 8
   register JDIMENSION col;
 #endif
 
-  ptr = dest->pub.buffer[0];
+  ptr = dest->pub._buffer[0];
   bufferptr = dest->iobuffer;
 #if BITS_IN_JSAMPLE == 8
-  MEMCOPY(bufferptr, ptr, dest->samples_per_row);
+  memcpy(bufferptr, ptr, dest->samples_per_row);
 #else
   for (col = dest->samples_per_row; col > 0; col--) {
     PUTPPMSAMPLE(bufferptr, *ptr++);
   }
 #endif
-  (void)JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
+  fwrite(dest->iobuffer, 1, dest->buffer_width, dest->pub.output_file);
 }
 
 
@@ -134,14 +135,14 @@ put_rgb(j_decompress_ptr cinfo, djpeg_dest_ptr dinfo, JDIMENSION rows_supplied)
 {
   ppm_dest_ptr dest = (ppm_dest_ptr)dinfo;
   register char *bufferptr;
-  register JSAMPROW ptr;
+  register _JSAMPROW ptr;
   register JDIMENSION col;
   register int rindex = rgb_red[cinfo->out_color_space];
   register int gindex = rgb_green[cinfo->out_color_space];
   register int bindex = rgb_blue[cinfo->out_color_space];
   register int ps = rgb_pixelsize[cinfo->out_color_space];
 
-  ptr = dest->pub.buffer[0];
+  ptr = dest->pub._buffer[0];
   bufferptr = dest->iobuffer;
   for (col = cinfo->output_width; col > 0; col--) {
     PUTPPMSAMPLE(bufferptr, ptr[rindex]);
@@ -149,7 +150,7 @@ put_rgb(j_decompress_ptr cinfo, djpeg_dest_ptr dinfo, JDIMENSION rows_supplied)
     PUTPPMSAMPLE(bufferptr, ptr[bindex]);
     ptr += ps;
   }
-  (void)JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
+  fwrite(dest->iobuffer, 1, dest->buffer_width, dest->pub.output_file);
 }
 
 
@@ -163,19 +164,19 @@ put_cmyk(j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
 {
   ppm_dest_ptr dest = (ppm_dest_ptr)dinfo;
   register char *bufferptr;
-  register JSAMPROW ptr;
+  register _JSAMPROW ptr;
   register JDIMENSION col;
 
-  ptr = dest->pub.buffer[0];
+  ptr = dest->pub._buffer[0];
   bufferptr = dest->iobuffer;
   for (col = cinfo->output_width; col > 0; col--) {
-    JSAMPLE r, g, b, c = *ptr++, m = *ptr++, y = *ptr++, k = *ptr++;
+    _JSAMPLE r, g, b, c = *ptr++, m = *ptr++, y = *ptr++, k = *ptr++;
     cmyk_to_rgb(c, m, y, k, &r, &g, &b);
     PUTPPMSAMPLE(bufferptr, r);
     PUTPPMSAMPLE(bufferptr, g);
     PUTPPMSAMPLE(bufferptr, b);
   }
-  (void)JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
+  fwrite(dest->iobuffer, 1, dest->buffer_width, dest->pub.output_file);
 }
 
 
@@ -191,13 +192,13 @@ put_demapped_rgb(j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
   ppm_dest_ptr dest = (ppm_dest_ptr)dinfo;
   register char *bufferptr;
   register int pixval;
-  register JSAMPROW ptr;
-  register JSAMPROW color_map0 = cinfo->colormap[0];
-  register JSAMPROW color_map1 = cinfo->colormap[1];
-  register JSAMPROW color_map2 = cinfo->colormap[2];
+  register _JSAMPROW ptr;
+  register _JSAMPROW color_map0 = ((_JSAMPARRAY)cinfo->colormap)[0];
+  register _JSAMPROW color_map1 = ((_JSAMPARRAY)cinfo->colormap)[1];
+  register _JSAMPROW color_map2 = ((_JSAMPARRAY)cinfo->colormap)[2];
   register JDIMENSION col;
 
-  ptr = dest->pub.buffer[0];
+  ptr = dest->pub._buffer[0];
   bufferptr = dest->iobuffer;
   for (col = cinfo->output_width; col > 0; col--) {
     pixval = *ptr++;
@@ -205,7 +206,7 @@ put_demapped_rgb(j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
     PUTPPMSAMPLE(bufferptr, color_map1[pixval]);
     PUTPPMSAMPLE(bufferptr, color_map2[pixval]);
   }
-  (void)JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
+  fwrite(dest->iobuffer, 1, dest->buffer_width, dest->pub.output_file);
 }
 
 
@@ -215,16 +216,16 @@ put_demapped_gray(j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
 {
   ppm_dest_ptr dest = (ppm_dest_ptr)dinfo;
   register char *bufferptr;
-  register JSAMPROW ptr;
-  register JSAMPROW color_map = cinfo->colormap[0];
+  register _JSAMPROW ptr;
+  register _JSAMPROW color_map = ((_JSAMPARRAY)cinfo->colormap)[0];
   register JDIMENSION col;
 
-  ptr = dest->pub.buffer[0];
+  ptr = dest->pub._buffer[0];
   bufferptr = dest->iobuffer;
   for (col = cinfo->output_width; col > 0; col--) {
     PUTPPMSAMPLE(bufferptr, color_map[*ptr++]);
   }
-  (void)JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
+  fwrite(dest->iobuffer, 1, dest->buffer_width, dest->pub.output_file);
 }
 
 
@@ -304,9 +305,12 @@ calc_buffer_dimensions_ppm(j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
  */
 
 GLOBAL(djpeg_dest_ptr)
-jinit_write_ppm(j_decompress_ptr cinfo)
+_jinit_write_ppm(j_decompress_ptr cinfo)
 {
   ppm_dest_ptr dest;
+
+  if (cinfo->data_precision != BITS_IN_JSAMPLE)
+    ERREXIT1(cinfo, JERR_BAD_PRECISION, cinfo->data_precision);
 
   /* Create module interface object, fill in method pointers */
   dest = (ppm_dest_ptr)
@@ -325,7 +329,7 @@ jinit_write_ppm(j_decompress_ptr cinfo)
     ((j_common_ptr)cinfo, JPOOL_IMAGE, dest->buffer_width);
 
   if (cinfo->quantize_colors || BITS_IN_JSAMPLE != 8 ||
-      sizeof(JSAMPLE) != sizeof(char) ||
+      sizeof(_JSAMPLE) != sizeof(char) ||
 #if RGB_RED == 0 && RGB_GREEN == 1 && RGB_BLUE == 2 && RGB_PIXELSIZE == 3
       (cinfo->out_color_space != JCS_EXT_RGB &&
        cinfo->out_color_space != JCS_RGB)) {
@@ -336,7 +340,7 @@ jinit_write_ppm(j_decompress_ptr cinfo)
      * that's separate from the physical I/O buffer.  We also need a
      * separate buffer if pixel format translation must take place.
      */
-    dest->pub.buffer = (*cinfo->mem->alloc_sarray)
+    dest->pub._buffer = (_JSAMPARRAY)(*cinfo->mem->alloc_sarray)
       ((j_common_ptr)cinfo, JPOOL_IMAGE,
        cinfo->output_width * cinfo->output_components, (JDIMENSION)1);
     dest->pub.buffer_height = 1;
@@ -353,9 +357,9 @@ jinit_write_ppm(j_decompress_ptr cinfo)
       dest->pub.put_pixel_rows = put_demapped_rgb;
   } else {
     /* We will fwrite() directly from decompressor output buffer. */
-    /* Synthesize a JSAMPARRAY pointer structure */
-    dest->pixrow = (JSAMPROW)dest->iobuffer;
-    dest->pub.buffer = &dest->pixrow;
+    /* Synthesize a _JSAMPARRAY pointer structure */
+    dest->pixrow = (_JSAMPROW)dest->iobuffer;
+    dest->pub._buffer = &dest->pixrow;
     dest->pub.buffer_height = 1;
     dest->pub.put_pixel_rows = put_pixel_rows;
   }
@@ -363,4 +367,5 @@ jinit_write_ppm(j_decompress_ptr cinfo)
   return (djpeg_dest_ptr)dest;
 }
 
-#endif /* PPM_SUPPORTED */
+#endif /* defined(PPM_SUPPORTED) &&
+          (BITS_IN_JSAMPLE != 16 || defined(D_LOSSLESS_SUPPORTED)) */

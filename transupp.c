@@ -4,7 +4,7 @@
  * This file was part of the Independent JPEG Group's software:
  * Copyright (C) 1997-2019, Thomas G. Lane, Guido Vollbeding.
  * libjpeg-turbo Modifications:
- * Copyright (C) 2010, 2017, D. R. Commander.
+ * Copyright (C) 2010, 2017, 2021-2022, 2024, D. R. Commander.
  * For conditions of distribution and use, see the accompanying README.ijg
  * file.
  *
@@ -23,7 +23,7 @@
 #include "jinclude.h"
 #include "jpeglib.h"
 #include "transupp.h"           /* My own external interface */
-#include "jpegcomp.h"
+#include "jpegapicomp.h"
 #include <ctype.h>              /* to declare isdigit() */
 
 
@@ -143,7 +143,7 @@ requant_comp(j_decompress_ptr cinfo, jpeg_component_info *compptr,
         for (k = 0; k < DCTSIZE2; k++) {
           temp = qtblptr->quantval[k];
           qval = qtblptr1->quantval[k];
-          if (temp != qval) {
+          if (temp != qval && qval != 0) {
             temp *= ptr[k];
             /* The following quantization code is copied from jcdctmgr.c */
 #ifdef FAST_DIVIDE
@@ -201,7 +201,11 @@ adjust_quant(j_decompress_ptr srcinfo, jvirt_barray_ptr *src_coef_arrays,
     compptr1 = srcinfo->comp_info + ci;
     compptr2 = dropinfo->comp_info + ci;
     qtblptr1 = compptr1->quant_table;
+    if (qtblptr1 == NULL)
+      ERREXIT1(srcinfo, JERR_NO_QUANT_TABLE, compptr1->quant_tbl_no);
     qtblptr2 = compptr2->quant_table;
+    if (qtblptr2 == NULL)
+      ERREXIT1(dropinfo, JERR_NO_QUANT_TABLE, compptr2->quant_tbl_no);
     for (k = 0; k < DCTSIZE2; k++) {
       if (qtblptr1->quantval[k] != qtblptr2->quantval[k]) {
         if (trim)
@@ -262,8 +266,8 @@ do_drop(j_decompress_ptr srcinfo, j_compress_ptr dstinfo,
         }
       } else {
         for (offset_y = 0; offset_y < compptr->v_samp_factor; offset_y++) {
-          MEMZERO(dst_buffer[offset_y] + x_drop_blocks,
-                  comp_width * sizeof(JBLOCK));
+          memset(dst_buffer[offset_y] + x_drop_blocks, 0,
+                 comp_width * sizeof(JBLOCK));
         }
       }
     }
@@ -345,8 +349,8 @@ do_crop_ext_zero(j_decompress_ptr srcinfo, j_compress_ptr dstinfo,
         if (dst_blk_y < y_crop_blocks ||
             dst_blk_y >= y_crop_blocks + comp_height) {
           for (offset_y = 0; offset_y < compptr->v_samp_factor; offset_y++) {
-            MEMZERO(dst_buffer[offset_y],
-                    compptr->width_in_blocks * sizeof(JBLOCK));
+            memset(dst_buffer[offset_y], 0,
+                   compptr->width_in_blocks * sizeof(JBLOCK));
           }
           continue;
         }
@@ -363,14 +367,14 @@ do_crop_ext_zero(j_decompress_ptr srcinfo, j_compress_ptr dstinfo,
       for (offset_y = 0; offset_y < compptr->v_samp_factor; offset_y++) {
         if (dstinfo->_jpeg_width > srcinfo->output_width) {
           if (x_crop_blocks > 0) {
-            MEMZERO(dst_buffer[offset_y], x_crop_blocks * sizeof(JBLOCK));
+            memset(dst_buffer[offset_y], 0, x_crop_blocks * sizeof(JBLOCK));
           }
           jcopy_block_row(src_buffer[offset_y],
                           dst_buffer[offset_y] + x_crop_blocks, comp_width);
           if (compptr->width_in_blocks > x_crop_blocks + comp_width) {
-            MEMZERO(dst_buffer[offset_y] + x_crop_blocks + comp_width,
-                    (compptr->width_in_blocks - x_crop_blocks - comp_width) *
-                    sizeof(JBLOCK));
+            memset(dst_buffer[offset_y] + x_crop_blocks + comp_width, 0,
+                   (compptr->width_in_blocks - x_crop_blocks - comp_width) *
+                   sizeof(JBLOCK));
           }
         } else {
           jcopy_block_row(src_buffer[offset_y] + x_crop_blocks,
@@ -421,8 +425,8 @@ do_crop_ext_flat(j_decompress_ptr srcinfo, j_compress_ptr dstinfo,
         if (dst_blk_y < y_crop_blocks ||
             dst_blk_y >= y_crop_blocks + comp_height) {
           for (offset_y = 0; offset_y < compptr->v_samp_factor; offset_y++) {
-            MEMZERO(dst_buffer[offset_y],
-                    compptr->width_in_blocks * sizeof(JBLOCK));
+            memset(dst_buffer[offset_y], 0,
+                   compptr->width_in_blocks * sizeof(JBLOCK));
           }
           continue;
         }
@@ -438,7 +442,7 @@ do_crop_ext_flat(j_decompress_ptr srcinfo, j_compress_ptr dstinfo,
       }
       for (offset_y = 0; offset_y < compptr->v_samp_factor; offset_y++) {
         if (x_crop_blocks > 0) {
-          MEMZERO(dst_buffer[offset_y], x_crop_blocks * sizeof(JBLOCK));
+          memset(dst_buffer[offset_y], 0, x_crop_blocks * sizeof(JBLOCK));
           dc = src_buffer[offset_y][0][0];
           for (dst_blk_x = 0; dst_blk_x < x_crop_blocks; dst_blk_x++) {
             dst_buffer[offset_y][dst_blk_x][0] = dc;
@@ -447,9 +451,9 @@ do_crop_ext_flat(j_decompress_ptr srcinfo, j_compress_ptr dstinfo,
         jcopy_block_row(src_buffer[offset_y],
                         dst_buffer[offset_y] + x_crop_blocks, comp_width);
         if (compptr->width_in_blocks > x_crop_blocks + comp_width) {
-          MEMZERO(dst_buffer[offset_y] + x_crop_blocks + comp_width,
-                  (compptr->width_in_blocks - x_crop_blocks - comp_width) *
-                  sizeof(JBLOCK));
+          memset(dst_buffer[offset_y] + x_crop_blocks + comp_width, 0,
+                 (compptr->width_in_blocks - x_crop_blocks - comp_width) *
+                 sizeof(JBLOCK));
           dc = src_buffer[offset_y][comp_width - 1][0];
           for (dst_blk_x = x_crop_blocks + comp_width;
                dst_blk_x < compptr->width_in_blocks; dst_blk_x++) {
@@ -502,8 +506,8 @@ do_crop_ext_reflect(j_decompress_ptr srcinfo, j_compress_ptr dstinfo,
         if (dst_blk_y < y_crop_blocks ||
             dst_blk_y >= y_crop_blocks + comp_height) {
           for (offset_y = 0; offset_y < compptr->v_samp_factor; offset_y++) {
-            MEMZERO(dst_buffer[offset_y],
-                    compptr->width_in_blocks * sizeof(JBLOCK));
+            memset(dst_buffer[offset_y], 0,
+                   compptr->width_in_blocks * sizeof(JBLOCK));
           }
           continue;
         }
@@ -591,7 +595,8 @@ do_wipe(j_decompress_ptr srcinfo, j_compress_ptr dstinfo,
         ((j_common_ptr)srcinfo, src_coef_arrays[ci], y_wipe_blocks,
          (JDIMENSION)compptr->v_samp_factor, TRUE);
       for (offset_y = 0; offset_y < compptr->v_samp_factor; offset_y++) {
-        MEMZERO(buffer[offset_y] + x_wipe_blocks, wipe_width * sizeof(JBLOCK));
+        memset(buffer[offset_y] + x_wipe_blocks, 0,
+               wipe_width * sizeof(JBLOCK));
       }
     }
   }
@@ -626,7 +631,8 @@ do_flatten(j_decompress_ptr srcinfo, j_compress_ptr dstinfo,
         ((j_common_ptr)srcinfo, src_coef_arrays[ci], y_wipe_blocks,
          (JDIMENSION)compptr->v_samp_factor, TRUE);
       for (offset_y = 0; offset_y < compptr->v_samp_factor; offset_y++) {
-        MEMZERO(buffer[offset_y] + x_wipe_blocks, wipe_width * sizeof(JBLOCK));
+        memset(buffer[offset_y] + x_wipe_blocks, 0,
+               wipe_width * sizeof(JBLOCK));
         if (x_wipe_blocks > 0) {
           dc_left_value = buffer[offset_y][x_wipe_blocks - 1][0];
           if (wipe_right < compptr->width_in_blocks) {
@@ -709,8 +715,8 @@ do_reflect(j_decompress_ptr srcinfo, j_compress_ptr dstinfo,
             }
           }
         } else {
-          MEMZERO(buffer[offset_y] + x_wipe_blocks,
-                  wipe_width * sizeof(JBLOCK));
+          memset(buffer[offset_y] + x_wipe_blocks, 0,
+                 wipe_width * sizeof(JBLOCK));
         }
       }
     }
@@ -2310,7 +2316,7 @@ jcopy_markers_setup(j_decompress_ptr srcinfo, JCOPY_OPTION option)
   int m;
 
   /* Save comments except under NONE option */
-  if (option != JCOPYOPT_NONE) {
+  if (option != JCOPYOPT_NONE && option != JCOPYOPT_ICC) {
     jpeg_save_markers(srcinfo, JPEG_COM, 0xFFFF);
   }
   /* Save all types of APPn markers iff ALL option */
@@ -2320,6 +2326,10 @@ jcopy_markers_setup(j_decompress_ptr srcinfo, JCOPY_OPTION option)
         continue;
       jpeg_save_markers(srcinfo, JPEG_APP0 + m, 0xFFFF);
     }
+  }
+  /* Save only APP2 markers if ICC option selected */
+  if (option == JCOPYOPT_ICC) {
+    jpeg_save_markers(srcinfo, JPEG_APP0 + 2, 0xFFFF);
   }
 #endif /* SAVE_MARKERS_SUPPORTED */
 }

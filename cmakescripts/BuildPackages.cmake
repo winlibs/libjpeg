@@ -1,18 +1,6 @@
 # This file is included from the top-level CMakeLists.txt.  We just store it
 # here to avoid cluttering up that file.
 
-set(PKGNAME ${CMAKE_PROJECT_NAME} CACHE STRING
-  "Distribution package name (default: ${CMAKE_PROJECT_NAME})")
-set(PKGVENDOR "The ${CMAKE_PROJECT_NAME} Project" CACHE STRING
-  "Vendor name to be included in distribution package descriptions (default: The ${CMAKE_PROJECT_NAME} Project)")
-set(PKGURL "http://www.${CMAKE_PROJECT_NAME}.org" CACHE STRING
-  "URL of project web site to be included in distribution package descriptions (default: http://www.${CMAKE_PROJECT_NAME}.org)")
-set(PKGEMAIL "information@${CMAKE_PROJECT_NAME}.org" CACHE STRING
-  "E-mail of project maintainer to be included in distribution package descriptions (default: information@${CMAKE_PROJECT_NAME}.org")
-set(PKGID "com.${CMAKE_PROJECT_NAME}.${PKGNAME}" CACHE STRING
-  "Globally unique package identifier (reverse DNS notation) (default: com.${CMAKE_PROJECT_NAME}.${PKGNAME})")
-
-
 ###############################################################################
 # Linux RPM and DEB
 ###############################################################################
@@ -27,7 +15,7 @@ elseif(CPU_TYPE STREQUAL "arm64")
 elseif(CPU_TYPE STREQUAL "arm")
   check_c_source_compiles("
     #if __ARM_PCS_VFP != 1
-    #error \"float ABI = softfp\"
+    #error \"float ABI != hard\"
     #endif
     int main(void) { return 0; }" HAVE_HARD_FLOAT)
   if(HAVE_HARD_FLOAT)
@@ -102,7 +90,7 @@ if(WITH_JAVA)
   set(INST_DEFS ${INST_DEFS} -DJAVA)
 endif()
 
-if(MSVC_IDE)
+if(GENERATOR_IS_MULTI_CONFIG)
   set(INST_DEFS ${INST_DEFS} "-DBUILDDIR=${CMAKE_CFG_INTDIR}\\")
 else()
   set(INST_DEFS ${INST_DEFS} "-DBUILDDIR=")
@@ -121,10 +109,13 @@ configure_file(win/${INST_ID}/projectTargets-release.cmake.in
 if(WITH_JAVA)
   set(JAVA_DEPEND turbojpeg-java)
 endif()
+if(WITH_TURBOJPEG)
+  set(TURBOJPEG_DEPEND turbojpeg turbojpeg-static tjbench)
+endif()
 add_custom_target(installer
   makensis -nocd ${INST_DEFS} installer.nsi
-  DEPENDS jpeg jpeg-static turbojpeg turbojpeg-static rdjpgcom wrjpgcom
-    cjpeg djpeg jpegtran tjbench ${JAVA_DEPEND}
+  DEPENDS jpeg jpeg-static rdjpgcom wrjpgcom cjpeg djpeg jpegtran
+    ${JAVA_DEPEND} ${TURBOJPEG_DEPEND}
   SOURCES installer.nsi)
 
 endif() # WIN32
@@ -171,7 +162,9 @@ add_custom_target(tarball pkgscripts/maketarball
 
 configure_file(release/libjpeg.pc.in pkgscripts/libjpeg.pc @ONLY)
 
-configure_file(release/libturbojpeg.pc.in pkgscripts/libturbojpeg.pc @ONLY)
+if(WITH_TURBOJPEG)
+  configure_file(release/libturbojpeg.pc.in pkgscripts/libturbojpeg.pc @ONLY)
+endif()
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
