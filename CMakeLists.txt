@@ -669,6 +669,8 @@ if(ENABLE_STATIC)
     $<TARGET_OBJECTS:jpeg16-static>)
   if(NOT MSVC)
     set_target_properties(jpeg-static PROPERTIES OUTPUT_NAME jpeg)
+  else()
+    set_target_properties(jpeg-static PROPERTIES OUTPUT_NAME libjpeg_a)
   endif()
 endif()
 
