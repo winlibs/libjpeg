@@ -671,6 +671,8 @@ if(ENABLE_STATIC)
     set_target_properties(jpeg-static PROPERTIES OUTPUT_NAME jpeg)
   else()
     set_target_properties(jpeg-static PROPERTIES OUTPUT_NAME libjpeg_a)
+    set_target_properties(jpeg12-static PROPERTIES COMPILE_PDB_NAME libjpeg_a)
+    set_target_properties(jpeg16-static PROPERTIES COMPILE_PDB_NAME libjpeg_a)
   endif()
 endif()
 
