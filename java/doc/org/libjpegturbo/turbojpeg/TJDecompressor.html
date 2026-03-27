@@ -14,7 +14,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../jquery/jquery-3.6.1.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="../../../jquery/jquery-ui.min.js"></script>
 </head>
 <body>
@@ -27,8 +27,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":42,"i2":42,"i3":42,"i4":42,"i5":42,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":42,"i18":42,"i19":10,"i20":42,"i21":10,"i22":10,"i23":42,"i24":10,"i25":10,"i26":10,"i27":42,"i28":42,"i29":42,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -205,7 +205,7 @@ implements java.io.Closeable</pre>
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -219,88 +219,16 @@ implements java.io.Closeable</pre>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress(byte%5B%5D,int,int,int,int,int,int,int)">decompress</a></span>&#8203;(byte[]&nbsp;dstBuf,
-          int&nbsp;x,
-          int&nbsp;y,
-          int&nbsp;desiredWidth,
-          int&nbsp;pitch,
-          int&nbsp;desiredHeight,
-          int&nbsp;pixelFormat,
-          int&nbsp;flags)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>,
- <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and
- <a href="#decompress8(byte%5B%5D,int,int,int,int)"><code>decompress8(byte[], int, int, int, int)</code></a> instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress(int%5B%5D,int,int,int,int,int,int,int)">decompress</a></span>&#8203;(int[]&nbsp;dstBuf,
-          int&nbsp;x,
-          int&nbsp;y,
-          int&nbsp;desiredWidth,
-          int&nbsp;stride,
-          int&nbsp;desiredHeight,
-          int&nbsp;pixelFormat,
-          int&nbsp;flags)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompress8(int%5B%5D,int,int,int,int)"><code>decompress8(int[], int, int, int, int)</code></a>
- instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>java.awt.image.BufferedImage</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress(int,int,int,int)">decompress</a></span>&#8203;(int&nbsp;desiredWidth,
-          int&nbsp;desiredHeight,
-          int&nbsp;bufferedImageType,
-          int&nbsp;flags)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompress8(int)"><code>decompress8(int)</code></a> instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>byte[]</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress(int,int,int,int,int)">decompress</a></span>&#8203;(int&nbsp;desiredWidth,
-          int&nbsp;pitch,
-          int&nbsp;desiredHeight,
-          int&nbsp;pixelFormat,
-          int&nbsp;flags)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>,
- <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and
- <a href="#decompress8(int,int)"><code>decompress8(int, int)</code></a> instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress(java.awt.image.BufferedImage,int)">decompress</a></span>&#8203;(java.awt.image.BufferedImage&nbsp;dstImage,
-          int&nbsp;flags)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompress8(java.awt.image.BufferedImage)"><code>decompress8(BufferedImage)</code></a> instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i6" class="altColor">
 <td class="colFirst"><code>short[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress12(int,int)">decompress12</a></span>&#8203;(int&nbsp;pitch,
             int&nbsp;pixelFormat)</code></th>
 <td class="colLast">
-<div class="block">Decompress the 12-bit-per-sample JPEG source image associated with this
- decompressor instance and return a buffer containing a 12-bit-per-sample
- packed-pixel decompressed image.</div>
+<div class="block">Decompress the JPEG source image with 9 to 12 bits per sample associated
+ with this decompressor instance and return a buffer containing a
+ packed-pixel decompressed image with the same data precision.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress12(short%5B%5D,int,int,int,int)">decompress12</a></span>&#8203;(short[]&nbsp;dstBuf,
             int&nbsp;x,
@@ -308,22 +236,23 @@ implements java.io.Closeable</pre>
             int&nbsp;pitch,
             int&nbsp;pixelFormat)</code></th>
 <td class="colLast">
-<div class="block">Decompress the 12-bit-per-sample JPEG source image associated with this
- decompressor instance and output a 12-bit-per-sample packed-pixel
- grayscale, RGB, or CMYK image to the given destination buffer.</div>
+<div class="block">Decompress the JPEG source image with 9 to 12 bits per sample associated
+ with this decompressor instance and output a packed-pixel grayscale, RGB,
+ or CMYK image with the same data precision to the given destination
+ buffer.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>short[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress16(int,int)">decompress16</a></span>&#8203;(int&nbsp;pitch,
             int&nbsp;pixelFormat)</code></th>
 <td class="colLast">
-<div class="block">Decompress the 16-bit-per-sample JPEG source image associated with this
- decompressor instance and return a buffer containing a 16-bit-per-sample
- packed-pixel decompressed image.</div>
+<div class="block">Decompress the JPEG source image with 13 to 16 bits per sample associated
+ with this decompressor instance and return a buffer containing a
+ packed-pixel decompressed image with the same data precision.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress16(short%5B%5D,int,int,int,int)">decompress16</a></span>&#8203;(short[]&nbsp;dstBuf,
             int&nbsp;x,
@@ -331,13 +260,13 @@ implements java.io.Closeable</pre>
             int&nbsp;pitch,
             int&nbsp;pixelFormat)</code></th>
 <td class="colLast">
-<div class="block">Decompress the 16-bit-per-sample lossless JPEG source image associated
- with this decompressor instance and output a 16-bit-per-sample
- packed-pixel grayscale, RGB, or CMYK image to the given destination
+<div class="block">Decompress the JPEG source image with 13 to 16 bits per sample associated
+ with this decompressor instance and output a packed-pixel grayscale, RGB,
+ or CMYK image with the same data precision to the given destination
  buffer.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress8(byte%5B%5D,int,int,int,int)">decompress8</a></span>&#8203;(byte[]&nbsp;dstBuf,
            int&nbsp;x,
@@ -345,13 +274,13 @@ implements java.io.Closeable</pre>
            int&nbsp;pitch,
            int&nbsp;pixelFormat)</code></th>
 <td class="colLast">
-<div class="block">Decompress the 8-bit-per-sample JPEG source image or decode the planar YUV
- source image associated with this decompressor instance and output an
- 8-bit-per-sample packed-pixel grayscale, RGB, or CMYK image to the given
- destination buffer.</div>
+<div class="block">Decompress the JPEG source image with 2 to 8 bits per sample, or decode
+ the 8-bit-per-sample planar YUV source image, associated with this
+ decompressor instance and output a packed-pixel grayscale, RGB, or CMYK
+ image with the same data precision to the given destination buffer.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.awt.image.BufferedImage</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress8(int)">decompress8</a></span>&#8203;(int&nbsp;bufferedImageType)</code></th>
 <td class="colLast">
@@ -361,7 +290,7 @@ implements java.io.Closeable</pre>
  packed-pixel decompressed/decoded image.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress8(int%5B%5D,int,int,int,int)">decompress8</a></span>&#8203;(int[]&nbsp;dstBuf,
            int&nbsp;x,
@@ -375,17 +304,18 @@ implements java.io.Closeable</pre>
  destination buffer.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress8(int,int)">decompress8</a></span>&#8203;(int&nbsp;pitch,
            int&nbsp;pixelFormat)</code></th>
 <td class="colLast">
-<div class="block">Decompress the 8-bit-per-sample JPEG source image or decode the planar YUV
- source image associated with this decompressor instance and return a
- buffer containing an 8-bit-per-sample packed-pixel decompressed image.</div>
+<div class="block">Decompress the JPEG source image with 2 to 8 bits per sample, or decode
+ the 8-bit-per-sample planar YUV source image, associated with this
+ decompressor instance and return a buffer containing a packed-pixel
+ decompressed image with the same data precision.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompress8(java.awt.image.BufferedImage)">decompress8</a></span>&#8203;(java.awt.image.BufferedImage&nbsp;dstImage)</code></th>
 <td class="colLast">
@@ -395,7 +325,7 @@ implements java.io.Closeable</pre>
  <code>BufferedImage</code> instance.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompressToYUV(int)">decompressToYUV</a></span>&#8203;(int&nbsp;align)</code></th>
 <td class="colLast">
@@ -404,7 +334,7 @@ implements java.io.Closeable</pre>
  and return a <a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg"><code>YUVImage</code></a> instance containing the decompressed image.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompressToYUV(int%5B%5D)">decompressToYUV</a></span>&#8203;(int[]&nbsp;strides)</code></th>
 <td class="colLast">
@@ -414,31 +344,7 @@ implements java.io.Closeable</pre>
  decompressed image planes.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
-<td class="colFirst"><code><a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompressToYUV(int,int%5B%5D,int,int)">decompressToYUV</a></span>&#8203;(int&nbsp;desiredWidth,
-               int[]&nbsp;strides,
-               int&nbsp;desiredHeight,
-               int&nbsp;flags)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompressToYUV(int%5B%5D)"><code>decompressToYUV(int[])</code></a> instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i18" class="altColor">
-<td class="colFirst"><code><a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompressToYUV(int,int,int,int)">decompressToYUV</a></span>&#8203;(int&nbsp;desiredWidth,
-               int&nbsp;align,
-               int&nbsp;desiredHeight,
-               int&nbsp;flags)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompressToYUV(int)"><code>decompressToYUV(int)</code></a> instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i19" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompressToYUV(org.libjpegturbo.turbojpeg.YUVImage)">decompressToYUV</a></span>&#8203;(<a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a>&nbsp;dstImage)</code></th>
 <td class="colLast">
@@ -447,39 +353,19 @@ implements java.io.Closeable</pre>
  it in the given <a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg"><code>YUVImage</code></a> instance.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decompressToYUV(org.libjpegturbo.turbojpeg.YUVImage,int)">decompressToYUV</a></span>&#8203;(<a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a>&nbsp;dstImage,
-               int&nbsp;flags)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompressToYUV(org.libjpegturbo.turbojpeg.YUVImage)"><code>decompressToYUV(YUVImage)</code></a> instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i21" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#finalize()">finalize</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(int)">get</a></span>&#8203;(int&nbsp;param)</code></th>
 <td class="colLast">
 <div class="block">Get the value of a decompression parameter.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getColorspace()">getColorspace</a></span>()</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <code><a href="#get(int)"><code>get</code></a>(<a href="TJ.html#PARAM_COLORSPACE"><code>TJ.PARAM_COLORSPACE</code></a>)</code>
- instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i24" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getHeight()">getHeight</a></span>()</code></th>
 <td class="colLast">
@@ -487,14 +373,34 @@ implements java.io.Closeable</pre>
  decompressor instance.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i16" class="altColor">
+<td class="colFirst"><code>byte[]</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getICCProfile()">getICCProfile</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Retrieve the ICC (International Color Consortium) color management profile
+ (if any) that was previously extracted from the JPEG image associated with
+ this decompressor instance (see <a href="#setSourceImage(byte%5B%5D,int)"><code>setSourceImage(byte[], int)</code></a>), and
+ return a buffer containing the ICC profile.</div>
+</td>
+</tr>
+<tr id="i17" class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getICCSize()">getICCSize</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns the size of the ICC profile (if any) that was previously extracted
+ from the JPEG image associated with this decompressor instance
+ (see <a href="#setSourceImage(byte%5B%5D,int)"><code>setSourceImage(byte[], int)</code></a>), or 0 if there is no ICC
+ profile to retrieve.</div>
+</td>
+</tr>
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getJPEGBuf()">getJPEGBuf</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns the JPEG buffer associated with this decompressor instance.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getJPEGSize()">getJPEGSize</a></span>()</code></th>
 <td class="colLast">
@@ -502,39 +408,7 @@ implements java.io.Closeable</pre>
  decompressor instance.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getScaledHeight(int,int)">getScaledHeight</a></span>&#8203;(int&nbsp;desiredWidth,
-               int&nbsp;desiredHeight)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a> and
- <a href="TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a> instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i28" class="altColor">
-<td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getScaledWidth(int,int)">getScaledWidth</a></span>&#8203;(int&nbsp;desiredWidth,
-              int&nbsp;desiredHeight)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a> and
- <a href="TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a> instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i29" class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSubsamp()">getSubsamp</a></span>()</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <code><a href="#get(int)"><code>get</code></a>(<a href="TJ.html#PARAM_SUBSAMP"><code>TJ.PARAM_SUBSAMP</code></a>)</code>
- instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i30" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getWidth()">getWidth</a></span>()</code></th>
 <td class="colLast">
@@ -542,7 +416,22 @@ implements java.io.Closeable</pre>
  decompressor instance.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i21" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#saveImage(java.lang.String,java.lang.Object,int,int,int,int,int,int)">saveImage</a></span>&#8203;(java.lang.String&nbsp;fileName,
+         java.lang.Object&nbsp;image,
+         int&nbsp;x,
+         int&nbsp;y,
+         int&nbsp;width,
+         int&nbsp;pitch,
+         int&nbsp;height,
+         int&nbsp;pixelFormat)</code></th>
+<td class="colLast">
+<div class="block">Save a packed-pixel image with 2 to 16 bits of data precision per sample
+ from memory to disk.</div>
+</td>
+</tr>
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#set(int,int)">set</a></span>&#8203;(int&nbsp;param,
    int&nbsp;value)</code></th>
@@ -550,7 +439,7 @@ implements java.io.Closeable</pre>
 <div class="block">Set the value of a decompression parameter.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setCroppingRegion(java.awt.Rectangle)">setCroppingRegion</a></span>&#8203;(java.awt.Rectangle&nbsp;croppingRegion)</code></th>
 <td class="colLast">
@@ -558,14 +447,14 @@ implements java.io.Closeable</pre>
  into a packed-pixel image.</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)">setScalingFactor</a></span>&#8203;(<a href="TJScalingFactor.html" title="class in org.libjpegturbo.turbojpeg">TJScalingFactor</a>&nbsp;scalingFactor)</code></th>
 <td class="colLast">
 <div class="block">Set the scaling factor for subsequent lossy decompression operations.</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setSourceImage(byte%5B%5D,int)">setSourceImage</a></span>&#8203;(byte[]&nbsp;jpegImage,
               int&nbsp;imageSize)</code></th>
@@ -575,7 +464,7 @@ implements java.io.Closeable</pre>
  <code>jpegImage</code> with this decompressor instance.</div>
 </td>
 </tr>
-<tr id="i35" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setSourceImage(org.libjpegturbo.turbojpeg.YUVImage)">setSourceImage</a></span>&#8203;(<a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a>&nbsp;srcImage)</code></th>
 <td class="colLast">
@@ -720,7 +609,11 @@ implements java.io.Closeable</pre>
  when decompressing video streams in which all frames share the same
  quantization and Huffman tables.  If a JPEG image is passed to this
  method, then the <a href="TJ.html#PARAM_STOPONWARNING"><code>parameters</code></a> that describe
- the JPEG image will be set when the method returns.</div>
+ the JPEG image will be set when the method returns.  If a JPEG image is
+ passed to this method and <a href="TJ.html#PARAM_SAVEMARKERS"><code>TJ.PARAM_SAVEMARKERS</code></a> is set to
+ <code>2</code> or <code>4</code>, then the ICC profile (if any) will be
+ extracted from the JPEG image.  (<a href="#getICCProfile()"><code>getICCProfile()</code></a> can then be used
+ to retrieve the profile.)</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>jpegImage</code> - buffer containing a JPEG source image or tables-only
@@ -817,6 +710,47 @@ implements java.io.Closeable</pre>
 </dl>
 </li>
 </ul>
+<a id="getICCProfile()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getICCProfile</h4>
+<pre class="methodSignature">public&nbsp;byte[]&nbsp;getICCProfile()
+                     throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
+<div class="block">Retrieve the ICC (International Color Consortium) color management profile
+ (if any) that was previously extracted from the JPEG image associated with
+ this decompressor instance (see <a href="#setSourceImage(byte%5B%5D,int)"><code>setSourceImage(byte[], int)</code></a>), and
+ return a buffer containing the ICC profile.  Once the ICC profile is
+ retrieved, it must be re-extracted before it can be retrieved again.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a buffer containing the ICC profile</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a id="getICCSize()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getICCSize</h4>
+<pre class="methodSignature">public&nbsp;int&nbsp;getICCSize()</pre>
+<div class="block">Returns the size of the ICC profile (if any) that was previously extracted
+ from the JPEG image associated with this decompressor instance
+ (see <a href="#setSourceImage(byte%5B%5D,int)"><code>setSourceImage(byte[], int)</code></a>), or 0 if there is no ICC
+ profile to retrieve.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the size of the ICC profile (if any) that was previously extracted
+ from the JPEG image associated with this decompressor instance
+ (see <a href="#setSourceImage(byte%5B%5D,int)"><code>setSourceImage(byte[], int)</code></a>), or 0 if there is no ICC
+ profile to retrieve.</dd>
+</dl>
+</li>
+</ul>
 <a id="setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)">
 <!--   -->
 </a>
@@ -838,8 +772,8 @@ implements java.io.Closeable</pre>
  with the JPEG image width and height (see <a href="#getWidth()"><code>getWidth()</code></a> and
  <a href="#getHeight()"><code>getHeight()</code></a>.)  When decompressing into a planar YUV image, an
  intermediate buffer copy will be performed if the width or height of the
- scaled destination image is not an even multiple of the MCU block size
- (see <a href="TJ.html#getMCUWidth(int)"><code>TJ.getMCUWidth()</code></a> and <a href="TJ.html#getMCUHeight(int)"><code>TJ.getMCUHeight()</code></a>.)  Note that decompression scaling is not available
+ scaled destination image is not an even multiple of the iMCU size (see
+ <a href="TJ.html#getMCUWidth(int)"><code>TJ.getMCUWidth()</code></a> and <a href="TJ.html#getMCUHeight(int)"><code>TJ.getMCUHeight()</code></a>.)  Note that decompression scaling is not available
  (and the specified scaling factor is ignored) when decompressing lossless
  JPEG images (see <a href="TJ.html#PARAM_LOSSLESS"><code>TJ.PARAM_LOSSLESS</code></a>), since the IDCT algorithm is
  not used with those images.  Note also that <a href="TJ.html#PARAM_FASTDCT"><code>TJ.PARAM_FASTDCT</code></a> is
@@ -862,46 +796,18 @@ implements java.io.Closeable</pre>
 <dd><code>croppingRegion</code> - <code>java.awt.Rectangle</code> instance that
  specifies a subregion of the JPEG image to decompress, or
  <a href="TJ.html#UNCROPPED"><code>TJ.UNCROPPED</code></a> for no cropping.  The left boundary of the cropping
- region must be evenly divisible by the scaled MCU block width, which can
- be determined by calling <a href="TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a> with the specified scaling factor (see
- <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>) and the MCU block width
- (see <a href="TJ.html#getMCUWidth(int)"><code>TJ.getMCUWidth()</code></a>) for the level of chrominance
+ region must be evenly divisible by the scaled iMCU width, which can be
+ determined by calling <a href="TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a> with the specified scaling factor (see
+ <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>) and the iMCU width (see
+ <a href="TJ.html#getMCUWidth(int)"><code>TJ.getMCUWidth()</code></a>) for the level of chrominance
  subsampling in the JPEG image (see <a href="TJ.html#PARAM_SUBSAMP"><code>TJ.PARAM_SUBSAMP</code></a>.)  The
  cropping region should be specified relative to the scaled image
  dimensions.  Unless <code>croppingRegion</code> is <a href="TJ.html#UNCROPPED"><code>TJ.UNCROPPED</code></a>,
- the JPEG header must be read (see <a href="#setSourceImage(byte%5B%5D,int)"><code>setSourceImage(byte[], int)</code></a>
+ the JPEG header must be read (see <a href="#setSourceImage(byte%5B%5D,int)"><code>setSourceImage(byte[], int)</code></a>)
  prior to calling this method.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
 </dl>
-</li>
-</ul>
-<a id="getSubsamp()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getSubsamp</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;int&nbsp;getSubsamp()</pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <code><a href="#get(int)"><code>get</code></a>(<a href="TJ.html#PARAM_SUBSAMP"><code>TJ.PARAM_SUBSAMP</code></a>)</code>
- instead.</div>
-</div>
-</li>
-</ul>
-<a id="getColorspace()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getColorspace</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;int&nbsp;getColorspace()</pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <code><a href="#get(int)"><code>get</code></a>(<a href="TJ.html#PARAM_COLORSPACE"><code>TJ.PARAM_COLORSPACE</code></a>)</code>
- instead.</div>
-</div>
 </li>
 </ul>
 <a id="getJPEGBuf()">
@@ -934,36 +840,6 @@ public&nbsp;int&nbsp;getColorspace()</pre>
 </dl>
 </li>
 </ul>
-<a id="getScaledWidth(int,int)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getScaledWidth</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;int&nbsp;getScaledWidth&#8203;(int&nbsp;desiredWidth,
-                          int&nbsp;desiredHeight)</pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a> and
- <a href="TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a> instead.</div>
-</div>
-</li>
-</ul>
-<a id="getScaledHeight(int,int)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getScaledHeight</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;int&nbsp;getScaledHeight&#8203;(int&nbsp;desiredWidth,
-                           int&nbsp;desiredHeight)</pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a> and
- <a href="TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a> instead.</div>
-</div>
-</li>
-</ul>
 <a id="decompress8(byte[],int,int,int,int)">
 <!--   -->
 </a>
@@ -976,13 +852,13 @@ public&nbsp;int&nbsp;getScaledHeight&#8203;(int&nbsp;desiredWidth,
                         int&nbsp;pitch,
                         int&nbsp;pixelFormat)
                  throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="block">Decompress the 8-bit-per-sample JPEG source image or decode the planar YUV
- source image associated with this decompressor instance and output an
- 8-bit-per-sample packed-pixel grayscale, RGB, or CMYK image to the given
- destination buffer.
- <p>
- NOTE: The destination image is fully recoverable if this method throws a
- non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless <a href="TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a> is
+<div class="block">Decompress the JPEG source image with 2 to 8 bits per sample, or decode
+ the 8-bit-per-sample planar YUV source image, associated with this
+ decompressor instance and output a packed-pixel grayscale, RGB, or CMYK
+ image with the same data precision to the given destination buffer.
+
+ <p>NOTE: The destination image is fully recoverable if this method throws
+ a non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless <a href="TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a> is
  set.)</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1011,7 +887,7 @@ public&nbsp;int&nbsp;getScaledHeight&#8203;(int&nbsp;desiredWidth,
  <a href="TJ.html#getPixelSize(int)"><code>TJ.getPixelSize</code></a>(pixelFormat)</code>.)  However,
  you can also use this parameter to specify the row alignment/padding of
  the destination image, to skip rows, or to decompress/decode into a
- specific region of a larger image.  NOTE: if the source image is a lossy
+ specific region of a larger image.  NOTE: If the source image is a lossy
  JPEG image, then <code>destinationWidth</code> is either the scaled JPEG
  width (see <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>,
  <a href="TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a>, and
@@ -1026,33 +902,6 @@ public&nbsp;int&nbsp;getScaledHeight&#8203;(int&nbsp;desiredWidth,
 </dl>
 </li>
 </ul>
-<a id="decompress(byte[],int,int,int,int,int,int,int)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>decompress</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;void&nbsp;decompress&#8203;(byte[]&nbsp;dstBuf,
-                       int&nbsp;x,
-                       int&nbsp;y,
-                       int&nbsp;desiredWidth,
-                       int&nbsp;pitch,
-                       int&nbsp;desiredHeight,
-                       int&nbsp;pixelFormat,
-                       int&nbsp;flags)
-                throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>,
- <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and
- <a href="#decompress8(byte%5B%5D,int,int,int,int)"><code>decompress8(byte[], int, int, int, int)</code></a> instead.</div>
-</div>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
-</dl>
-</li>
-</ul>
 <a id="decompress8(int,int)">
 <!--   -->
 </a>
@@ -1062,9 +911,10 @@ public&nbsp;void&nbsp;decompress&#8203;(byte[]&nbsp;dstBuf,
 <pre class="methodSignature">public&nbsp;byte[]&nbsp;decompress8&#8203;(int&nbsp;pitch,
                           int&nbsp;pixelFormat)
                    throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="block">Decompress the 8-bit-per-sample JPEG source image or decode the planar YUV
- source image associated with this decompressor instance and return a
- buffer containing an 8-bit-per-sample packed-pixel decompressed image.</div>
+<div class="block">Decompress the JPEG source image with 2 to 8 bits per sample, or decode
+ the 8-bit-per-sample planar YUV source image, associated with this
+ decompressor instance and return a buffer containing a packed-pixel
+ decompressed image with the same data precision.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>pitch</code> - see
@@ -1072,32 +922,8 @@ public&nbsp;void&nbsp;decompress&#8203;(byte[]&nbsp;dstBuf,
 <dd><code>pixelFormat</code> - pixel format of the decompressed image (one of
  <a href="TJ.html#PF_RGB"><code>TJ.PF_*</code></a>)</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a buffer containing an 8-bit-per-sample packed-pixel decompressed
- image.</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
-</dl>
-</li>
-</ul>
-<a id="decompress(int,int,int,int,int)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>decompress</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;byte[]&nbsp;decompress&#8203;(int&nbsp;desiredWidth,
-                         int&nbsp;pitch,
-                         int&nbsp;desiredHeight,
-                         int&nbsp;pixelFormat,
-                         int&nbsp;flags)
-                  throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>,
- <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and
- <a href="#decompress8(int,int)"><code>decompress8(int, int)</code></a> instead.</div>
-</div>
-<dl>
+<dd>a buffer containing a packed-pixel decompressed image with 2 to 8
+ bits of data precision per sample.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
 </dl>
@@ -1115,12 +941,13 @@ public&nbsp;byte[]&nbsp;decompress&#8203;(int&nbsp;desiredWidth,
                          int&nbsp;pitch,
                          int&nbsp;pixelFormat)
                   throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="block">Decompress the 12-bit-per-sample JPEG source image associated with this
- decompressor instance and output a 12-bit-per-sample packed-pixel
- grayscale, RGB, or CMYK image to the given destination buffer.
- <p>
- NOTE: The destination image is fully recoverable if this method throws a
- non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless <a href="TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a> is
+<div class="block">Decompress the JPEG source image with 9 to 12 bits per sample associated
+ with this decompressor instance and output a packed-pixel grayscale, RGB,
+ or CMYK image with the same data precision to the given destination
+ buffer.
+
+ <p>NOTE: The destination image is fully recoverable if this method throws
+ a non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless <a href="TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a> is
  set.)</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1150,7 +977,7 @@ public&nbsp;byte[]&nbsp;decompress&#8203;(int&nbsp;desiredWidth,
  <a href="TJ.html#getPixelSize(int)"><code>TJ.getPixelSize</code></a>(pixelFormat)</code>.)  However,
  you can also use this parameter to specify the row alignment/padding of
  the destination image, to skip rows, or to decompress into a specific
- region of a larger image.  NOTE: if the source image is a lossy JPEG
+ region of a larger image.  NOTE: If the source image is a lossy JPEG
  image, then <code>destinationWidth</code> is either the scaled JPEG width
  (see <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>,
  <a href="TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a>, and
@@ -1174,9 +1001,9 @@ public&nbsp;byte[]&nbsp;decompress&#8203;(int&nbsp;desiredWidth,
 <pre class="methodSignature">public&nbsp;short[]&nbsp;decompress12&#8203;(int&nbsp;pitch,
                             int&nbsp;pixelFormat)
                      throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="block">Decompress the 12-bit-per-sample JPEG source image associated with this
- decompressor instance and return a buffer containing a 12-bit-per-sample
- packed-pixel decompressed image.</div>
+<div class="block">Decompress the JPEG source image with 9 to 12 bits per sample associated
+ with this decompressor instance and return a buffer containing a
+ packed-pixel decompressed image with the same data precision.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>pitch</code> - see
@@ -1184,8 +1011,8 @@ public&nbsp;byte[]&nbsp;decompress&#8203;(int&nbsp;desiredWidth,
 <dd><code>pixelFormat</code> - pixel format of the decompressed image (one of
  <a href="TJ.html#PF_RGB"><code>TJ.PF_*</code></a>)</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a buffer containing an 8-bit-per-sample packed-pixel decompressed
- image.</dd>
+<dd>a buffer containing a packed-pixel decompressed image with 9 to 12
+ bits of data precision per sample.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
 </dl>
@@ -1203,13 +1030,13 @@ public&nbsp;byte[]&nbsp;decompress&#8203;(int&nbsp;desiredWidth,
                          int&nbsp;pitch,
                          int&nbsp;pixelFormat)
                   throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="block">Decompress the 16-bit-per-sample lossless JPEG source image associated
- with this decompressor instance and output a 16-bit-per-sample
- packed-pixel grayscale, RGB, or CMYK image to the given destination
+<div class="block">Decompress the JPEG source image with 13 to 16 bits per sample associated
+ with this decompressor instance and output a packed-pixel grayscale, RGB,
+ or CMYK image with the same data precision to the given destination
  buffer.
- <p>
- NOTE: The destination image is fully recoverable if this method throws a
- non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless <a href="TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a> is
+
+ <p>NOTE: The destination image is fully recoverable if this method throws
+ a non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless <a href="TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a> is
  set.)</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1248,9 +1075,9 @@ public&nbsp;byte[]&nbsp;decompress&#8203;(int&nbsp;desiredWidth,
 <pre class="methodSignature">public&nbsp;short[]&nbsp;decompress16&#8203;(int&nbsp;pitch,
                             int&nbsp;pixelFormat)
                      throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="block">Decompress the 16-bit-per-sample JPEG source image associated with this
- decompressor instance and return a buffer containing a 16-bit-per-sample
- packed-pixel decompressed image.</div>
+<div class="block">Decompress the JPEG source image with 13 to 16 bits per sample associated
+ with this decompressor instance and return a buffer containing a
+ packed-pixel decompressed image with the same data precision.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>pitch</code> - see
@@ -1258,8 +1085,8 @@ public&nbsp;byte[]&nbsp;decompress&#8203;(int&nbsp;desiredWidth,
 <dd><code>pixelFormat</code> - pixel format of the decompressed image (one of
  <a href="TJ.html#PF_RGB"><code>TJ.PF_*</code></a>)</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a buffer containing an 8-bit-per-sample packed-pixel decompressed
- image.</dd>
+<dd>a buffer containing a packed-pixel decompressed image with 13 to
+ 16 bits of data precision per sample.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
 </dl>
@@ -1279,9 +1106,9 @@ public&nbsp;byte[]&nbsp;decompress&#8203;(int&nbsp;desiredWidth,
  decompression but leaves out the color conversion step, so a planar YUV
  image is generated instead of a packed-pixel image.  This method cannot be
  used to decompress JPEG source images with the CMYK or YCCK colorspace.
- <p>
- NOTE: The planar YUV destination image is fully recoverable if this method
- throws a non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless
+
+ <p>NOTE: The planar YUV destination image is fully recoverable if this
+ method throws a non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless
  <a href="TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a> is set.)</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1290,25 +1117,6 @@ public&nbsp;byte[]&nbsp;decompress&#8203;(int&nbsp;desiredWidth,
  <a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg"><code>YUVImage</code></a> instance must match that of the JPEG image, and the width
  and height specified in the <a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg"><code>YUVImage</code></a> instance must match the
  scaled JPEG width and height (see <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, <a href="TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a>, <a href="#getWidth()"><code>getWidth()</code></a>, and <a href="#getHeight()"><code>getHeight()</code></a>.)</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
-</dl>
-</li>
-</ul>
-<a id="decompressToYUV(org.libjpegturbo.turbojpeg.YUVImage,int)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>decompressToYUV</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;void&nbsp;decompressToYUV&#8203;(<a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a>&nbsp;dstImage,
-                            int&nbsp;flags)
-                     throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompressToYUV(org.libjpegturbo.turbojpeg.YUVImage)"><code>decompressToYUV(YUVImage)</code></a> instead.</div>
-</div>
-<dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
 </dl>
@@ -1346,27 +1154,6 @@ public&nbsp;void&nbsp;decompressToYUV&#8203;(<a href="YUVImage.html" title="clas
 </dl>
 </li>
 </ul>
-<a id="decompressToYUV(int,int[],int,int)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>decompressToYUV</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;<a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a>&nbsp;decompressToYUV&#8203;(int&nbsp;desiredWidth,
-                                int[]&nbsp;strides,
-                                int&nbsp;desiredHeight,
-                                int&nbsp;flags)
-                         throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompressToYUV(int%5B%5D)"><code>decompressToYUV(int[])</code></a> instead.</div>
-</div>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
-</dl>
-</li>
-</ul>
 <a id="decompressToYUV(int)">
 <!--   -->
 </a>
@@ -1395,27 +1182,6 @@ public&nbsp;<a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">
 </dl>
 </li>
 </ul>
-<a id="decompressToYUV(int,int,int,int)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>decompressToYUV</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;<a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a>&nbsp;decompressToYUV&#8203;(int&nbsp;desiredWidth,
-                                int&nbsp;align,
-                                int&nbsp;desiredHeight,
-                                int&nbsp;flags)
-                         throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompressToYUV(int)"><code>decompressToYUV(int)</code></a> instead.</div>
-</div>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
-</dl>
-</li>
-</ul>
 <a id="decompress8(int[],int,int,int,int)">
 <!--   -->
 </a>
@@ -1432,9 +1198,9 @@ public&nbsp;<a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">
  source image associated with this decompressor instance and output an
  8-bit-per-sample packed-pixel grayscale, RGB, or CMYK image to the given
  destination buffer.
- <p>
- NOTE: The destination image is fully recoverable if this method throws a
- non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless <a href="TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a>
+
+ <p>NOTE: The destination image is fully recoverable if this method throws
+ a non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless <a href="TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a>
  is set.)</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1460,7 +1226,7 @@ public&nbsp;<a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">
  should be set to <code>destinationWidth</code>.  (Setting this parameter
  to 0 is the equivalent of setting it to <code>destinationWidth</code>.)
  However, you can also use this parameter to skip rows or to
- decompress/decode into a specific region of a larger image.  NOTE: if the
+ decompress/decode into a specific region of a larger image.  NOTE: If the
  source image is a lossy JPEG image, then <code>destinationWidth</code> is
  either the scaled JPEG width (see <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, <a href="TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a>, and <a href="#getWidth()"><code>getWidth()</code></a>) or the width of the
  cropping region (see <a href="#setCroppingRegion(java.awt.Rectangle)"><code>setCroppingRegion()</code></a>.)  If
@@ -1468,32 +1234,6 @@ public&nbsp;<a href="YUVImage.html" title="class in org.libjpegturbo.turbojpeg">
  <code>destinationWidth</code> is the width of the source image.</dd>
 <dd><code>pixelFormat</code> - pixel format of the decompressed/decoded image (one of
  <a href="TJ.html#PF_RGB"><code>TJ.PF_*</code></a>)</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
-</dl>
-</li>
-</ul>
-<a id="decompress(int[],int,int,int,int,int,int,int)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>decompress</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;void&nbsp;decompress&#8203;(int[]&nbsp;dstBuf,
-                       int&nbsp;x,
-                       int&nbsp;y,
-                       int&nbsp;desiredWidth,
-                       int&nbsp;stride,
-                       int&nbsp;desiredHeight,
-                       int&nbsp;pixelFormat,
-                       int&nbsp;flags)
-                throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompress8(int%5B%5D,int,int,int,int)"><code>decompress8(int[], int, int, int, int)</code></a>
- instead.</div>
-</div>
-<dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
 </dl>
@@ -1511,9 +1251,9 @@ public&nbsp;void&nbsp;decompress&#8203;(int[]&nbsp;dstBuf,
  source image associated with this decompressor instance and output an
  8-bit-per-sample packed-pixel decompressed/decoded image to the given
  <code>BufferedImage</code> instance.
- <p>
- NOTE: The destination image is fully recoverable if this method throws a
- non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless <a href="TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a>
+
+ <p>NOTE: The destination image is fully recoverable if this method throws
+ a non-fatal <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg"><code>TJException</code></a> (unless <a href="TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a>
  is set.)</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1528,25 +1268,6 @@ public&nbsp;void&nbsp;decompress&#8203;(int[]&nbsp;dstBuf,
  the source image is a YUV image or a lossless JPEG image, then the width
  and height of the <code>BufferedImage</code> instance must match the width
  and height of the source image.</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
-</dl>
-</li>
-</ul>
-<a id="decompress(java.awt.image.BufferedImage,int)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>decompress</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;void&nbsp;decompress&#8203;(java.awt.image.BufferedImage&nbsp;dstImage,
-                       int&nbsp;flags)
-                throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompress8(java.awt.image.BufferedImage)"><code>decompress8(BufferedImage)</code></a> instead.</div>
-</div>
-<dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
 </dl>
@@ -1577,22 +1298,56 @@ public&nbsp;void&nbsp;decompress&#8203;(java.awt.image.BufferedImage&nbsp;dstIma
 </dl>
 </li>
 </ul>
-<a id="decompress(int,int,int,int)">
+<a id="saveImage(java.lang.String,java.lang.Object,int,int,int,int,int,int)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>decompress</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;java.awt.image.BufferedImage&nbsp;decompress&#8203;(int&nbsp;desiredWidth,
-                                               int&nbsp;desiredHeight,
-                                               int&nbsp;bufferedImageType,
-                                               int&nbsp;flags)
-                                        throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="#set(int,int)"><code>set()</code></a>, <a href="#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="#decompress8(int)"><code>decompress8(int)</code></a> instead.</div>
-</div>
+<h4>saveImage</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;saveImage&#8203;(java.lang.String&nbsp;fileName,
+                      java.lang.Object&nbsp;image,
+                      int&nbsp;x,
+                      int&nbsp;y,
+                      int&nbsp;width,
+                      int&nbsp;pitch,
+                      int&nbsp;height,
+                      int&nbsp;pixelFormat)
+               throws <a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></pre>
+<div class="block">Save a packed-pixel image with 2 to 16 bits of data precision per sample
+ from memory to disk.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>fileName</code> - name of a file to which to save the packed-pixel image.
+ The image will be stored in Windows BMP or PBMPLUS (PPM/PGM) format,
+ depending on the file extension.  Windows BMP files require
+ 8-bit-per-sample data precision.  When saving a PBMPLUS file, the source
+ data precision (from 2 to 16 bits per sample) can be specified using
+ <a href="TJ.html#PARAM_PRECISION"><code>TJ.PARAM_PRECISION</code></a> and defaults to 8 if <a href="TJ.html#PARAM_PRECISION"><code>TJ.PARAM_PRECISION</code></a>
+ is unset.</dd>
+<dd><code>image</code> - buffer containing a packed-pixel RGB, grayscale, or CMYK
+ image to be saved.  The buffer is a <code>byte</code> array if the image
+ has 2 to 8 bits of data precision per sample and a <code>short</code>
+ array otherwise.</dd>
+<dd><code>x</code> - x offset (in pixels) of the region in the buffer from which to
+ save the packed-pixel image</dd>
+<dd><code>y</code> - y offset (in pixels) of the region in the buffer from which to
+ save the packed-pixel image</dd>
+<dd><code>width</code> - width (in pixels) of the region in the buffer from which to
+ save the packed-pixel image</dd>
+<dd><code>pitch</code> - samples per row in the packed-pixel buffer.  Setting this
+ parameter to 0 is the equivalent of setting it to <code>width *
+ <a href="TJ.html#getPixelSize(int)"><code>TJ.getPixelSize</code></a>(pixelFormat)</code>.</dd>
+<dd><code>height</code> - height (in pixels) of the region in the buffer from which to
+ save the packed-pixel image</dd>
+<dd><code>pixelFormat</code> - pixel format of the packed-pixel image (one of
+ <a href="TJ.html#PF_RGB"><code>TJ.PF_*</code></a>).  If this parameter is set to
+ <a href="TJ.html#PF_GRAY"><code>TJ.PF_GRAY</code></a>, then the image will be stored in PGM or
+ 8-bit-per-pixel (indexed color) BMP format.  Otherwise, the image will be
+ stored in PPM or 24-bit-per-pixel BMP format.  If this parameter is set to
+ <a href="TJ.html#PF_CMYK"><code>TJ.PF_CMYK</code></a>, then the CMYK pixels will be converted to RGB using a
+ quick &amp; dirty algorithm that is suitable only for testing purposes.
+ (Proper conversion between CMYK and other formats requires a color
+ management system.)</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="TJException.html" title="class in org.libjpegturbo.turbojpeg">TJException</a></code></dd>
 </dl>

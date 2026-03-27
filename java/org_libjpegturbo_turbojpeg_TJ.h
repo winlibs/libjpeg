@@ -51,6 +51,8 @@ extern "C" {
 #define org_libjpegturbo_turbojpeg_TJ_PF_ARGB 10L
 #undef org_libjpegturbo_turbojpeg_TJ_PF_CMYK
 #define org_libjpegturbo_turbojpeg_TJ_PF_CMYK 11L
+#undef org_libjpegturbo_turbojpeg_TJ_PF_UNKNOWN
+#define org_libjpegturbo_turbojpeg_TJ_PF_UNKNOWN -1L
 #undef org_libjpegturbo_turbojpeg_TJ_NUMCS
 #define org_libjpegturbo_turbojpeg_TJ_NUMCS 5L
 #undef org_libjpegturbo_turbojpeg_TJ_CS_RGB
@@ -111,20 +113,8 @@ extern "C" {
 #define org_libjpegturbo_turbojpeg_TJ_PARAM_MAXMEMORY 23L
 #undef org_libjpegturbo_turbojpeg_TJ_PARAM_MAXPIXELS
 #define org_libjpegturbo_turbojpeg_TJ_PARAM_MAXPIXELS 24L
-#undef org_libjpegturbo_turbojpeg_TJ_FLAG_BOTTOMUP
-#define org_libjpegturbo_turbojpeg_TJ_FLAG_BOTTOMUP 2L
-#undef org_libjpegturbo_turbojpeg_TJ_FLAG_FASTUPSAMPLE
-#define org_libjpegturbo_turbojpeg_TJ_FLAG_FASTUPSAMPLE 256L
-#undef org_libjpegturbo_turbojpeg_TJ_FLAG_FASTDCT
-#define org_libjpegturbo_turbojpeg_TJ_FLAG_FASTDCT 2048L
-#undef org_libjpegturbo_turbojpeg_TJ_FLAG_ACCURATEDCT
-#define org_libjpegturbo_turbojpeg_TJ_FLAG_ACCURATEDCT 4096L
-#undef org_libjpegturbo_turbojpeg_TJ_FLAG_STOPONWARNING
-#define org_libjpegturbo_turbojpeg_TJ_FLAG_STOPONWARNING 8192L
-#undef org_libjpegturbo_turbojpeg_TJ_FLAG_PROGRESSIVE
-#define org_libjpegturbo_turbojpeg_TJ_FLAG_PROGRESSIVE 16384L
-#undef org_libjpegturbo_turbojpeg_TJ_FLAG_LIMITSCANS
-#define org_libjpegturbo_turbojpeg_TJ_FLAG_LIMITSCANS 32768L
+#undef org_libjpegturbo_turbojpeg_TJ_PARAM_SAVEMARKERS
+#define org_libjpegturbo_turbojpeg_TJ_PARAM_SAVEMARKERS 25L
 #undef org_libjpegturbo_turbojpeg_TJ_NUMERR
 #define org_libjpegturbo_turbojpeg_TJ_NUMERR 2L
 #undef org_libjpegturbo_turbojpeg_TJ_ERR_WARNING

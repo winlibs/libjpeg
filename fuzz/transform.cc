@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2021-2023 D. R. Commander.  All Rights Reserved.
+ * Copyright (C) 2011, 2021-2026 D. R. Commander.  All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -26,26 +26,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <turbojpeg.h>
+#include "../src/turbojpeg.h"
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 
 
+static int dummyDCTFilter(short *coeffs, tjregion arrayRegion,
+                          tjregion planeRegion, int componentIndex,
+                          int transformIndex, tjtransform *transform)
+{
+  int i;
+
+  for (i = 0; i < arrayRegion.w * arrayRegion.h; i++)
+    coeffs[i] = -coeffs[i];
+  return 0;
+}
+
+
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
   tjhandle handle = NULL;
-  unsigned char *dstBufs[1] = { NULL };
-  size_t dstSizes[1] = { 0 }, maxBufSize;
-  int width = 0, height = 0, jpegSubsamp, i;
-  tjtransform transforms[1];
-#if defined(__has_feature) && __has_feature(memory_sanitizer)
-  char env[18] = "JSIMD_FORCENONE=1";
-
-  /* The libjpeg-turbo SIMD extensions produce false positives with
-     MemorySanitizer. */
-  putenv(env);
-#endif
+  unsigned char *dstBufs[2] = { NULL, NULL };
+  size_t dstSizes[2] = { 0, 0 }, maxBufSize, i;
+  int width = 0, height = 0, jpegSubsamp;
+  tjtransform transforms[2];
 
   if ((handle = tj3Init(TJINIT_TRANSFORM)) == NULL)
     goto bailout;
@@ -67,39 +72,43 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
   if (width < 1 || height < 1 || (uint64_t)width * height > 1048576)
     goto bailout;
 
-  tj3Set(handle, TJPARAM_SCANLIMIT, 500);
+  tj3Set(handle, TJPARAM_SCANLIMIT, 100);
 
   if (jpegSubsamp < 0 || jpegSubsamp >= TJ_NUMSAMP)
     jpegSubsamp = TJSAMP_444;
 
-  memset(&transforms[0], 0, sizeof(tjtransform));
+  memset(&transforms[0], 0, sizeof(tjtransform) * 2);
 
   transforms[0].op = TJXOP_NONE;
   transforms[0].options = TJXOPT_PROGRESSIVE | TJXOPT_COPYNONE;
-  dstBufs[0] =
-    (unsigned char *)malloc(tj3JPEGBufSize(width, height, jpegSubsamp));
-  if (!dstBufs[0])
+  dstSizes[0] = maxBufSize = tj3TransformBufSize(handle, &transforms[0]);
+  if (dstSizes[0] == 0 ||
+      (dstBufs[0] = (unsigned char *)tj3Alloc(dstSizes[0])) == NULL)
     goto bailout;
 
-  maxBufSize = tj3JPEGBufSize(width, height, jpegSubsamp);
+  if (size >= 34)
+    tj3SetICCProfile(handle, (unsigned char *)&data[2], 32);
 
   tj3Set(handle, TJPARAM_NOREALLOC, 1);
   if (tj3Transform(handle, data, size, 1, dstBufs, dstSizes,
                    transforms) == 0) {
-    /* Touch all of the output pixels in order to catch uninitialized reads
-       when using MemorySanitizer. */
-    int sum = 0;
+    /* Touch all of the output data in order to catch uninitialized reads when
+       using MemorySanitizer. */
+    size_t sum = 0;
 
     for (i = 0; i < dstSizes[0]; i++)
       sum += dstBufs[0][i];
 
-    /* Prevent the code above from being optimized out.  This test should
-       never be true, but the compiler doesn't know that. */
+    /* Prevent the sum above from being optimized out.  This test should never
+       be true, but the compiler doesn't know that. */
     if (sum > 255 * maxBufSize)
       goto bailout;
-  }
+  } else if (!strcmp(tj3GetErrorStr(handle),
+                     "Progressive JPEG image has more than 100 scans"))
+    goto bailout;
 
-  free(dstBufs[0]);
+
+  tj3Free(dstBufs[0]);
   dstBufs[0] = NULL;
 
   transforms[0].r.w = (height + 1) / 2;
@@ -107,69 +116,84 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
   transforms[0].op = TJXOP_TRANSPOSE;
   transforms[0].options = TJXOPT_GRAY | TJXOPT_CROP | TJXOPT_COPYNONE |
                           TJXOPT_OPTIMIZE;
-  dstBufs[0] =
-    (unsigned char *)malloc(tj3JPEGBufSize((height + 1) / 2, (width + 1) / 2,
-                                           jpegSubsamp));
-  if (!dstBufs[0])
+  dstSizes[0] = maxBufSize = tj3TransformBufSize(handle, &transforms[0]);
+  if (dstSizes[0] == 0 ||
+      (dstBufs[0] = (unsigned char *)tj3Alloc(dstSizes[0])) == NULL)
     goto bailout;
-
-  maxBufSize = tj3JPEGBufSize((height + 1) / 2, (width + 1) / 2, jpegSubsamp);
 
   if (tj3Transform(handle, data, size, 1, dstBufs, dstSizes,
                    transforms) == 0) {
-    int sum = 0;
+    size_t sum = 0;
 
     for (i = 0; i < dstSizes[0]; i++)
       sum += dstBufs[0][i];
 
     if (sum > 255 * maxBufSize)
       goto bailout;
-  }
+  } else if (!strcmp(tj3GetErrorStr(handle),
+                     "Progressive JPEG image has more than 100 scans"))
+    goto bailout;
 
-  free(dstBufs[0]);
+  tj3Free(dstBufs[0]);
   dstBufs[0] = NULL;
 
   transforms[0].op = TJXOP_ROT90;
   transforms[0].options = TJXOPT_TRIM | TJXOPT_ARITHMETIC;
-  dstBufs[0] =
-    (unsigned char *)malloc(tj3JPEGBufSize(height, width, jpegSubsamp));
-  if (!dstBufs[0])
+  dstSizes[0] = maxBufSize = tj3TransformBufSize(handle, &transforms[0]);
+  if (dstSizes[0] == 0 ||
+      (dstBufs[0] = (unsigned char *)tj3Alloc(dstSizes[0])) == NULL)
     goto bailout;
-
-  maxBufSize = tj3JPEGBufSize(height, width, jpegSubsamp);
 
   if (tj3Transform(handle, data, size, 1, dstBufs, dstSizes,
                    transforms) == 0) {
-    int sum = 0;
+    size_t sum = 0;
 
     for (i = 0; i < dstSizes[0]; i++)
       sum += dstBufs[0][i];
 
     if (sum > 255 * maxBufSize)
       goto bailout;
-  }
+  } else if (!strcmp(tj3GetErrorStr(handle),
+                     "Progressive JPEG image has more than 100 scans"))
+    goto bailout;
 
-  free(dstBufs[0]);
+  tj3Free(dstBufs[0]);
   dstBufs[0] = NULL;
 
   transforms[0].op = TJXOP_NONE;
   transforms[0].options = TJXOPT_PROGRESSIVE;
-  dstSizes[0] = 0;
+  transforms[0].customFilter = dummyDCTFilter;
+  if ((dstBufs[0] = (unsigned char *)tj3Alloc(100)) == NULL)
+    goto bailout;
+  dstSizes[0] = 100;
+
+  transforms[1].op = TJXOP_ROT180;
+  transforms[1].options = TJXOPT_TRIM;
+  if ((dstBufs[1] = (unsigned char *)tj3Alloc(50)) == NULL)
+    goto bailout;
+  dstSizes[1] = 50;
+
+  maxBufSize = dstSizes[0] + dstSizes[1];
 
   tj3Set(handle, TJPARAM_NOREALLOC, 0);
-  if (tj3Transform(handle, data, size, 1, dstBufs, dstSizes,
+  if (tj3Transform(handle, data, size, 2, dstBufs, dstSizes,
                    transforms) == 0) {
-    int sum = 0;
+    size_t sum = 0;
 
     for (i = 0; i < dstSizes[0]; i++)
       sum += dstBufs[0][i];
+    for (i = 0; i < dstSizes[1]; i++)
+      sum += dstBufs[1][i];
 
     if (sum > 255 * maxBufSize)
       goto bailout;
-  }
+  } else if (!strcmp(tj3GetErrorStr(handle),
+                     "Progressive JPEG image has more than 100 scans"))
+    goto bailout;
 
 bailout:
-  free(dstBufs[0]);
+  tj3Free(dstBufs[0]);
+  tj3Free(dstBufs[1]);
   tj3Destroy(handle);
   return 0;
 }

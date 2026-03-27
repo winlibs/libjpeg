@@ -25,6 +25,22 @@ JNIEXPORT jint JNICALL Java_org_libjpegturbo_turbojpeg_TJDecompressor_get
 
 /*
  * Class:     org_libjpegturbo_turbojpeg_TJDecompressor
+ * Method:    getICCProfile
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_org_libjpegturbo_turbojpeg_TJDecompressor_getICCProfile
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_libjpegturbo_turbojpeg_TJDecompressor
+ * Method:    getICCSize
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_libjpegturbo_turbojpeg_TJDecompressor_getICCSize
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_libjpegturbo_turbojpeg_TJDecompressor
  * Method:    init
  * Signature: ()V
  */
@@ -114,10 +130,10 @@ JNIEXPORT void JNICALL Java_org_libjpegturbo_turbojpeg_TJDecompressor_decodeYUV8
 /*
  * Class:     org_libjpegturbo_turbojpeg_TJDecompressor
  * Method:    saveImage
- * Signature: (ILjava/lang/String;Ljava/lang/Object;IIII)V
+ * Signature: (ILjava/lang/String;Ljava/lang/Object;IIIIII)V
  */
 JNIEXPORT void JNICALL Java_org_libjpegturbo_turbojpeg_TJDecompressor_saveImage
-  (JNIEnv *, jobject, jint, jstring, jobject, jint, jint, jint, jint);
+  (JNIEnv *, jobject, jint, jstring, jobject, jint, jint, jint, jint, jint, jint);
 
 #ifdef __cplusplus
 }

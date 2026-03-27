@@ -1,5 +1,5 @@
 ;
-; jsimdcpu.asm - SIMD instruction support check
+; SIMD instruction support check
 ;
 ; Copyright 2009 Pierre Ossman <ossman@cendio.se> for Cendio AB
 ; Copyright (C) 2016, D. R. Commander.
@@ -10,23 +10,18 @@
 ; Copyright (C) 1999-2006, MIYASAKA Masaru.
 ; For conditions of distribution and use, see copyright notice in jsimdext.inc
 ;
-; This file should be assembled with NASM (Netwide Assembler),
-; can *not* be assembled with Microsoft's MASM or any compatible
-; assembler (including Borland's Turbo Assembler).
-; NASM is available from http://nasm.sourceforge.net/ or
-; http://sourceforge.net/project/showfiles.php?group_id=6208
+; This file should be assembled with NASM (Netwide Assembler) or Yasm.
 
 %include "jsimdext.inc"
 
 ; --------------------------------------------------------------------------
     SECTION     SEG_TEXT
     BITS        64
-;
+
 ; Check if the CPU supports SIMD instructions
 ;
 ; GLOBAL(unsigned int)
 ; jpeg_simd_cpu_support(void)
-;
 
     align       32
     GLOBAL_FUNCTION(jpeg_simd_cpu_support)
@@ -56,16 +51,16 @@ EXTN(jpeg_simd_cpu_support):
     cpuid
     mov         rax, rbx                ; rax = Extended feature flags
 
-    test        rax, 1<<5               ; bit5:AVX2
+    test        rax, 1 << 5             ; bit5:AVX2
     jz          short .return
 
     ; Check for AVX2 O/S support
     mov         rax, 1
     xor         rcx, rcx
     cpuid
-    test        rcx, 1<<27
+    test        rcx, 1 << 27
     jz          short .return           ; O/S does not support XSAVE
-    test        rcx, 1<<28
+    test        rcx, 1 << 28
     jz          short .return           ; CPU does not support AVX2
 
     xor         rcx, rcx

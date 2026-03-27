@@ -1,7 +1,7 @@
 /*
- * Copyright (C)2011-2015, 2018, 2022-2023 D. R. Commander.
- *                                         All Rights Reserved.
- * Copyright (C)2015 Viktor Szathmáry.  All Rights Reserved.
+ * Copyright (C) 2011-2015, 2018, 2022-2024 D. R. Commander.
+ *                                          All Rights Reserved.
+ * Copyright (C) 2015 Viktor Szathmáry.  All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -110,7 +110,11 @@ public class TJDecompressor implements Closeable {
    * when decompressing video streams in which all frames share the same
    * quantization and Huffman tables.  If a JPEG image is passed to this
    * method, then the {@link TJ#PARAM_STOPONWARNING parameters} that describe
-   * the JPEG image will be set when the method returns.
+   * the JPEG image will be set when the method returns.  If a JPEG image is
+   * passed to this method and {@link TJ#PARAM_SAVEMARKERS} is set to
+   * <code>2</code> or <code>4</code>, then the ICC profile (if any) will be
+   * extracted from the JPEG image.  ({@link #getICCProfile()} can then be used
+   * to retrieve the profile.)
    *
    * @param jpegImage buffer containing a JPEG source image or tables-only
    * datastream.  This buffer is not modified.
@@ -209,6 +213,30 @@ public class TJDecompressor implements Closeable {
   public native int get(int param);
 
   /**
+   * Retrieve the ICC (International Color Consortium) color management profile
+   * (if any) that was previously extracted from the JPEG image associated with
+   * this decompressor instance (see {@link #setSourceImage(byte[], int)}), and
+   * return a buffer containing the ICC profile.  Once the ICC profile is
+   * retrieved, it must be re-extracted before it can be retrieved again.
+   *
+   * @return a buffer containing the ICC profile
+   */
+  public native byte[] getICCProfile() throws TJException;
+
+  /**
+   * Returns the size of the ICC profile (if any) that was previously extracted
+   * from the JPEG image associated with this decompressor instance
+   * (see {@link #setSourceImage(byte[], int)}), or 0 if there is no ICC
+   * profile to retrieve.
+   *
+   * @return the size of the ICC profile (if any) that was previously extracted
+   * from the JPEG image associated with this decompressor instance
+   * (see {@link #setSourceImage(byte[], int)}), or 0 if there is no ICC
+   * profile to retrieve.
+   */
+  public native int getICCSize();
+
+  /**
    * Set the scaling factor for subsequent lossy decompression operations.
    *
    * @param scalingFactor {@link TJScalingFactor} instance that specifies a
@@ -222,8 +250,8 @@ public class TJDecompressor implements Closeable {
    * with the JPEG image width and height (see {@link #getWidth} and
    * {@link #getHeight}.)  When decompressing into a planar YUV image, an
    * intermediate buffer copy will be performed if the width or height of the
-   * scaled destination image is not an even multiple of the MCU block size
-   * (see {@link TJ#getMCUWidth TJ.getMCUWidth()} and {@link TJ#getMCUHeight
+   * scaled destination image is not an even multiple of the iMCU size (see
+   * {@link TJ#getMCUWidth TJ.getMCUWidth()} and {@link TJ#getMCUHeight
    * TJ.getMCUHeight()}.)  Note that decompression scaling is not available
    * (and the specified scaling factor is ignored) when decompressing lossless
    * JPEG images (see {@link TJ#PARAM_LOSSLESS}), since the IDCT algorithm is
@@ -255,53 +283,21 @@ public class TJDecompressor implements Closeable {
    * @param croppingRegion <code>java.awt.Rectangle</code> instance that
    * specifies a subregion of the JPEG image to decompress, or
    * {@link TJ#UNCROPPED} for no cropping.  The left boundary of the cropping
-   * region must be evenly divisible by the scaled MCU block width, which can
-   * be determined by calling {@link TJScalingFactor#getScaled
+   * region must be evenly divisible by the scaled iMCU width, which can be
+   * determined by calling {@link TJScalingFactor#getScaled
    * TJScalingFactor.getScaled()} with the specified scaling factor (see
-   * {@link #setScalingFactor setScalingFactor()}) and the MCU block width
-   * (see {@link TJ#getMCUWidth TJ.getMCUWidth()}) for the level of chrominance
+   * {@link #setScalingFactor setScalingFactor()}) and the iMCU width (see
+   * {@link TJ#getMCUWidth TJ.getMCUWidth()}) for the level of chrominance
    * subsampling in the JPEG image (see {@link TJ#PARAM_SUBSAMP}.)  The
    * cropping region should be specified relative to the scaled image
    * dimensions.  Unless <code>croppingRegion</code> is {@link TJ#UNCROPPED},
-   * the JPEG header must be read (see {@link #setSourceImage(byte[], int)}
+   * the JPEG header must be read (see {@link #setSourceImage(byte[], int)})
    * prior to calling this method.
    */
   @SuppressWarnings("checkstyle:HiddenField")
   public void setCroppingRegion(Rectangle croppingRegion) throws TJException {
     this.croppingRegion = croppingRegion;
     setCroppingRegion();
-  }
-
-  /**
-   * @deprecated Use <code>{@link #get get}({@link TJ#PARAM_SUBSAMP})</code>
-   * instead.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public int getSubsamp() {
-    int subsamp = get(TJ.PARAM_SUBSAMP);
-    if (subsamp == TJ.SAMP_UNKNOWN)
-      throw new IllegalStateException(NO_ASSOC_ERROR);
-    if (subsamp >= TJ.NUMSAMP)
-      throw new IllegalStateException("JPEG header information is invalid");
-    return subsamp;
-  }
-
-  /**
-   * @deprecated Use <code>{@link #get get}({@link TJ#PARAM_COLORSPACE})</code>
-   * instead.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public int getColorspace() {
-    if (yuvImage != null)
-      return TJ.CS_YCbCr;
-    int jpegColorspace = get(TJ.PARAM_COLORSPACE);
-    if (jpegColorspace < 0)
-      throw new IllegalStateException(NO_ASSOC_ERROR);
-    if (jpegColorspace >= TJ.NUMCS)
-      throw new IllegalStateException("JPEG header information is invalid");
-    return jpegColorspace;
   }
 
   /**
@@ -326,28 +322,6 @@ public class TJDecompressor implements Closeable {
     if (jpegBufSize < 1)
       throw new IllegalStateException(NO_ASSOC_ERROR);
     return jpegBufSize;
-  }
-
-  /**
-   * @deprecated Use {@link #setScalingFactor setScalingFactor()} and
-   * {@link TJScalingFactor#getScaled TJScalingFactor.getScaled()} instead.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public int getScaledWidth(int desiredWidth, int desiredHeight) {
-    TJScalingFactor sf = getScalingFactor(desiredWidth, desiredHeight);
-    return sf.getScaled(getJPEGWidth());
-  }
-
-  /**
-   * @deprecated Use {@link #setScalingFactor setScalingFactor()} and
-   * {@link TJScalingFactor#getScaled TJScalingFactor.getScaled()} instead.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public int getScaledHeight(int desiredWidth, int desiredHeight) {
-    TJScalingFactor sf = getScalingFactor(desiredWidth, desiredHeight);
-    return sf.getScaled(getJPEGHeight());
   }
 
   private TJScalingFactor getScalingFactor(int desiredWidth,
@@ -376,13 +350,13 @@ public class TJDecompressor implements Closeable {
   }
 
   /**
-   * Decompress the 8-bit-per-sample JPEG source image or decode the planar YUV
-   * source image associated with this decompressor instance and output an
-   * 8-bit-per-sample packed-pixel grayscale, RGB, or CMYK image to the given
-   * destination buffer.
-   * <p>
-   * NOTE: The destination image is fully recoverable if this method throws a
-   * non-fatal {@link TJException} (unless {@link TJ#PARAM_STOPONWARNING} is
+   * Decompress the JPEG source image with 2 to 8 bits per sample, or decode
+   * the 8-bit-per-sample planar YUV source image, associated with this
+   * decompressor instance and output a packed-pixel grayscale, RGB, or CMYK
+   * image with the same data precision to the given destination buffer.
+   *
+   * <p>NOTE: The destination image is fully recoverable if this method throws
+   * a non-fatal {@link TJException} (unless {@link TJ#PARAM_STOPONWARNING} is
    * set.)
    *
    * @param dstBuf buffer that will receive the packed-pixel
@@ -413,7 +387,7 @@ public class TJDecompressor implements Closeable {
    * {@link TJ#getPixelSize TJ.getPixelSize}(pixelFormat)</code>.)  However,
    * you can also use this parameter to specify the row alignment/padding of
    * the destination image, to skip rows, or to decompress/decode into a
-   * specific region of a larger image.  NOTE: if the source image is a lossy
+   * specific region of a larger image.  NOTE: If the source image is a lossy
    * JPEG image, then <code>destinationWidth</code> is either the scaled JPEG
    * width (see {@link #setScalingFactor setScalingFactor()},
    * {@link TJScalingFactor#getScaled TJScalingFactor.getScaled()}, and
@@ -442,31 +416,10 @@ public class TJDecompressor implements Closeable {
   }
 
   /**
-   * @deprecated Use {@link #set set()},
-   * {@link #setScalingFactor setScalingFactor()}, and
-   * {@link #decompress8(byte[], int, int, int, int)} instead.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public void decompress(byte[] dstBuf, int x, int y, int desiredWidth,
-                         int pitch, int desiredHeight, int pixelFormat,
-                         int flags) throws TJException {
-    if ((yuvImage != null && (desiredWidth < 0 || desiredHeight < 0)) ||
-        flags < 0)
-      throw new IllegalArgumentException("Invalid argument in decompress()");
-
-    if (yuvImage == null) {
-      TJScalingFactor sf = getScalingFactor(desiredWidth, desiredHeight);
-      setScalingFactor(sf);
-    }
-    processFlags(flags);
-    decompress8(dstBuf, x, y, pitch, pixelFormat);
-  }
-
-  /**
-   * Decompress the 8-bit-per-sample JPEG source image or decode the planar YUV
-   * source image associated with this decompressor instance and return a
-   * buffer containing an 8-bit-per-sample packed-pixel decompressed image.
+   * Decompress the JPEG source image with 2 to 8 bits per sample, or decode
+   * the 8-bit-per-sample planar YUV source image, associated with this
+   * decompressor instance and return a buffer containing a packed-pixel
+   * decompressed image with the same data precision.
    *
    * @param pitch see
    * {@link #decompress8(byte[], int, int, int, int)} for description
@@ -474,8 +427,8 @@ public class TJDecompressor implements Closeable {
    * @param pixelFormat pixel format of the decompressed image (one of
    * {@link TJ#PF_RGB TJ.PF_*})
    *
-   * @return a buffer containing an 8-bit-per-sample packed-pixel decompressed
-   * image.
+   * @return a buffer containing a packed-pixel decompressed image with 2 to 8
+   * bits of data precision per sample.
    */
   public byte[] decompress8(int pitch, int pixelFormat) throws TJException {
     if (pitch < 0 || pixelFormat < 0 || pixelFormat >= TJ.NUMPF)
@@ -491,33 +444,13 @@ public class TJDecompressor implements Closeable {
   }
 
   /**
-   * @deprecated Use {@link #set set()},
-   * {@link #setScalingFactor setScalingFactor()}, and
-   * {@link #decompress8(int, int)} instead.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public byte[] decompress(int desiredWidth, int pitch, int desiredHeight,
-                           int pixelFormat, int flags) throws TJException {
-    if ((yuvImage == null && (desiredWidth < 0 || desiredHeight < 0)) ||
-        flags < 0)
-      throw new IllegalArgumentException("Invalid argument in decompress()");
-
-    if (yuvImage == null) {
-      TJScalingFactor sf = getScalingFactor(desiredWidth, desiredHeight);
-      setScalingFactor(sf);
-    }
-    processFlags(flags);
-    return decompress8(pitch, pixelFormat);
-  }
-
-  /**
-   * Decompress the 12-bit-per-sample JPEG source image associated with this
-   * decompressor instance and output a 12-bit-per-sample packed-pixel
-   * grayscale, RGB, or CMYK image to the given destination buffer.
-   * <p>
-   * NOTE: The destination image is fully recoverable if this method throws a
-   * non-fatal {@link TJException} (unless {@link TJ#PARAM_STOPONWARNING} is
+   * Decompress the JPEG source image with 9 to 12 bits per sample associated
+   * with this decompressor instance and output a packed-pixel grayscale, RGB,
+   * or CMYK image with the same data precision to the given destination
+   * buffer.
+   *
+   * <p>NOTE: The destination image is fully recoverable if this method throws
+   * a non-fatal {@link TJException} (unless {@link TJ#PARAM_STOPONWARNING} is
    * set.)
    *
    * @param dstBuf buffer that will receive the packed-pixel
@@ -549,7 +482,7 @@ public class TJDecompressor implements Closeable {
    * {@link TJ#getPixelSize TJ.getPixelSize}(pixelFormat)</code>.)  However,
    * you can also use this parameter to specify the row alignment/padding of
    * the destination image, to skip rows, or to decompress into a specific
-   * region of a larger image.  NOTE: if the source image is a lossy JPEG
+   * region of a larger image.  NOTE: If the source image is a lossy JPEG
    * image, then <code>destinationWidth</code> is either the scaled JPEG width
    * (see {@link #setScalingFactor setScalingFactor()},
    * {@link TJScalingFactor#getScaled TJScalingFactor.getScaled()}, and
@@ -572,9 +505,9 @@ public class TJDecompressor implements Closeable {
   }
 
   /**
-   * Decompress the 12-bit-per-sample JPEG source image associated with this
-   * decompressor instance and return a buffer containing a 12-bit-per-sample
-   * packed-pixel decompressed image.
+   * Decompress the JPEG source image with 9 to 12 bits per sample associated
+   * with this decompressor instance and return a buffer containing a
+   * packed-pixel decompressed image with the same data precision.
    *
    * @param pitch see
    * {@link #decompress12(short[], int, int, int, int)} for description
@@ -582,8 +515,8 @@ public class TJDecompressor implements Closeable {
    * @param pixelFormat pixel format of the decompressed image (one of
    * {@link TJ#PF_RGB TJ.PF_*})
    *
-   * @return a buffer containing an 8-bit-per-sample packed-pixel decompressed
-   * image.
+   * @return a buffer containing a packed-pixel decompressed image with 9 to 12
+   * bits of data precision per sample.
    */
   public short[] decompress12(int pitch, int pixelFormat) throws TJException {
     if (pitch < 0 || pixelFormat < 0 || pixelFormat >= TJ.NUMPF)
@@ -599,13 +532,13 @@ public class TJDecompressor implements Closeable {
   }
 
   /**
-   * Decompress the 16-bit-per-sample lossless JPEG source image associated
-   * with this decompressor instance and output a 16-bit-per-sample
-   * packed-pixel grayscale, RGB, or CMYK image to the given destination
+   * Decompress the JPEG source image with 13 to 16 bits per sample associated
+   * with this decompressor instance and output a packed-pixel grayscale, RGB,
+   * or CMYK image with the same data precision to the given destination
    * buffer.
-   * <p>
-   * NOTE: The destination image is fully recoverable if this method throws a
-   * non-fatal {@link TJException} (unless {@link TJ#PARAM_STOPONWARNING} is
+   *
+   * <p>NOTE: The destination image is fully recoverable if this method throws
+   * a non-fatal {@link TJException} (unless {@link TJ#PARAM_STOPONWARNING} is
    * set.)
    *
    * @param dstBuf buffer that will receive the packed-pixel
@@ -645,9 +578,9 @@ public class TJDecompressor implements Closeable {
   }
 
   /**
-   * Decompress the 16-bit-per-sample JPEG source image associated with this
-   * decompressor instance and return a buffer containing a 16-bit-per-sample
-   * packed-pixel decompressed image.
+   * Decompress the JPEG source image with 13 to 16 bits per sample associated
+   * with this decompressor instance and return a buffer containing a
+   * packed-pixel decompressed image with the same data precision.
    *
    * @param pitch see
    * {@link #decompress16(short[], int, int, int, int)} for description
@@ -655,8 +588,8 @@ public class TJDecompressor implements Closeable {
    * @param pixelFormat pixel format of the decompressed image (one of
    * {@link TJ#PF_RGB TJ.PF_*})
    *
-   * @return a buffer containing an 8-bit-per-sample packed-pixel decompressed
-   * image.
+   * @return a buffer containing a packed-pixel decompressed image with 13 to
+   * 16 bits of data precision per sample.
    */
   public short[] decompress16(int pitch, int pixelFormat) throws TJException {
     if (pitch < 0 || pixelFormat < 0 || pixelFormat >= TJ.NUMPF)
@@ -678,9 +611,9 @@ public class TJDecompressor implements Closeable {
    * decompression but leaves out the color conversion step, so a planar YUV
    * image is generated instead of a packed-pixel image.  This method cannot be
    * used to decompress JPEG source images with the CMYK or YCCK colorspace.
-   * <p>
-   * NOTE: The planar YUV destination image is fully recoverable if this method
-   * throws a non-fatal {@link TJException} (unless
+   *
+   * <p>NOTE: The planar YUV destination image is fully recoverable if this
+   * method throws a non-fatal {@link TJException} (unless
    * {@link TJ#PARAM_STOPONWARNING} is set.)
    *
    * @param dstImage {@link YUVImage} instance that will receive the planar YUV
@@ -705,28 +638,6 @@ public class TJDecompressor implements Closeable {
 
     decompressToYUV8(jpegBuf, jpegBufSize, dstImage.getPlanes(),
                      dstImage.getOffsets(), dstImage.getStrides());
-  }
-
-  /**
-   * @deprecated Use {@link #set set()}, {@link #setScalingFactor
-   * setScalingFactor()}, and {@link #decompressToYUV(YUVImage)} instead.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public void decompressToYUV(YUVImage dstImage, int flags)
-                              throws TJException {
-    if (flags < 0)
-      throw new IllegalArgumentException("Invalid argument in decompressToYUV()");
-
-    TJScalingFactor sf = getScalingFactor(dstImage.getWidth(),
-                                          dstImage.getHeight());
-    if (sf.getScaled(getJPEGWidth()) != dstImage.getWidth() ||
-        sf.getScaled(getJPEGHeight()) != dstImage.getHeight())
-      throw new IllegalArgumentException("YUVImage dimensions do not match one of the scaled image sizes that the decompressor is capable of generating.");
-
-    setScalingFactor(sf);
-    processFlags(flags);
-    decompressToYUV(dstImage);
   }
 
   /**
@@ -765,24 +676,6 @@ public class TJDecompressor implements Closeable {
   }
 
   /**
-   * @deprecated Use {@link #set set()}, {@link #setScalingFactor
-   * setScalingFactor()}, and {@link #decompressToYUV(int[])} instead.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public YUVImage decompressToYUV(int desiredWidth, int[] strides,
-                                  int desiredHeight,
-                                  int flags) throws TJException {
-    if (flags < 0)
-      throw new IllegalArgumentException("Invalid argument in decompressToYUV()");
-
-    TJScalingFactor sf = getScalingFactor(desiredWidth, desiredHeight);
-    setScalingFactor(sf);
-    processFlags(flags);
-    return decompressToYUV(strides);
-  }
-
-  /**
    * Decompress the 8-bit-per-sample JPEG source image associated with this
    * decompressor instance into an 8-bit-per-sample unified planar YUV image
    * and return a {@link YUVImage} instance containing the decompressed image.
@@ -814,31 +707,13 @@ public class TJDecompressor implements Closeable {
   }
 
   /**
-   * @deprecated Use {@link #set set()}, {@link #setScalingFactor
-   * setScalingFactor()}, and {@link #decompressToYUV(int)} instead.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public YUVImage decompressToYUV(int desiredWidth, int align,
-                                  int desiredHeight, int flags)
-                                  throws TJException {
-    if (flags < 0)
-      throw new IllegalArgumentException("Invalid argument in decompressToYUV()");
-
-    TJScalingFactor sf = getScalingFactor(desiredWidth, desiredHeight);
-    setScalingFactor(sf);
-    processFlags(flags);
-    return decompressToYUV(align);
-  }
-
-  /**
    * Decompress the 8-bit-per-sample JPEG source image or decode the planar YUV
    * source image associated with this decompressor instance and output an
    * 8-bit-per-sample packed-pixel grayscale, RGB, or CMYK image to the given
    * destination buffer.
-   * <p>
-   * NOTE: The destination image is fully recoverable if this method throws a
-   * non-fatal {@link TJException} (unless {@link TJ#PARAM_STOPONWARNING}
+   *
+   * <p>NOTE: The destination image is fully recoverable if this method throws
+   * a non-fatal {@link TJException} (unless {@link TJ#PARAM_STOPONWARNING}
    * is set.)
    *
    * @param dstBuf buffer that will receive the packed-pixel
@@ -866,7 +741,7 @@ public class TJDecompressor implements Closeable {
    * should be set to <code>destinationWidth</code>.  (Setting this parameter
    * to 0 is the equivalent of setting it to <code>destinationWidth</code>.)
    * However, you can also use this parameter to skip rows or to
-   * decompress/decode into a specific region of a larger image.  NOTE: if the
+   * decompress/decode into a specific region of a larger image.  NOTE: If the
    * source image is a lossy JPEG image, then <code>destinationWidth</code> is
    * either the scaled JPEG width (see {@link #setScalingFactor
    * setScalingFactor()}, {@link TJScalingFactor#getScaled
@@ -895,35 +770,13 @@ public class TJDecompressor implements Closeable {
   }
 
   /**
-   * @deprecated Use {@link #set set()}, {@link #setScalingFactor
-   * setScalingFactor()}, and {@link #decompress8(int[], int, int, int, int)}
-   * instead.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public void decompress(int[] dstBuf, int x, int y, int desiredWidth,
-                         int stride, int desiredHeight, int pixelFormat,
-                         int flags) throws TJException {
-    if ((yuvImage != null && (desiredWidth < 0 || desiredHeight < 0)) ||
-       flags < 0)
-      throw new IllegalArgumentException("Invalid argument in decompress()");
-
-    if (yuvImage == null) {
-      TJScalingFactor sf = getScalingFactor(desiredWidth, desiredHeight);
-      setScalingFactor(sf);
-    }
-    processFlags(flags);
-    decompress8(dstBuf, x, y, stride, pixelFormat);
-  }
-
-  /**
    * Decompress the 8-bit-per-sample JPEG source image or decode the planar YUV
    * source image associated with this decompressor instance and output an
    * 8-bit-per-sample packed-pixel decompressed/decoded image to the given
    * <code>BufferedImage</code> instance.
-   * <p>
-   * NOTE: The destination image is fully recoverable if this method throws a
-   * non-fatal {@link TJException} (unless {@link TJ#PARAM_STOPONWARNING}
+   *
+   * <p>NOTE: The destination image is fully recoverable if this method throws
+   * a non-fatal {@link TJException} (unless {@link TJ#PARAM_STOPONWARNING}
    * is set.)
    *
    * @param dstImage a <code>BufferedImage</code> instance that will receive
@@ -1015,31 +868,6 @@ public class TJDecompressor implements Closeable {
   }
 
   /**
-   * @deprecated Use {@link #set set()}, {@link #setScalingFactor
-   * setScalingFactor()}, and {@link #decompress8(BufferedImage)} instead.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public void decompress(BufferedImage dstImage, int flags)
-                         throws TJException {
-    if (flags < 0)
-      throw new IllegalArgumentException("Invalid argument in decompress()");
-
-    if (yuvImage == null) {
-      TJScalingFactor sf = getScalingFactor(dstImage.getWidth(),
-                                            dstImage.getHeight());
-      if (sf.getScaled(getJPEGWidth()) != dstImage.getWidth() ||
-          sf.getScaled(getJPEGHeight()) != dstImage.getHeight())
-        throw new IllegalArgumentException("BufferedImage dimensions do not match one of the scaled image sizes that TurboJPEG is capable of generating.");
-
-      setScalingFactor(sf);
-    }
-
-    processFlags(flags);
-    decompress8(dstImage);
-  }
-
-  /**
    * Decompress the 8-bit-per-sample JPEG source image or decode the planar YUV
    * source image associated with this decompressor instance and return a
    * <code>BufferedImage</code> instance containing the 8-bit-per-sample
@@ -1062,24 +890,56 @@ public class TJDecompressor implements Closeable {
   }
 
   /**
-   * @deprecated Use {@link #set set()}, {@link #setScalingFactor
-   * setScalingFactor()}, and {@link #decompress8(int)} instead.
+   * Save a packed-pixel image with 2 to 16 bits of data precision per sample
+   * from memory to disk.
+   *
+   * @param fileName name of a file to which to save the packed-pixel image.
+   * The image will be stored in Windows BMP or PBMPLUS (PPM/PGM) format,
+   * depending on the file extension.  Windows BMP files require
+   * 8-bit-per-sample data precision.  When saving a PBMPLUS file, the source
+   * data precision (from 2 to 16 bits per sample) can be specified using
+   * {@link TJ#PARAM_PRECISION} and defaults to 8 if {@link TJ#PARAM_PRECISION}
+   * is unset.
+   *
+   * @param image buffer containing a packed-pixel RGB, grayscale, or CMYK
+   * image to be saved.  The buffer is a <code>byte</code> array if the image
+   * has 2 to 8 bits of data precision per sample and a <code>short</code>
+   * array otherwise.
+   *
+   * @param x x offset (in pixels) of the region in the buffer from which to
+   * save the packed-pixel image
+   *
+   * @param y y offset (in pixels) of the region in the buffer from which to
+   * save the packed-pixel image
+   *
+   * @param width width (in pixels) of the region in the buffer from which to
+   * save the packed-pixel image
+   *
+   * @param pitch samples per row in the packed-pixel buffer.  Setting this
+   * parameter to 0 is the equivalent of setting it to <code>width *
+   * {@link TJ#getPixelSize TJ.getPixelSize}(pixelFormat)</code>.
+   *
+   * @param height height (in pixels) of the region in the buffer from which to
+   * save the packed-pixel image
+   *
+   * @param pixelFormat pixel format of the packed-pixel image (one of
+   * {@link TJ#PF_RGB TJ.PF_*}).  If this parameter is set to
+   * {@link TJ#PF_GRAY}, then the image will be stored in PGM or
+   * 8-bit-per-pixel (indexed color) BMP format.  Otherwise, the image will be
+   * stored in PPM or 24-bit-per-pixel BMP format.  If this parameter is set to
+   * {@link TJ#PF_CMYK}, then the CMYK pixels will be converted to RGB using a
+   * quick &amp; dirty algorithm that is suitable only for testing purposes.
+   * (Proper conversion between CMYK and other formats requires a color
+   * management system.)
    */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  @Deprecated
-  public BufferedImage decompress(int desiredWidth, int desiredHeight,
-                                  int bufferedImageType, int flags)
-                                  throws TJException {
-    if ((yuvImage == null && (desiredWidth < 0 || desiredHeight < 0)) ||
-        flags < 0)
-      throw new IllegalArgumentException("Invalid argument in decompress()");
-
-    if (yuvImage == null) {
-      TJScalingFactor sf = getScalingFactor(desiredWidth, desiredHeight);
-      setScalingFactor(sf);
-    }
-    processFlags(flags);
-    return decompress8(bufferedImageType);
+  public void saveImage(String fileName, Object image, int x, int y, int width,
+                        int pitch, int height, int pixelFormat)
+                        throws TJException {
+    int precision = get(TJ.PARAM_PRECISION);
+    if (precision < 2 || precision > 16)
+      precision = 8;
+    saveImage(precision, fileName, image, x, y, width, pitch, height,
+              pixelFormat);
   }
 
   /**
@@ -1101,15 +961,6 @@ public class TJDecompressor implements Closeable {
       super.finalize();
     }
   };
-
-  @SuppressWarnings("deprecation")
-  final void processFlags(int flags) {
-    set(TJ.PARAM_BOTTOMUP, (flags & TJ.FLAG_BOTTOMUP) != 0 ? 1 : 0);
-    set(TJ.PARAM_FASTUPSAMPLE, (flags & TJ.FLAG_FASTUPSAMPLE) != 0 ? 1 : 0);
-    set(TJ.PARAM_FASTDCT, (flags & TJ.FLAG_FASTDCT) != 0 ? 1 : 0);
-    set(TJ.PARAM_STOPONWARNING, (flags & TJ.FLAG_STOPONWARNING) != 0 ? 1 : 0);
-    set(TJ.PARAM_SCANLIMIT, (flags & TJ.FLAG_LIMITSCANS) != 0 ? 500 : 0);
-  }
 
   final void checkSubsampling() {
     if (get(TJ.PARAM_SUBSAMP) == TJ.SAMP_UNKNOWN)
@@ -1153,18 +1004,9 @@ public class TJDecompressor implements Closeable {
     int[] srcStrides, int[] dstBuf, int x, int y, int width, int stride,
     int height, int pixelFormat) throws TJException;
 
-  /**
-   * @hidden
-   * Ugly hack alert.  It isn't straightforward to save 12-bit-per-sample and
-   * 16-bit-per-sample images using the ImageIO and BufferedImage classes, and
-   * ImageIO doesn't support PBMPLUS files anyhow.  This method accesses
-   * tj3SaveImage() through JNI and copies the pixel data between the C and
-   * Java heaps.  Currently it is undocumented and used only by TJBench.
-   */
-  @SuppressWarnings("checkstyle:JavadocMethod")
-  public native void saveImage(int precision, String fileName, Object srcBuf,
-                               int width, int pitch, int height,
-                               int pixelFormat) throws TJException;
+  private native void saveImage(int precision, String fileName, Object buffer,
+    int x, int y, int width, int pitch, int height, int pixelFormat)
+    throws TJException;
 
   static {
     TJLoader.load();

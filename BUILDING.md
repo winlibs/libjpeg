@@ -8,16 +8,16 @@ Build Requirements
 
 ### All Systems
 
-- [CMake](http://www.cmake.org) v2.8.12 or later
+- [CMake](https://cmake.org) v2.8.12 or later
 
-- [NASM](http://www.nasm.us) or [Yasm](http://yasm.tortall.net)
+- [NASM](https://nasm.us) or [Yasm](https://yasm.tortall.net)
   (if building x86 or x86-64 SIMD extensions)
   * If using NASM, 2.13 or later is required.
   * If using Yasm, 1.2.0 or later is required.
   * NASM 2.15 or later is required if building libjpeg-turbo with Intel
     Control-flow Enforcement Technology (CET) support.
   * If building on macOS, NASM or Yasm can be obtained from
-    [MacPorts](http://www.macports.org/) or [Homebrew](http://brew.sh/).
+    [MacPorts](https://macports.org) or [Homebrew](https://brew.sh).
      - NOTE: Currently, if it is desirable to hide the SIMD function symbols in
        Mac executables or shared libraries that statically link with
        libjpeg-turbo, then NASM 2.14 or later or Yasm must be used when
@@ -31,17 +31,18 @@ Build Requirements
     repository on Red Hat Enterprise Linux 8+ and derivatives, which is not
     enabled by default.
 
-### Un*x Platforms (including Linux, Mac, FreeBSD, Solaris, and Cygwin)
+- If building the TurboJPEG Java API, JDK or OpenJDK 7 or later is required.
 
-- GCC v4.1 (or later) or Clang recommended for best performance
-
-- If building the TurboJPEG Java wrapper, JDK or OpenJDK 1.5 or later is
-  required.  Most modern Linux distributions, as well as Solaris 10 and later,
-  include JDK or OpenJDK.  For other systems, you can obtain the Oracle Java
-  Development Kit from
-  <http://www.oracle.com/technetwork/java/javase/downloads>.
+  * Most modern Linux distributions, as well as Solaris 10 and later, include
+    JDK or OpenJDK.  For other systems, pre-built JDK binaries can be obtained
+    from [Oracle](https://oracle.com/java/technologies/downloads) or
+    [Adoptium](https://adoptium.net/temurin/releases).
 
   * If using JDK 11 or later, CMake 3.10.x or later must also be used.
+
+### Un*x Platforms (including Mac and Cygwin)
+
+- GCC v4.1 (or later) or Clang recommended for best performance
 
 ### Windows
 
@@ -69,16 +70,10 @@ Build Requirements
 
 - MinGW
 
-  [MSYS2](http://msys2.github.io/) or [tdm-gcc](http://tdm-gcc.tdragon.net/)
+  [MSYS2](https://msys2.org) or [tdm-gcc](https://jmeubank.github.io/tdm-gcc)
   recommended if building on a Windows machine.  Both distributions install a
   Start Menu link that can be used to launch a command prompt with the
   appropriate compiler paths automatically set.
-
-- If building the TurboJPEG Java wrapper, JDK 1.5 or later is required.  This
-  can be downloaded from
-  <http://www.oracle.com/technetwork/java/javase/downloads>.
-
-  * If using JDK 11 or later, CMake 3.10.x or later must also be used.
 
 
 Sub-Project Builds
@@ -301,20 +296,20 @@ add `-DWITH_ARITH_ENC=0` or `-DWITH_ARITH_DEC=0` to the CMake command line to
 disable encoding or decoding (respectively.)
 
 
-### TurboJPEG Java Wrapper
+### TurboJPEG Java API
 
 Add `-DWITH_JAVA=1` to the CMake command line to incorporate an optional Java
 Native Interface (JNI) wrapper into the TurboJPEG shared library and build the
 Java front-end classes to support it.  This allows the TurboJPEG shared library
-to be used directly from Java applications.  See [java/README](java/README) for
-more details.
+to be used directly from Java applications.  See
+[java/README.md](java/README.md) for more details.
 
 If Java is not in your `PATH`, or if you wish to use an alternate JDK to
 build/test libjpeg-turbo, then (prior to running CMake) set the `JAVA_HOME`
 environment variable to the location of the JDK that you wish to use.  The
 `Java_JAVAC_EXECUTABLE`, `Java_JAVA_EXECUTABLE`, and `Java_JAR_EXECUTABLE`
 CMake variables can also be used to specify alternate commands or locations for
-javac, jar, and java (respectively.)  You can also set the
+javac, java, and jar (respectively.)  You can also set the
 `CMAKE_JAVA_COMPILE_FLAGS` CMake variable or the `JAVAFLAGS` environment
 variable to specify arguments that should be passed to the Java compiler when
 building the TurboJPEG classes, and the `JAVAARGS` CMake variable to specify
@@ -415,17 +410,13 @@ iPhone 5S/iPad Mini 2/iPad Air and newer.
 
     IOS_PLATFORMDIR=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform
     IOS_SYSROOT=($IOS_PLATFORMDIR/Developer/SDKs/iPhoneOS*.sdk)
-    export CFLAGS="-Wall -arch arm64 -miphoneos-version-min=8.0 -funwind-tables"
+    export CFLAGS="-Wall -miphoneos-version-min=8.0 -funwind-tables"
 
     cd {build_directory}
 
-    cat <<EOF >toolchain.cmake
-    set(CMAKE_SYSTEM_NAME Darwin)
-    set(CMAKE_SYSTEM_PROCESSOR aarch64)
-    set(CMAKE_C_COMPILER /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang)
-    EOF
-
-    cmake -G"Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake \
+    cmake -G"Unix Makefiles" \
+      -DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang \
+      -DCMAKE_OSX_ARCHITECTURES=arm64 \
       -DCMAKE_OSX_SYSROOT=${IOS_SYSROOT[0]} \
       [additional CMake flags] {source_directory}
     make
@@ -439,7 +430,7 @@ Building libjpeg-turbo for Android
 ----------------------------------
 
 Building libjpeg-turbo for Android platforms requires v13b or later of the
-[Android NDK](https://developer.android.com/tools/sdk/ndk).
+[Android NDK](https://developer.android.com/ndk).
 
 
 ### Armv7 (32-bit)
@@ -586,7 +577,7 @@ MinGW 32-bit build
 MinGW 64-bit build
 
 **/opt/libjpeg-turbo**<br>
-Un*x
+Un*x (including Mac and Cygwin)
 
 The default value of `CMAKE_INSTALL_PREFIX` causes the libjpeg-turbo files to
 be installed with a directory structure resembling that of the official
@@ -643,18 +634,19 @@ are installed by default on OS X/macOS 10.7 and later.
 In order to create a Mac package/disk image that contains universal
 x86-64/Arm binaries, set the following CMake variable:
 
-* `ARMV8_BUILD`: Directory containing an Armv8 (64-bit) iOS or macOS build of
-  libjpeg-turbo to include in the universal binaries
+* `SECONDARY_BUILD`: Directory containing a cross-compiled x86-64 or Armv8
+  (64-bit) iOS or macOS build of libjpeg-turbo to include in the universal
+  binaries
 
-You should first use CMake to configure an Armv8 sub-build of libjpeg-turbo
-(see "Building libjpeg-turbo for iOS" above, if applicable) in a build
-directory that matches the one specified in the aforementioned CMake variable.
-Next, configure the primary (x86-64) build of libjpeg-turbo as an out-of-tree
-build, specifying the aforementioned CMake variable, and build it.  Once the
-primary build has been built, run `make dmg` from the build directory.  The
-packaging system will build the sub-build, use lipo to combine it with the
-primary build into a single set of universal binaries, then package the
-universal binaries.
+You should first use CMake to configure the cross-compiled x86-64 or Armv8
+secondary build of libjpeg-turbo (see "Building libjpeg-turbo for iOS" above,
+if applicable) in a build directory that matches the one specified in the
+aforementioned CMake variable.  Next, configure the primary (native) build of
+libjpeg-turbo as an out-of-tree build, specifying the aforementioned CMake
+variable, and build it.  Once the primary build has been built, run `make dmg`
+from the build directory.  The packaging system will build the secondary build,
+use lipo to combine it with the primary build into a single set of universal
+binaries, then package the universal binaries.
 
 
 Windows
@@ -679,7 +671,7 @@ as the configuration you built (such as *{build_directory}*\Debug\ or
 *{build_directory}*\Release\).
 
 Building a Windows installer requires the
-[Nullsoft Install System](http://nsis.sourceforge.net/).  makensis.exe should
+[Nullsoft Install System](https://nsis.sourceforge.io).  makensis.exe should
 be in your `PATH`.
 
 
@@ -700,11 +692,11 @@ Invoking `make testclean` (Un*x) or `nmake testclean` (Windows command line) or
 building the "testclean" target (Visual Studio IDE) will clean up the output
 images generated by the tests.
 
-On Un*x platforms, more extensive tests of the TurboJPEG C and Java wrappers
-can be run by invoking `make tjtest`.  These extended TurboJPEG tests
-essentially iterate through all of the available features of the TurboJPEG APIs
-that are not covered by the TurboJPEG unit tests (including the lossless
-transform options) and compare the images generated by each feature to images
-generated using the equivalent feature in the libjpeg API.  The extended
-TurboJPEG tests are meant to test for regressions in the TurboJPEG wrappers,
-not in the underlying libjpeg API library.
+On Un*x platforms, more extensive tests of the TurboJPEG C and Java APIs can be
+run by invoking `make tjtest`, `make tjtest12`, and `make tjtest16`.  These
+extended TurboJPEG tests iterate through all of the available features of the
+TurboJPEG APIs that are not covered by the TurboJPEG unit tests (including the
+lossless transform options) and compare the images generated by each feature to
+images generated using the equivalent feature in the libjpeg API.  The extended
+TurboJPEG tests are meant to test for regressions in the TurboJPEG APIs, not in
+the underlying libjpeg API library.

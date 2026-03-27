@@ -69,9 +69,12 @@ JPEG images:
   generating planar YUV images and performing multiple simultaneous lossless
   transforms on an image.  The Java interface for libjpeg-turbo is written on
   top of the TurboJPEG API.  The TurboJPEG API is recommended for first-time
-  users of libjpeg-turbo.  Refer to [tjexample.c](tjexample.c) and
-  [TJExample.java](java/TJExample.java) for examples of its usage and to
-  <http://libjpeg-turbo.org/Documentation/Documentation> for API documentation.
+  users of libjpeg-turbo.  Refer to [tjcomp.c](src/tjcomp.c),
+  [tjdecomp.c](src/tjdecomp.c), [tjtran.c](src/tjtran.c),
+  [TJComp.java](java/TJComp.java), [TJDecomp.java](java/TJDecomp.java), and
+  [TJTran.java](java/TJTran.java) for examples of its usage and to
+  <https://libjpeg-turbo.org/Documentation/Documentation> for API
+  documentation.
 
 - **libjpeg API**<br>
   This is the de facto industry-standard API for compressing and decompressing
@@ -79,8 +82,9 @@ JPEG images:
   more powerful.  The libjpeg API implementation in libjpeg-turbo is both
   API/ABI-compatible and mathematically compatible with libjpeg v6b.  It can
   also optionally be configured to be API/ABI-compatible with libjpeg v7 and v8
-  (see below.)  Refer to [cjpeg.c](cjpeg.c) and [djpeg.c](djpeg.c) for examples
-  of its usage and to [libjpeg.txt](libjpeg.txt) for API documentation.
+  (see below.)  Refer to [cjpeg.c](src/cjpeg.c) and [djpeg.c](src/djpeg.c) for
+  examples of its usage and to [libjpeg.txt](doc/libjpeg.txt) for API
+  documentation.
 
 There is no significant performance advantage to either API when both are used
 to perform similar operations.
@@ -132,9 +136,9 @@ extensions at compile time with:
 
     #ifdef JCS_ALPHA_EXTENSIONS
 
-[jcstest.c](jcstest.c), located in the libjpeg-turbo source tree, demonstrates
-how to check for the existence of the colorspace extensions at compile time and
-run time.
+[jcstest.c](src/jcstest.c), located in the libjpeg-turbo source tree,
+demonstrates how to check for the existence of the colorspace extensions at
+compile time and run time.
 
 libjpeg v7 and v8 API/ABI Emulation
 -----------------------------------
@@ -199,7 +203,7 @@ supported and which aren't.
 NOTE:  As of this writing, extensive research has been conducted into the
 usefulness of DCT scaling as a means of data reduction and SmartScale as a
 means of quality improvement.  Readers are invited to peruse the research at
-<http://www.libjpeg-turbo.org/About/SmartScale> and draw their own conclusions,
+<https://libjpeg-turbo.org/About/SmartScale> and draw their own conclusions,
 but it is the general belief of our project that these features have not
 demonstrated sufficient usefulness to justify inclusion in libjpeg-turbo.
 
@@ -364,8 +368,11 @@ Memory Debugger Pitfalls
 
 Valgrind and Memory Sanitizer (MSan) can generate false positives
 (specifically, incorrect reports of uninitialized memory accesses) when used
-with libjpeg-turbo's SIMD extensions.  It is generally recommended that the
-SIMD extensions be disabled, either by passing an argument of `-DWITH_SIMD=0`
-to `cmake` when configuring the build or by setting the environment variable
-`JSIMD_FORCENONE` to `1` at run time, when testing libjpeg-turbo with Valgrind,
-MSan, or other memory debuggers.
+with libjpeg-turbo's SIMD extensions.  There are two ways to work around this
+when testing libjpeg-turbo with Valgrind, MSan, or other memory debuggers:
+
+1. Disable the SIMD extensions, either by passing an argument of
+   `-DWITH_SIMD=0` to `cmake` when configuring the build or by setting the
+   environment variable `JSIMD_FORCENONE` to `1` at run time.
+2. Define the `ZERO_BUFFERS` preprocessor macro (for instance, by adding
+   `-DZERO_BUFFERS=1` to `CMAKE_C_FLAGS`.)

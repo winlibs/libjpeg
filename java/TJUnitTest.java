@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2011-2018, 2022-2023 D. R. Commander.  All Rights Reserved.
+ * Copyright (C) 2011-2018, 2022-2026 D. R. Commander.  All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -26,15 +26,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * This program tests the various code paths in the TurboJPEG JNI Wrapper
- */
+// This program tests the various code paths in the TurboJPEG Java API
 
 import java.io.*;
 import java.util.*;
 import java.awt.image.*;
 import javax.imageio.*;
 import java.nio.*;
+import java.nio.file.*;
 import org.libjpegturbo.turbojpeg.*;
 
 @SuppressWarnings("checkstyle:JavadocType")
@@ -52,10 +51,11 @@ final class TJUnitTest {
     System.out.println("       (8-bit data precision only)");
     System.out.println("-noyuvpad = do not pad each row in each Y, U, and V plane to the nearest");
     System.out.println("            multiple of 4 bytes");
-    System.out.println("-precision N = test N-bit data precision (N is 8, 12, or 16; default is 8; if N");
-    System.out.println("               is 16, then -lossless is implied)");
+    System.out.println("-precision N = test N-bit data precision (N=2..16; default is 8; if N is not 8");
+    System.out.println("               or 12, then -lossless is implied)");
     System.out.println("-lossless = test lossless JPEG compression/decompression");
-    System.out.println("-bi = test BufferedImage I/O (8-bit data precision only)\n");
+    System.out.println("-bi = test BufferedImage I/O (8-bit data precision only)");
+    System.out.println("-bmp = test packed-pixel image I/O\n");
     System.exit(1);
   }
 
@@ -105,6 +105,9 @@ final class TJUnitTest {
 
   private static int exitStatus = 0;
 
+  private static String uniqueID =
+    java.util.UUID.randomUUID().toString().replace("-", "");
+
   static int biTypePF(int biType) {
     ByteOrder byteOrder = ByteOrder.nativeOrder();
     switch (biType) {
@@ -151,14 +154,14 @@ final class TJUnitTest {
   }
 
   static void fillArray(Object buf, int val) {
-    if (precision == 8)
+    if (precision <= 8)
       Arrays.fill((byte[])buf, (byte)val);
     else
       Arrays.fill((short[])buf, (short)val);
   }
 
   static void setVal(Object buf, int index, int value) {
-    if (precision == 8)
+    if (precision <= 8)
       ((byte[])buf)[index] = (byte)value;
     else
       ((short[])buf)[index] = (short)value;
@@ -171,12 +174,12 @@ final class TJUnitTest {
     int boffset = TJ.getBlueOffset(pf);
     int aoffset = TJ.getAlphaOffset(pf);
     int ps = TJ.getPixelSize(pf);
-    int index, row, col, halfway = 16;
+    int index, halfway = 16;
 
     if (pf == TJ.PF_GRAY) {
       fillArray(buf, 0);
-      for (row = 0; row < h; row++) {
-        for (col = 0; col < w; col++) {
+      for (int row = 0; row < h; row++) {
+        for (int  col = 0; col < w; col++) {
           if (bottomUp)
             index = pitch * (h - row - 1) + col;
           else
@@ -191,8 +194,8 @@ final class TJUnitTest {
     }
     if (pf == TJ.PF_CMYK) {
       fillArray(buf, maxSample);
-      for (row = 0; row < h; row++) {
-        for (col = 0; col < w; col++) {
+      for (int row = 0; row < h; row++) {
+        for (int col = 0; col < w; col++) {
           if (bottomUp)
             index = (h - row - 1) * w + col;
           else
@@ -210,8 +213,8 @@ final class TJUnitTest {
     }
 
     fillArray(buf, 0);
-    for (row = 0; row < h; row++) {
-      for (col = 0; col < w; col++) {
+    for (int row = 0; row < h; row++) {
+      for (int col = 0; col < w; col++) {
         if (bottomUp)
           index = pitch * (h - row - 1) + col * ps;
         else
@@ -239,11 +242,11 @@ final class TJUnitTest {
     int gshift = TJ.getGreenOffset(pf) * 8;
     int bshift = TJ.getBlueOffset(pf) * 8;
     int ashift = TJ.getAlphaOffset(pf) * 8;
-    int index, row, col, halfway = 16;
+    int index, halfway = 16;
 
     Arrays.fill(buf, 0);
-    for (row = 0; row < h; row++) {
-      for (col = 0; col < w; col++) {
+    for (int row = 0; row < h; row++) {
+      for (int col = 0; col < w; col++) {
         if (bottomUp)
           index = pitch * (h - row - 1) + col;
         else
@@ -316,25 +319,27 @@ final class TJUnitTest {
     }
   }
 
-  static int getVal(Object buf, int index) {
+  static int getVal(Object buf, int index, int targetPrecision) {
     int v;
-    if (precision == 8)
+    if (targetPrecision <= 8)
       v = (int)(((byte[])buf)[index]);
     else
       v = (int)(((short[])buf)[index]);
     if (v < 0)
-      v += maxSample + 1;
+      v += (1 << targetPrecision);
     return v;
   }
 
-  static int checkBuf(Object buf, int w, int pitch, int h, int pf, int subsamp,
-                      TJScalingFactor sf, boolean bottomUp) throws Exception {
+  static boolean checkBuf(Object buf, int w, int pitch, int h, int pf,
+                          int subsamp, TJScalingFactor sf, boolean bottomUp)
+                          throws Exception {
     int roffset = TJ.getRedOffset(pf);
     int goffset = TJ.getGreenOffset(pf);
     int boffset = TJ.getBlueOffset(pf);
     int aoffset = TJ.getAlphaOffset(pf);
     int ps = TJ.getPixelSize(pf);
-    int index, row, col, retval = 1;
+    int index;
+    boolean retval = true;
     int halfway = 16 * sf.getNum() / sf.getDenom();
     int blockSize = 8 * sf.getNum() / sf.getDenom();
 
@@ -344,16 +349,16 @@ final class TJUnitTest {
         roffset = goffset = boffset = 0;
 
       if (pf == TJ.PF_CMYK) {
-        for (row = 0; row < h; row++) {
-          for (col = 0; col < w; col++) {
+        for (int row = 0; row < h; row++) {
+          for (int col = 0; col < w; col++) {
             if (bottomUp)
               index = (h - row - 1) * w + col;
             else
               index = row * w + col;
-            int c = getVal(buf, index * ps);
-            int m = getVal(buf, index * ps + 1);
-            int y = getVal(buf, index * ps + 2);
-            int k = getVal(buf, index * ps + 3);
+            int c = getVal(buf, index * ps, precision);
+            int m = getVal(buf, index * ps + 1, precision);
+            int y = getVal(buf, index * ps + 2, precision);
+            int k = getVal(buf, index * ps + 3, precision);
             checkValMax(row, col, c, "C");
             if (((row / blockSize) + (col / blockSize)) % 2 == 0) {
               checkValMax(row, col, m, "M");
@@ -372,19 +377,20 @@ final class TJUnitTest {
             }
           }
         }
-        return 1;
+        return true;
       }
 
-      for (row = 0; row < halfway; row++) {
-        for (col = 0; col < w; col++) {
+      for (int row = 0; row < halfway; row++) {
+        for (int col = 0; col < w; col++) {
           if (bottomUp)
             index = pitch * (h - row - 1) + col * ps;
           else
             index = pitch * row + col * ps;
-          int r = getVal(buf, index + roffset);
-          int g = getVal(buf, index + goffset);
-          int b = getVal(buf, index + boffset);
-          int a = aoffset >= 0 ? getVal(buf, index + aoffset) : maxSample;
+          int r = getVal(buf, index + roffset, precision);
+          int g = getVal(buf, index + goffset, precision);
+          int b = getVal(buf, index + boffset, precision);
+          int a = aoffset >= 0 ? getVal(buf, index + aoffset, precision) :
+                                 maxSample;
           if (((row / blockSize) + (col / blockSize)) % 2 == 0) {
             if (row < halfway) {
               checkValMax(row, col, r, "R");
@@ -421,22 +427,22 @@ final class TJUnitTest {
       }
     } catch (Exception e) {
       System.out.println("\n" + e.getMessage());
-      retval = 0;
+      retval = false;
     }
 
-    if (retval == 0) {
-      for (row = 0; row < h; row++) {
-        for (col = 0; col < w; col++) {
+    if (!retval) {
+      for (int row = 0; row < h; row++) {
+        for (int col = 0; col < w; col++) {
           if (pf == TJ.PF_CMYK) {
-            int c = getVal(buf, pitch * row + col * ps);
-            int m = getVal(buf, pitch * row + col * ps + 1);
-            int y = getVal(buf, pitch * row + col * ps + 2);
-            int k = getVal(buf, pitch * row + col * ps + 3);
+            int c = getVal(buf, pitch * row + col * ps, precision);
+            int m = getVal(buf, pitch * row + col * ps + 1, precision);
+            int y = getVal(buf, pitch * row + col * ps + 2, precision);
+            int k = getVal(buf, pitch * row + col * ps + 3, precision);
             System.out.format("%3d/%3d/%3d/%3d ", c, m, y, k);
           } else {
-            int r = getVal(buf, pitch * row + col * ps + roffset);
-            int g = getVal(buf, pitch * row + col * ps + goffset);
-            int b = getVal(buf, pitch * row + col * ps + boffset);
+            int r = getVal(buf, pitch * row + col * ps + roffset, precision);
+            int g = getVal(buf, pitch * row + col * ps + goffset, precision);
+            int b = getVal(buf, pitch * row + col * ps + boffset, precision);
             System.out.format("%3d/%3d/%3d ", r, g, b);
           }
         }
@@ -446,20 +452,21 @@ final class TJUnitTest {
     return retval;
   }
 
-  static int checkIntBuf(int[] buf, int w, int pitch, int h, int pf,
-                         int subsamp, TJScalingFactor sf, boolean bottomUp)
-                         throws Exception {
+  static boolean checkIntBuf(int[] buf, int w, int pitch, int h, int pf,
+                             int subsamp, TJScalingFactor sf, boolean bottomUp)
+                             throws Exception {
     int rshift = TJ.getRedOffset(pf) * 8;
     int gshift = TJ.getGreenOffset(pf) * 8;
     int bshift = TJ.getBlueOffset(pf) * 8;
     int ashift = TJ.getAlphaOffset(pf) * 8;
-    int index, row, col, retval = 1;
+    int index;
+    boolean retval = true;
     int halfway = 16 * sf.getNum() / sf.getDenom();
     int blockSize = 8 * sf.getNum() / sf.getDenom();
 
     try {
-      for (row = 0; row < halfway; row++) {
-        for (col = 0; col < w; col++) {
+      for (int row = 0; row < halfway; row++) {
+        for (int col = 0; col < w; col++) {
           if (bottomUp)
             index = pitch * (h - row - 1) + col;
           else
@@ -504,12 +511,12 @@ final class TJUnitTest {
       }
     } catch (Exception e) {
       System.out.println("\n" + e.getMessage());
-      retval = 0;
+      retval = false;
     }
 
-    if (retval == 0) {
-      for (row = 0; row < h; row++) {
-        for (col = 0; col < w; col++) {
+    if (!retval) {
+      for (int row = 0; row < h; row++) {
+        for (int col = 0; col < w; col++) {
           int r = (buf[pitch * row + col] >> rshift) & 0xFF;
           int g = (buf[pitch * row + col] >> gshift) & 0xFF;
           int b = (buf[pitch * row + col] >> bshift) & 0xFF;
@@ -524,8 +531,9 @@ final class TJUnitTest {
     return retval;
   }
 
-  static int checkImg(BufferedImage img, int pf, int subsamp,
-                      TJScalingFactor sf, boolean bottomUp) throws Exception {
+  static boolean checkImg(BufferedImage img, int pf, int subsamp,
+                          TJScalingFactor sf, boolean bottomUp)
+                          throws Exception {
     WritableRaster wr = img.getRaster();
     int imgType = img.getType();
     if (imgType == BufferedImage.TYPE_INT_RGB ||
@@ -553,14 +561,13 @@ final class TJUnitTest {
     return ((v + (p) - 1) & (~((p) - 1)));
   }
 
-  static int checkBufYUV(byte[] buf, int size, int w, int h, int subsamp,
-                         TJScalingFactor sf) throws Exception {
-    int row, col;
+  static boolean checkBufYUV(byte[] buf, int size, int w, int h, int subsamp,
+                             TJScalingFactor sf) throws Exception {
     int hsf = TJ.getMCUWidth(subsamp) / 8, vsf = TJ.getMCUHeight(subsamp) / 8;
     int pw = pad(w, hsf), ph = pad(h, vsf);
     int cw = pw / hsf, ch = ph / vsf;
     int ypitch = pad(pw, yuvAlign), uvpitch = pad(cw, yuvAlign);
-    int retval = 1;
+    boolean retval = true;
     int correctsize = ypitch * ph +
                       (subsamp == TJ.SAMP_GRAY ? 0 : uvpitch * ch * 2);
     int halfway = 16 * sf.getNum() / sf.getDenom();
@@ -571,8 +578,8 @@ final class TJUnitTest {
         throw new Exception("Incorrect size " + size + ".  Should be " +
                             correctsize);
 
-      for (row = 0; row < ph; row++) {
-        for (col = 0; col < pw; col++) {
+      for (int row = 0; row < ph; row++) {
+        for (int col = 0; col < pw; col++) {
           byte y = buf[ypitch * row + col];
           if (((row / blockSize) + (col / blockSize)) % 2 == 0) {
             if (row < halfway)
@@ -589,8 +596,8 @@ final class TJUnitTest {
       }
       if (subsamp != TJ.SAMP_GRAY) {
         halfway = 16 / vsf * sf.getNum() / sf.getDenom();
-        for (row = 0; row < ch; row++) {
-          for (col = 0; col < cw; col++) {
+        for (int row = 0; row < ch; row++) {
+          for (int col = 0; col < cw; col++) {
             byte u = buf[ypitch * ph + (uvpitch * row + col)],
                  v = buf[ypitch * ph + uvpitch * ch + (uvpitch * row + col)];
             if (((row * vsf / blockSize) + (col * hsf / blockSize)) % 2 == 0) {
@@ -610,12 +617,12 @@ final class TJUnitTest {
       }
     } catch (Exception e) {
       System.out.println("\n" + e.getMessage());
-      retval = 0;
+      retval = false;
     }
 
-    if (retval == 0) {
-      for (row = 0; row < ph; row++) {
-        for (col = 0; col < pw; col++) {
+    if (!retval) {
+      for (int row = 0; row < ph; row++) {
+        for (int col = 0; col < pw; col++) {
           int y = buf[ypitch * row + col];
           if (y < 0) y += 256;
           System.out.format("%3d ", y);
@@ -623,8 +630,8 @@ final class TJUnitTest {
         System.out.print("\n");
       }
       System.out.print("\n");
-      for (row = 0; row < ch; row++) {
-        for (col = 0; col < cw; col++) {
+      for (int row = 0; row < ch; row++) {
+        for (int col = 0; col < cw; col++) {
           int u = buf[ypitch * ph + (uvpitch * row + col)];
           if (u < 0) u += 256;
           System.out.format("%3d ", u);
@@ -632,8 +639,8 @@ final class TJUnitTest {
         System.out.print("\n");
       }
       System.out.print("\n");
-      for (row = 0; row < ch; row++) {
-        for (col = 0; col < cw; col++) {
+      for (int row = 0; row < ch; row++) {
+        for (int col = 0; col < cw; col++) {
           int v = buf[ypitch * ph + uvpitch * ch + (uvpitch * row + col)];
           if (v < 0) v += 256;
           System.out.format("%3d ", v);
@@ -648,9 +655,9 @@ final class TJUnitTest {
   static void writeJPEG(byte[] jpegBuf, int jpegBufSize, String filename)
                         throws Exception {
     File file = new File(filename);
-    FileOutputStream fos = new FileOutputStream(file);
-    fos.write(jpegBuf, 0, jpegBufSize);
-    fos.close();
+    try (FileOutputStream fos = new FileOutputStream(file)) {
+      fos.write(jpegBuf, 0, jpegBufSize);
+    }
   }
 
   static int compTest(TJCompressor tjc, byte[] dstBuf, int w, int h, int pf,
@@ -686,14 +693,14 @@ final class TJUnitTest {
       ImageIO.write(img, "png", file);
       tjc.setSourceImage(img, 0, 0, 0, 0);
     } else {
-      if (precision == 8)
+      if (precision <= 8)
         srcBuf = new byte[w * h * ps + 1];
       else
         srcBuf = new short[w * h * ps + 1];
       initBuf(srcBuf, w, w * ps, h, pf, bottomUp);
-      if (precision == 8)
+      if (precision <= 8)
         tjc.setSourceImage((byte[])srcBuf, 0, 0, w, 0, h, pf);
-      else if (precision == 12)
+      else if (precision <= 12)
         tjc.setSourceImage12((short[])srcBuf, 0, 0, w, 0, h, pf);
       else
         tjc.setSourceImage16((short[])srcBuf, 0, 0, w, 0, h, pf);
@@ -705,7 +712,7 @@ final class TJUnitTest {
                         SUBNAME_LONG[subsamp]);
       YUVImage yuvImage = tjc.encodeYUV(yuvAlign);
       if (checkBufYUV(yuvImage.getBuf(), yuvImage.getSize(), w, h, subsamp,
-                      new TJScalingFactor(1, 1)) == 1)
+                      TJ.UNSCALED))
         System.out.print("Passed.\n");
       else {
         System.out.print("FAILED!\n");
@@ -716,10 +723,11 @@ final class TJUnitTest {
                         buStrLong, jpegQual);
       tjc.setSourceImage(yuvImage);
     } else {
-      if (lossless)
+      if (lossless) {
+        tjc.set(TJ.PARAM_PRECISION, precision);
         System.out.format("%s %s -> LOSSLESS PSV%d ... ", pfStrLong, buStrLong,
                           jpegPSV);
-      else
+      } else
         System.out.format("%s %s -> %s Q%d ... ", pfStrLong, buStrLong,
                           SUBNAME_LONG[subsamp], jpegQual);
     }
@@ -774,7 +782,7 @@ final class TJUnitTest {
       else System.out.print("... ");
       YUVImage yuvImage = tjd.decompressToYUV(yuvAlign);
       if (checkBufYUV(yuvImage.getBuf(), yuvImage.getSize(), scaledWidth,
-                      scaledHeight, subsamp, sf) == 1)
+                      scaledHeight, subsamp, sf))
         System.out.print("Passed.\n");
       else {
         System.out.print("FAILED!\n");  exitStatus = -1;
@@ -792,9 +800,9 @@ final class TJUnitTest {
     if (bi)
       img = tjd.decompress8(imgType);
     else {
-      if (precision == 8)
+      if (precision <= 8)
         dstBuf = tjd.decompress8(0, pf);
-      else if (precision == 12)
+      else if (precision <= 12)
         dstBuf = tjd.decompress12(0, pf);
       else
         dstBuf = tjd.decompress16(0, pf);
@@ -808,10 +816,10 @@ final class TJUnitTest {
       ImageIO.write(img, "png", file);
     }
 
-    if ((bi && checkImg(img, pf, subsamp, sf, bottomUp) == 1) ||
+    if ((bi && checkImg(img, pf, subsamp, sf, bottomUp)) ||
         (!bi && checkBuf(dstBuf, scaledWidth,
                          scaledWidth * TJ.getPixelSize(pf), scaledHeight, pf,
-                         subsamp, sf, bottomUp) == 1))
+                         subsamp, sf, bottomUp)))
       System.out.print("Passed.\n");
     else {
       System.out.print("FAILED!\n");
@@ -822,8 +830,6 @@ final class TJUnitTest {
   static void decompTest(TJDecompressor tjd, byte[] jpegBuf, int jpegSize,
                          int w, int h, int pf, String baseName, int subsamp)
                          throws Exception {
-    int i;
-
     if (lossless) {
       decompTest(tjd, jpegBuf, jpegSize, w, h, pf, baseName, subsamp,
                  TJ.UNSCALED);
@@ -831,22 +837,21 @@ final class TJUnitTest {
     }
 
     TJScalingFactor[] sf = TJ.getScalingFactors();
-    for (i = 0; i < sf.length; i++) {
+    for (int i = 0; i < sf.length; i++) {
       int num = sf[i].getNum();
       int denom = sf[i].getDenom();
       if (subsamp == TJ.SAMP_444 || subsamp == TJ.SAMP_GRAY ||
           ((subsamp == TJ.SAMP_411 || subsamp == TJ.SAMP_441) && num == 1 &&
            (denom == 2 || denom == 1)) ||
           (subsamp != TJ.SAMP_411 && subsamp != TJ.SAMP_441 && num == 1 &&
-           (denom == 4 || denom == 2 || denom == 1)))
+           (denom == 4 || denom == 2 || denom == 1)) ||
+          (subsamp == TJ.SAMP_420 && num == 1 && denom == 8 && !doYUV))
         decompTest(tjd, jpegBuf, jpegSize, w, h, pf, baseName, subsamp, sf[i]);
     }
   }
 
   static void doTest(int w, int h, int[] formats, int subsamp, String baseName)
                      throws Exception {
-    TJCompressor tjc = null;
-    TJDecompressor tjd = null;
     int size;
     byte[] dstBuf;
 
@@ -855,9 +860,8 @@ final class TJUnitTest {
 
     dstBuf = new byte[TJ.bufSize(w, h, subsamp)];
 
-    try {
-      tjc = new TJCompressor();
-      tjd = new TJDecompressor();
+    try (TJCompressor tjc = new TJCompressor();
+         TJDecompressor tjd = new TJDecompressor()) {
 
       if (lossless) {
         tjc.set(TJ.PARAM_LOSSLESS, 1);
@@ -865,8 +869,7 @@ final class TJUnitTest {
       } else {
         tjc.set(TJ.PARAM_QUALITY, 100);
         if (subsamp == TJ.SAMP_422 || subsamp == TJ.SAMP_420 ||
-            subsamp == TJ.SAMP_440 || subsamp == TJ.SAMP_411 ||
-            subsamp == TJ.SAMP_441)
+            subsamp == TJ.SAMP_440)
           tjd.set(TJ.PARAM_FASTUPSAMPLE, 1);
       }
       tjc.set(TJ.PARAM_SUBSAMP, subsamp);
@@ -887,17 +890,12 @@ final class TJUnitTest {
         }
       }
       System.out.print("--------------------\n\n");
-    } catch (Exception e) {
-      if (tjc != null) tjc.close();
-      if (tjd != null) tjd.close();
-      throw e;
-    }
-    if (tjc != null) tjc.close();
-    if (tjd != null) tjd.close();
+
+    }  // try (tjc; tjd)
   }
 
   static void overflowTest() throws Exception {
-    /* Ensure that the various buffer size methods don't overflow */
+    // Ensure that the various buffer size methods don't overflow
     int size = 0;
     boolean exception = false;
 
@@ -946,16 +944,15 @@ final class TJUnitTest {
   }
 
   static void bufSizeTest() throws Exception {
-    int w, h, i, subsamp, numSamp = TJ.NUMSAMP;
+    int numSamp = TJ.NUMSAMP;
     byte[] srcBuf, dstBuf = null;
     YUVImage dstImage = null;
-    TJCompressor tjc = null;
     Random r = new Random();
 
-    try {
-      tjc = new TJCompressor();
+    try (TJCompressor tjc = new TJCompressor()) {
 
       if (lossless) {
+        tjc.set(TJ.PARAM_PRECISION, precision);
         tjc.set(TJ.PARAM_LOSSLESS, 1);
         tjc.set(TJ.PARAM_LOSSLESSPSV, ((psv++ - 1) % 7) + 1);
         numSamp = 1;
@@ -963,11 +960,11 @@ final class TJUnitTest {
         tjc.set(TJ.PARAM_QUALITY, 100);
 
       System.out.println("Buffer size regression test");
-      for (subsamp = 0; subsamp < numSamp; subsamp++) {
+      for (int subsamp = 0; subsamp < numSamp; subsamp++) {
         tjc.set(TJ.PARAM_SUBSAMP, subsamp);
-        for (w = 1; w < 48; w++) {
+        for (int w = 1; w < 48; w++) {
           int maxh = (w == 1) ? 2048 : 48;
-          for (h = 1; h < maxh; h++) {
+          for (int h = 1; h < maxh; h++) {
             if (h % 100 == 0)
               System.out.format("%04d x %04d\b\b\b\b\b\b\b\b\b\b\b", w, h);
             srcBuf = new byte[w * h * 4];
@@ -975,7 +972,7 @@ final class TJUnitTest {
               dstImage = new YUVImage(w, yuvAlign, h, subsamp);
             else
               dstBuf = new byte[TJ.bufSize(w, h, subsamp)];
-            for (i = 0; i < w * h * 4; i++) {
+            for (int i = 0; i < w * h * 4; i++) {
               srcBuf[i] = (byte)(r.nextInt(2) * 255);
             }
             tjc.setSourceImage(srcBuf, 0, 0, w, 0, h, TJ.PF_BGRX);
@@ -989,7 +986,7 @@ final class TJUnitTest {
               dstImage = new YUVImage(h, yuvAlign, w, subsamp);
             else
               dstBuf = new byte[TJ.bufSize(h, w, subsamp)];
-            for (i = 0; i < h * w * 4; i++) {
+            for (int i = 0; i < h * w * 4; i++) {
               srcBuf[i] = (byte)(r.nextInt(2) * 255);
             }
             tjc.setSourceImage(srcBuf, 0, 0, h, 0, w, TJ.PF_BGRX);
@@ -1004,16 +1001,328 @@ final class TJUnitTest {
         }
       }
       System.out.println("Done.      ");
-    } catch (Exception e) {
-      if (tjc != null) tjc.close();
-      throw e;
+
+    }  // try (tjc)
+  }
+
+  static void rgbToCMYK(int r, int g, int b, int[] c, int[] m, int[] y,
+                        int[] k) {
+    double ctmp = 1.0 - ((double)r / (double)maxSample);
+    double mtmp = 1.0 - ((double)g / (double)maxSample);
+    double ytmp = 1.0 - ((double)b / (double)maxSample);
+    double ktmp = Math.min(Math.min(ctmp, mtmp), ytmp);
+
+    if (ktmp == 1.0)
+      ctmp = mtmp = ytmp = 0.0;
+    else {
+      ctmp = (ctmp - ktmp) / (1.0 - ktmp);
+      mtmp = (mtmp - ktmp) / (1.0 - ktmp);
+      ytmp = (ytmp - ktmp) / (1.0 - ktmp);
     }
-    if (tjc != null) tjc.close();
+    c[0] = (int)((double)maxSample - ctmp * (double)maxSample + 0.5);
+    m[0] = (int)((double)maxSample - mtmp * (double)maxSample + 0.5);
+    y[0] = (int)((double)maxSample - ytmp * (double)maxSample + 0.5);
+    k[0] = (int)((double)maxSample - ktmp * (double)maxSample + 0.5);
+  }
+
+  static void initBitmap(Object buf, int width, int pitch, int height, int pf,
+                         boolean bottomUp) {
+    int roffset = TJ.getRedOffset(pf);
+    int goffset = TJ.getGreenOffset(pf);
+    int boffset = TJ.getBlueOffset(pf);
+    int ps = TJ.getPixelSize(pf);
+
+    for (int j = 0; j < height; j++) {
+      int row = bottomUp ? height - j - 1 : j;
+
+      for (int i = 0; i < width; i++) {
+        int r = (i * (maxSample + 1) / width) % (maxSample + 1);
+        int g = (j * (maxSample + 1) / height) % (maxSample + 1);
+        int b = (j * (maxSample + 1) / height +
+                 i * (maxSample + 1) / width) % (maxSample + 1);
+
+        for (int ci = 0; ci < ps; ci++)
+          setVal(buf, row * pitch + i * ps + ci, 0);
+        if (pf == TJ.PF_GRAY)
+          setVal(buf, row * pitch + i * ps, b);
+        else if (pf == TJ.PF_CMYK) {
+          int[] c = new int[1], m = new int[1], y = new int[1], k = new int[1];
+
+          rgbToCMYK(r, g, b, c, m, y, k);
+          setVal(buf, row * pitch + i * ps + 0, c[0]);
+          setVal(buf, row * pitch + i * ps + 1, m[0]);
+          setVal(buf, row * pitch + i * ps + 2, y[0]);
+          setVal(buf, row * pitch + i * ps + 3, k[0]);
+        } else {
+          setVal(buf, row * pitch + i * ps + roffset, r);
+          setVal(buf, row * pitch + i * ps + goffset, g);
+          setVal(buf, row * pitch + i * ps + boffset, b);
+        }
+      }
+    }
+  }
+
+  static void cmykToRGB(int c, int m, int y, int k, int[] r, int[] g,
+                        int[] b, int targetMaxSample) {
+    r[0] = (int)((double)c * (double)k / (double)targetMaxSample + 0.5);
+    g[0] = (int)((double)m * (double)k / (double)targetMaxSample + 0.5);
+    b[0] = (int)((double)y * (double)k / (double)targetMaxSample + 0.5);
+  }
+
+  static boolean cmpBitmap(Object buf, int width, int pitch, int height,
+                           int pf, boolean bottomUp, boolean gray2rgb,
+                           int targetPrecision) {
+    int roffset = TJ.getRedOffset(pf);
+    int goffset = TJ.getGreenOffset(pf);
+    int boffset = TJ.getBlueOffset(pf);
+    int aoffset = TJ.getAlphaOffset(pf);
+    int ps = TJ.getPixelSize(pf);
+    int targetMaxSample = (1 << targetPrecision) - 1;
+
+    for (int j = 0; j < height; j++) {
+      int row = bottomUp ? height - j - 1 : j;
+
+      for (int i = 0; i < width; i++) {
+        int r = (i * (maxSample + 1) / width) % (maxSample + 1);
+        int g = (j * (maxSample + 1) / height) % (maxSample + 1);
+        int b = (j * (maxSample + 1) / height +
+                 i * (maxSample + 1) / width) % (maxSample + 1);
+
+        if (precision != targetPrecision) {
+          long halfMaxSample = maxSample / 2;
+
+          r = (int)((r * ((1 << targetPrecision) - 1) + halfMaxSample) /
+                    maxSample);
+          g = (int)((g * ((1 << targetPrecision) - 1) + halfMaxSample) /
+                    maxSample);
+          b = (int)((b * ((1 << targetPrecision) - 1) + halfMaxSample) /
+                    maxSample);
+        }
+
+        if (pf == TJ.PF_GRAY) {
+          if (getVal(buf, row * pitch + i * ps, targetPrecision) != b)
+            return false;
+        } else if (pf == TJ.PF_CMYK) {
+          int[] rf = new int[1], gf = new int[1], bf = new int[1];
+
+          cmykToRGB(getVal(buf, row * pitch + i * ps + 0, targetPrecision),
+                    getVal(buf, row * pitch + i * ps + 1, targetPrecision),
+                    getVal(buf, row * pitch + i * ps + 2, targetPrecision),
+                    getVal(buf, row * pitch + i * ps + 3, targetPrecision),
+                    rf, gf, bf, targetMaxSample);
+          if (gray2rgb) {
+            if (rf[0] != b || gf[0] != b || bf[0] != b)
+              return false;
+          } else if (rf[0] != r || gf[0] != g || bf[0] != b)
+            return false;
+        } else {
+          if (gray2rgb) {
+            if (getVal(buf, row * pitch + i * ps + roffset,
+                       targetPrecision) != b ||
+                getVal(buf, row * pitch + i * ps + goffset,
+                       targetPrecision) != b ||
+                getVal(buf, row * pitch + i * ps + boffset,
+                       targetPrecision) != b)
+              return false;
+          } else if (getVal(buf, row * pitch + i * ps + roffset,
+                            targetPrecision) != r ||
+                     getVal(buf, row * pitch + i * ps + goffset,
+                            targetPrecision) != g ||
+                     getVal(buf, row * pitch + i * ps + boffset,
+                            targetPrecision) != b)
+            return false;
+          if (aoffset >= 0 &&
+              getVal(buf, row * pitch + i * ps + aoffset,
+                     targetPrecision) != targetMaxSample)
+            return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  static String getMD5Sum(String filename) throws Exception {
+    byte[] bytes = Files.readAllBytes(Paths.get(filename));
+    byte[] md5sum =
+      java.security.MessageDigest.getInstance("MD5").digest(bytes);
+    return new java.math.BigInteger(1, md5sum).toString(16);
+  }
+
+  static void doBmpTest(String ext, int width, int align, int height, int pf,
+                        boolean bottomUp) throws Exception {
+    String filename, md5sum;
+    int ps = TJ.getPixelSize(pf), pitch = pad(width * ps, align),
+      loadWidth = 0, loadPitch = 0, loadHeight = 0, pixelFormat = pf;
+    Object buf = null;
+    String md5ref;
+    String[] colorPPMRefs = new String[] {
+      "", "", "bad09d9ef38eda566848fb7c0b7fd0a",
+      "7ef2c87261a8bd6838303b541563cf27", "28a37cf9636ff6bb9ed6b206bdac60db",
+      "723307791d42e0b5f9e91625c7636086", "d729c4bcd3addc14abc16b656c6bbc98",
+      "5d7636eedae3cf579b6de13078227548", "c0c9f772b464d1896326883a5c79c545",
+      "fcf6490e0445569427f1d95baf5f8fcb", "5cbc3b0ccba23f5781d950a72e0ccc83",
+      "d4e26d6d16d7bfee380f6feb10f7e53",  "2ff5299287017502832c99718450c90a",
+      "44ae6cd70c798ea583ab0c8c03621092", "697b2fe03892bc9a75396ad3e73d9203",
+      "599732f973eb7c0849a888e783bbe27e", "623f54661b928d170bd2324bc3620565"
+    };
+    String[] grayPPMRefs = new String[] {
+      "", "", "7565be35a2ce909cae016fa282af8efa",
+      "e86b9ea57f7d53f6b5497653740992b5", "8924d4d81fe0220c684719294f93407a",
+      "e2e69ba70efcfae317528c91651c7ae2", "e6154aafc1eb9e4333d68ce7ad9df051",
+      "3d7fe831d6fbe55d3fa12f52059c15d3", "112c682e82ce5de1cca089e20d60000b",
+      "5a7ce86c649dda86d6fed185ab78a67",  "b723c0bc087592816523fbc906b7c3a",
+      "5da422b1ddfd44c7659094d42ba5580c", "d1895c7e6f2b2c9af6e821a655c239c",
+      "fc2803bca103ff75785ea0dca992aa",   "d8c91fac522c16b029e514d331a22bc4",
+      "e50cff0b3562ed7e64dbfc093440e333", "64f3320b226ea37fb58080713b4df1b2"
+    };
+    int maxTargetPrecision = 16;
+
+    try (TJCompressor tjc =  new TJCompressor();
+         TJDecompressor tjd = new TJDecompressor()) {
+
+      tjc.set(TJ.PARAM_BOTTOMUP, bottomUp ? 1 : 0);
+      tjd.set(TJ.PARAM_BOTTOMUP, bottomUp ? 1 : 0);
+      tjd.set(TJ.PARAM_PRECISION, precision);
+
+      if (precision == 8 && ext.equalsIgnoreCase("bmp")) {
+        md5ref = (pf == TJ.PF_GRAY ? "51976530acf75f02beddf5d21149101d" :
+                                     "6d659071b9bfcdee2def22cb58ddadca");
+        maxTargetPrecision = 8;
+      } else
+        md5ref = (pf == TJ.PF_GRAY ? grayPPMRefs[precision] :
+                                     colorPPMRefs[precision]);
+
+      if (precision <= 8)
+        buf = new byte[pitch * height];
+      else
+        buf = new short[pitch * height];
+      initBitmap(buf, width, pitch, height, pf, bottomUp);
+
+      filename = String.format("test_bmp%d_%s_%d_%s_%s.%s", precision,
+                               PIXFORMATSTR[pf], align, bottomUp ? "bu" : "td",
+                               uniqueID, ext);
+      tjd.saveImage(filename, buf, 0, 0, width, pitch, height, pf);
+      md5sum = getMD5Sum(filename);
+      if (md5sum == null)
+        throw new Exception("Could not determine MD5 sum of " + filename);
+      if (!md5sum.equalsIgnoreCase(md5ref))
+        throw new Exception(filename + " has an MD5 sum of " + md5sum +
+                            ".  Should be " + md5ref);
+
+      for (int targetPrecision = 2; targetPrecision <= maxTargetPrecision;
+           targetPrecision++) {
+        tjc.set(TJ.PARAM_PRECISION, targetPrecision);
+        pf = pixelFormat;
+
+        tjc.loadSourceImage(filename, align, pf);
+        loadWidth = tjc.getWidth();
+        loadPitch = tjc.getPitch();
+        loadHeight = tjc.getHeight();
+        pf = tjc.getPixelFormat();
+        buf = tjc.getSourceBuf();
+        pitch = pad(width * TJ.getPixelSize(pf), align);
+        if (width != loadWidth || pitch != loadPitch || height != loadHeight)
+          throw new Exception("Image dimensions of " + filename +
+                              " are bogus");
+        if (!cmpBitmap(buf, width, pitch, height, pf, bottomUp, false,
+                       ext.equalsIgnoreCase("bmp") ? 8 : targetPrecision))
+          throw new Exception("Pixel data in " + filename + " is bogus " +
+                              "(target data precision = " + targetPrecision +
+                              ")");
+
+        if (pf == TJ.PF_GRAY) {
+          pf = TJ.PF_XBGR;
+          tjc.loadSourceImage(filename, align, pf);
+          loadWidth = tjc.getWidth();
+          loadPitch = tjc.getPitch();
+          loadHeight = tjc.getHeight();
+          pf = tjc.getPixelFormat();
+          buf = tjc.getSourceBuf();
+          pitch = pad(width * TJ.getPixelSize(pf), align);
+          if (width != loadWidth || pitch != loadPitch || height != loadHeight)
+            throw new Exception("Image dimensions of " + filename +
+                                " are bogus");
+          if (!cmpBitmap(buf, width, pitch, height, pf, bottomUp, true,
+                         ext.equalsIgnoreCase("bmp") ? 8 : targetPrecision))
+            throw new Exception("Converting " + filename + " to RGB failed " +
+                                "(target data precision = " + targetPrecision +
+                                ")");
+
+          pf = TJ.PF_CMYK;
+          tjc.loadSourceImage(filename, align, pf);
+          loadWidth = tjc.getWidth();
+          loadPitch = tjc.getPitch();
+          loadHeight = tjc.getHeight();
+          pf = tjc.getPixelFormat();
+          buf = tjc.getSourceBuf();
+          pitch = pad(width * TJ.getPixelSize(pf), align);
+          if (width != loadWidth || pitch != loadPitch || height != loadHeight)
+            throw new Exception("Image dimensions of " + filename +
+                                " are bogus");
+          if (!cmpBitmap(buf, width, pitch, height, pf, bottomUp, true,
+                         ext.equalsIgnoreCase("bmp") ? 8 : targetPrecision))
+            throw new Exception("Converting " + filename +
+                                " to CMYK failed (target data precision = " +
+                                targetPrecision + ")");
+        }
+
+        // Verify that TJCompressor.loadSourceImage() returns the proper
+        // "preferred" pixel format for the file type.
+        pf = pixelFormat;
+        pixelFormat = TJ.PF_UNKNOWN;
+        tjc.loadSourceImage(filename, align, pixelFormat);
+        pixelFormat = tjc.getPixelFormat();
+        if ((pf == TJ.PF_GRAY && pixelFormat != TJ.PF_GRAY) ||
+            (pf != TJ.PF_GRAY && ext.equalsIgnoreCase("bmp") &&
+             pixelFormat != TJ.PF_BGR) ||
+            (pf != TJ.PF_GRAY && ext.equalsIgnoreCase("ppm") &&
+             pixelFormat != TJ.PF_RGB))
+          throw new Exception("TJCompressor.loadImage() returned unexpected " +
+                              "pixel format: " + PIXFORMATSTR[pixelFormat]);
+      }
+      File file = new File(filename);
+      file.delete();
+
+    }  // try (tjc; tjd)
+  }
+
+  static void bmpTest() throws Exception {
+    int width = 35, height = 39;
+
+    for (int align = 1; align <= 8; align *= 2) {
+      for (int format = 0; format < TJ.NUMPF; format++) {
+        if (precision == 8) {
+          System.out.format("%s Top-Down BMP (row alignment = %d samples)  ...  ",
+                            PIXFORMATSTR[format], align);
+          doBmpTest("bmp", width, align, height, format, false);
+          System.out.println("OK.");
+        }
+
+        System.out.format("%s Top-Down PPM (row alignment = %d samples)  ...  ",
+                          PIXFORMATSTR[format], align);
+        doBmpTest("ppm", width, align, height, format, false);
+        System.out.println("OK.");
+
+        if (precision == 8) {
+          System.out.format("%s Bottom-Up BMP (row alignment = %d samples)  ...  ",
+                            PIXFORMATSTR[format], align);
+          doBmpTest("bmp", width, align, height, format, true);
+          System.out.println("OK.");
+        }
+
+        System.out.format("%s Bottom-Up PPM (row alignment = %d samples)  ...  ",
+                          PIXFORMATSTR[format], align);
+        doBmpTest("ppm", width, align, height, format, true);
+        System.out.println("OK.");
+      }
+    }
   }
 
   public static void main(String[] argv) {
     try {
       String testName = "javatest";
+      boolean bmp = false;
+
       for (int i = 0; i < argv.length; i++) {
         if (argv[i].equalsIgnoreCase("-yuv"))
           doYUV = true;
@@ -1024,17 +1333,19 @@ final class TJUnitTest {
         else if (argv[i].equalsIgnoreCase("-bi")) {
           bi = true;
           testName = "javabitest";
-        } else if (argv[i].equalsIgnoreCase("-precision") &&
-                   i < argv.length - 1) {
+        } else if (argv[i].equalsIgnoreCase("-bmp"))
+          bmp = true;
+        else if (argv[i].equalsIgnoreCase("-precision") &&
+                 i < argv.length - 1) {
           int tempi = -1;
 
           try {
             tempi = Integer.parseInt(argv[++i]);
           } catch (NumberFormatException e) {}
-          if (tempi != 8 && tempi != 12 && tempi != 16)
+          if (tempi < 2 || tempi > 16)
             usage();
           precision = tempi;
-          if (precision == 16)
+          if (precision != 8 && precision != 12)
             lossless = true;
         } else
           usage();
@@ -1047,12 +1358,16 @@ final class TJUnitTest {
         throw new Exception("BufferedImage support requires 8-bit data precision.");
 
       System.out.format("Testing %d-bit precision\n", precision);
-      sampleSize = (precision == 8 ? 1 : 2);
+      sampleSize = (precision <= 8 ? 1 : 2);
       maxSample = (1 << precision) - 1;
       tolerance = (lossless ? 0 : (precision > 8 ? 2 : 1));
       redToY = (19595 * maxSample) >> 16;
       yellowToY = (58065 * maxSample) >> 16;
 
+      if (bmp) {
+        bmpTest();
+        System.exit(exitStatus);
+      }
       if (doYUV)
         FORMATS_4SAMPLE[4] = -1;
       overflowTest();

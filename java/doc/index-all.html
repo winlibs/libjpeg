@@ -14,7 +14,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="jquery/jquery-3.6.1.min.js"></script>
+<script type="text/javascript" src="jquery/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="jquery/jquery-ui.min.js"></script>
 </head>
 <body>
@@ -91,7 +91,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </nav>
 </header>
 <main role="main">
-<div class="contentContainer"><a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a><a id="I:B">
+<div class="contentContainer"><a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a><a id="I:B">
 <!--   -->
 </a>
 <h2 class="title">B</h2>
@@ -100,6 +100,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Returns the maximum size of the buffer (in bytes) required to hold a JPEG
  image with the given width, height, and level of chrominance subsampling.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransformer.html#bufSize(org.libjpegturbo.turbojpeg.TJTransform)">bufSize(TJTransform)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransformer.html" title="class in org.libjpegturbo.turbojpeg">TJTransformer</a></dt>
+<dd>
+<div class="block">Returns the maximum size of the buffer (in bytes) required to hold a JPEG
+ image transformed, with the given transform parameters and/or cropping
+ region, from the JPEG source image associated with this transformer
+ instance.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#bufSizeYUV(int,int,int,int)">bufSizeYUV(int, int, int, int)</a></span> - Static method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
@@ -136,37 +143,25 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  compressor instance and output a JPEG image to the given destination
  buffer.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#compress(byte%5B%5D,int)">compress(byte[], int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJCompressor.html#set(int,int)"><code>set()</code></a> and <a href="org/libjpegturbo/turbojpeg/TJCompressor.html#compress(byte%5B%5D)"><code>TJCompressor.compress(byte[])</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#compress(int)">compress(int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJCompressor.html#set(int,int)"><code>set()</code></a> and <a href="org/libjpegturbo/turbojpeg/TJCompressor.html#compress()"><code>TJCompressor.compress()</code></a> instead.</div>
-</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#CS_CMYK">CS_CMYK</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">CMYK colorspace.</div>
+<div class="block">CMYK colorspace</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#CS_GRAY">CS_GRAY</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">Grayscale colorspace.</div>
+<div class="block">Grayscale colorspace</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#CS_RGB">CS_RGB</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">RGB colorspace.</div>
+<div class="block">RGB colorspace</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#CS_YCbCr">CS_YCbCr</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">YCbCr colorspace.</div>
+<div class="block">YCbCr colorspace</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#CS_YCCK">CS_YCCK</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">YCCK colorspace.</div>
+<div class="block">YCCK colorspace</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCustomFilter.html#customFilter(java.nio.ShortBuffer,java.awt.Rectangle,java.awt.Rectangle,int,int,org.libjpegturbo.turbojpeg.TJTransform)">customFilter(ShortBuffer, Rectangle, Rectangle, int, int, TJTransform)</a></span> - Method in interface org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCustomFilter.html" title="interface in org.libjpegturbo.turbojpeg">TJCustomFilter</a></dt>
 <dd>
@@ -180,72 +175,38 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">D</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress(byte%5B%5D,int,int,int,int,int,int,int)">decompress(byte[], int, int, int, int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#set(int,int)"><code>set()</code></a>,
- <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and
- <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress8(byte%5B%5D,int,int,int,int)"><code>TJDecompressor.decompress8(byte[], int, int, int, int)</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress(int%5B%5D,int,int,int,int,int,int,int)">decompress(int[], int, int, int, int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#set(int,int)"><code>set()</code></a>, <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress8(int%5B%5D,int,int,int,int)"><code>TJDecompressor.decompress8(int[], int, int, int, int)</code></a>
- instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress(int,int,int,int)">decompress(int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#set(int,int)"><code>set()</code></a>, <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress8(int)"><code>TJDecompressor.decompress8(int)</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress(int,int,int,int,int)">decompress(int, int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#set(int,int)"><code>set()</code></a>,
- <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and
- <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress8(int,int)"><code>TJDecompressor.decompress8(int, int)</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress(java.awt.image.BufferedImage,int)">decompress(BufferedImage, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#set(int,int)"><code>set()</code></a>, <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress8(java.awt.image.BufferedImage)"><code>TJDecompressor.decompress8(BufferedImage)</code></a> instead.</div>
-</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress12(int,int)">decompress12(int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
-<div class="block">Decompress the 12-bit-per-sample JPEG source image associated with this
- decompressor instance and return a buffer containing a 12-bit-per-sample
- packed-pixel decompressed image.</div>
+<div class="block">Decompress the JPEG source image with 9 to 12 bits per sample associated
+ with this decompressor instance and return a buffer containing a
+ packed-pixel decompressed image with the same data precision.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress12(short%5B%5D,int,int,int,int)">decompress12(short[], int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
-<div class="block">Decompress the 12-bit-per-sample JPEG source image associated with this
- decompressor instance and output a 12-bit-per-sample packed-pixel
- grayscale, RGB, or CMYK image to the given destination buffer.</div>
+<div class="block">Decompress the JPEG source image with 9 to 12 bits per sample associated
+ with this decompressor instance and output a packed-pixel grayscale, RGB,
+ or CMYK image with the same data precision to the given destination
+ buffer.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress16(int,int)">decompress16(int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
-<div class="block">Decompress the 16-bit-per-sample JPEG source image associated with this
- decompressor instance and return a buffer containing a 16-bit-per-sample
- packed-pixel decompressed image.</div>
+<div class="block">Decompress the JPEG source image with 13 to 16 bits per sample associated
+ with this decompressor instance and return a buffer containing a
+ packed-pixel decompressed image with the same data precision.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress16(short%5B%5D,int,int,int,int)">decompress16(short[], int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
-<div class="block">Decompress the 16-bit-per-sample lossless JPEG source image associated
- with this decompressor instance and output a 16-bit-per-sample
- packed-pixel grayscale, RGB, or CMYK image to the given destination
+<div class="block">Decompress the JPEG source image with 13 to 16 bits per sample associated
+ with this decompressor instance and output a packed-pixel grayscale, RGB,
+ or CMYK image with the same data precision to the given destination
  buffer.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress8(byte%5B%5D,int,int,int,int)">decompress8(byte[], int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
-<div class="block">Decompress the 8-bit-per-sample JPEG source image or decode the planar YUV
- source image associated with this decompressor instance and output an
- 8-bit-per-sample packed-pixel grayscale, RGB, or CMYK image to the given
- destination buffer.</div>
+<div class="block">Decompress the JPEG source image with 2 to 8 bits per sample, or decode
+ the 8-bit-per-sample planar YUV source image, associated with this
+ decompressor instance and output a packed-pixel grayscale, RGB, or CMYK
+ image with the same data precision to the given destination buffer.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress8(int)">decompress8(int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
@@ -263,9 +224,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress8(int,int)">decompress8(int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
-<div class="block">Decompress the 8-bit-per-sample JPEG source image or decode the planar YUV
- source image associated with this decompressor instance and return a
- buffer containing an 8-bit-per-sample packed-pixel decompressed image.</div>
+<div class="block">Decompress the JPEG source image with 2 to 8 bits per sample, or decode
+ the 8-bit-per-sample planar YUV source image, associated with this
+ decompressor instance and return a buffer containing a packed-pixel
+ decompressed image with the same data precision.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompress8(java.awt.image.BufferedImage)">decompress8(BufferedImage)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
@@ -287,29 +249,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  image planes and return a <a href="org/libjpegturbo/turbojpeg/YUVImage.html" title="class in org.libjpegturbo.turbojpeg"><code>YUVImage</code></a> instance containing the
  decompressed image planes.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompressToYUV(int,int%5B%5D,int,int)">decompressToYUV(int, int[], int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#set(int,int)"><code>set()</code></a>, <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompressToYUV(int%5B%5D)"><code>TJDecompressor.decompressToYUV(int[])</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompressToYUV(int,int,int,int)">decompressToYUV(int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#set(int,int)"><code>set()</code></a>, <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompressToYUV(int)"><code>TJDecompressor.decompressToYUV(int)</code></a> instead.</div>
-</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompressToYUV(org.libjpegturbo.turbojpeg.YUVImage)">decompressToYUV(YUVImage)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
 <div class="block">Decompress the 8-bit-per-sample JPEG source image associated with this
  decompressor instance into an 8-bit-per-sample planar YUV image and store
  it in the given <a href="org/libjpegturbo/turbojpeg/YUVImage.html" title="class in org.libjpegturbo.turbojpeg"><code>YUVImage</code></a> instance.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompressToYUV(org.libjpegturbo.turbojpeg.YUVImage,int)">decompressToYUV(YUVImage, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#set(int,int)"><code>set()</code></a>, <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a>, and <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#decompressToYUV(org.libjpegturbo.turbojpeg.YUVImage)"><code>TJDecompressor.decompressToYUV(YUVImage)</code></a> instead.</div>
-</div>
 </dd>
 </dl>
 <a id="I:E">
@@ -330,30 +274,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  image planes and return a <a href="org/libjpegturbo/turbojpeg/YUVImage.html" title="class in org.libjpegturbo.turbojpeg"><code>YUVImage</code></a> instance containing the encoded
  image planes.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(int%5B%5D,int)">encodeYUV(int[], int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJCompressor.html#set(int,int)"><code>set()</code></a> and <a href="org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(int%5B%5D)"><code>TJCompressor.encodeYUV(int[])</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(int,int)">encodeYUV(int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJCompressor.html#set(int,int)"><code>set()</code></a> and <a href="org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(int)"><code>TJCompressor.encodeYUV(int)</code></a> instead.</div>
-</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(org.libjpegturbo.turbojpeg.YUVImage)">encodeYUV(YUVImage)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
 <dd>
 <div class="block">Encode the 8-bit-per-sample packed-pixel source image associated with this
  compressor instance into an 8-bit-per-sample planar YUV image and store it
  in the given <a href="org/libjpegturbo/turbojpeg/YUVImage.html" title="class in org.libjpegturbo.turbojpeg"><code>YUVImage</code></a> instance.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(org.libjpegturbo.turbojpeg.YUVImage,int)">encodeYUV(YUVImage, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJCompressor.html#set(int,int)"><code>set()</code></a> and <a href="org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(org.libjpegturbo.turbojpeg.YUVImage)"><code>TJCompressor.encodeYUV(YUVImage)</code></a>
- instead.</div>
-</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJScalingFactor.html#equals(org.libjpegturbo.turbojpeg.TJScalingFactor)">equals(TJScalingFactor)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJScalingFactor.html" title="class in org.libjpegturbo.turbojpeg">TJScalingFactor</a></dt>
 <dd>
@@ -379,48 +304,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#finalize()">finalize()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#FLAG_ACCURATEDCT">FLAG_ACCURATEDCT</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_FASTDCT"><code>TJ.PARAM_FASTDCT</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#FLAG_BOTTOMUP">FLAG_BOTTOMUP</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_BOTTOMUP"><code>TJ.PARAM_BOTTOMUP</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#FLAG_FASTDCT">FLAG_FASTDCT</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_FASTDCT"><code>TJ.PARAM_FASTDCT</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#FLAG_FASTUPSAMPLE">FLAG_FASTUPSAMPLE</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_FASTUPSAMPLE"><code>TJ.PARAM_FASTUPSAMPLE</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#FLAG_LIMITSCANS">FLAG_LIMITSCANS</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_SCANLIMIT"><code>TJ.PARAM_SCANLIMIT</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#FLAG_PROGRESSIVE">FLAG_PROGRESSIVE</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_PROGRESSIVE"><code>TJ.PARAM_PROGRESSIVE</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#FLAG_STOPONWARNING">FLAG_STOPONWARNING</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_STOPONWARNING"><code>TJ.PARAM_STOPONWARNING</code></a> instead.</div>
-</div>
-</dd>
 </dl>
 <a id="I:G">
 <!--   -->
@@ -450,17 +333,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the YUV buffer (if this image is stored in a unified buffer rather
  than separate image planes.)</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#getColorspace()">getColorspace()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <code><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#get(int)"><code>get</code></a>(<a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_COLORSPACE"><code>TJ.PARAM_COLORSPACE</code></a>)</code>
- instead.</div>
-</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#getCompressedSize()">getCompressedSize()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
 <dd>
 <div class="block">Returns the size of the image (in bytes) generated by the most recent
- compress operation.</div>
+ compression operation.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJScalingFactor.html#getDenom()">getDenom()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJScalingFactor.html" title="class in org.libjpegturbo.turbojpeg">TJScalingFactor</a></dt>
 <dd>
@@ -476,6 +352,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">For the given pixel format, returns the number of samples that the green
  component is offset from the start of the pixel.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#getHeight()">getHeight()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
+<dd>
+<div class="block">Returns the height of the source image (packed-pixel or YUV) associated
+ with this compressor instance.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#getHeight()">getHeight()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
 <div class="block">Returns the height of the source image (JPEG or YUV) associated with this
@@ -484,6 +365,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/YUVImage.html#getHeight()">getHeight()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a></dt>
 <dd>
 <div class="block">Returns the height of the YUV image (or subregion.)</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#getICCProfile()">getICCProfile()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
+<dd>
+<div class="block">Retrieve the ICC (International Color Consortium) color management profile
+ (if any) that was previously extracted from the JPEG image associated with
+ this decompressor instance (see <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setSourceImage(byte%5B%5D,int)"><code>TJDecompressor.setSourceImage(byte[], int)</code></a>), and
+ return a buffer containing the ICC profile.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#getICCSize()">getICCSize()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
+<dd>
+<div class="block">Returns the size of the ICC profile (if any) that was previously extracted
+ from the JPEG image associated with this decompressor instance
+ (see <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setSourceImage(byte%5B%5D,int)"><code>TJDecompressor.setSourceImage(byte[], int)</code></a>), or 0 if there is no ICC
+ profile to retrieve.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#getJPEGBuf()">getJPEGBuf()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
@@ -496,13 +391,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#getMCUHeight(int)">getMCUHeight(int)</a></span> - Static method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">Returns the MCU block height for the given level of chrominance
- subsampling.</div>
+<div class="block">Returns the iMCU height for the given level of chrominance subsampling.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#getMCUWidth(int)">getMCUWidth(int)</a></span> - Static method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">Returns the MCU block width for the given level of chrominance
- subsampling.</div>
+<div class="block">Returns the iMCU width for the given level of chrominance subsampling.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJScalingFactor.html#getNum()">getNum()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJScalingFactor.html" title="class in org.libjpegturbo.turbojpeg">TJScalingFactor</a></dt>
 <dd>
@@ -517,6 +410,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Returns the row alignment (in bytes) of the YUV buffer (if this image is
  stored in a unified buffer rather than separate image planes.)</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#getPitch()">getPitch()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
+<dd>
+<div class="block">Returns the pitch (samples per row) of the packed-pixel source image
+ associated with this compressor instance.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#getPixelFormat()">getPixelFormat()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
+<dd>
+<div class="block">Returns the pixel format of the packed-pixel source image associated with
+ this compressor instance.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#getPixelSize(int)">getPixelSize(int)</a></span> - Static method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
@@ -535,20 +438,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Returns the scaled value of <code>dimension</code>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#getScaledHeight(int,int)">getScaledHeight(int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a> and
- <a href="org/libjpegturbo/turbojpeg/TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a> instead.</div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#getScaledWidth(int,int)">getScaledWidth(int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)"><code>setScalingFactor()</code></a> and
- <a href="org/libjpegturbo/turbojpeg/TJScalingFactor.html#getScaled(int)"><code>TJScalingFactor.getScaled()</code></a> instead.</div>
-</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#getScalingFactors()">getScalingFactors()</a></span> - Static method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
 <div class="block">Returns a list of fractional scaling factors that the JPEG decompressor
@@ -559,16 +448,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the size (in bytes) of the YUV buffer (if this image is stored in
  a unified buffer rather than separate image planes.)</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#getSourceBuf()">getSourceBuf()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
+<dd>
+<div class="block">Returns the buffer containing the packed-pixel image associated with this
+ compressor instance.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/YUVImage.html#getStrides()">getStrides()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a></dt>
 <dd>
 <div class="block">Returns the number of bytes per row of each plane in the YUV image.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#getSubsamp()">getSubsamp()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <code><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#get(int)"><code>get</code></a>(<a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_SUBSAMP"><code>TJ.PARAM_SUBSAMP</code></a>)</code>
- instead.</div>
-</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/YUVImage.html#getSubsamp()">getSubsamp()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/YUVImage.html" title="class in org.libjpegturbo.turbojpeg">YUVImage</a></dt>
 <dd>
@@ -578,6 +465,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Returns an array containing the sizes of the transformed JPEG images
  (in bytes) generated by the most recent transform operation.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#getWidth()">getWidth()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
+<dd>
+<div class="block">Returns the width of the source image (packed-pixel or YUV) associated
+ with this compressor instance.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#getWidth()">getWidth()</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
@@ -598,6 +490,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Returns true or false, depending on whether this instance is equal to
  1/1.</div>
+</dd>
+</dl>
+<a id="I:L">
+<!--   -->
+</a>
+<h2 class="title">L</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#loadSourceImage(java.lang.String,int,int)">loadSourceImage(String, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
+<dd>
+<div class="block">Load a packed-pixel RGB or grayscale source image with 2 to 16 bits of
+ data precision per sample from disk into memory and associate it with this
+ compressor instance.</div>
 </dd>
 </dl>
 <a id="I:N">
@@ -670,47 +574,43 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransform.html#OPT_ARITHMETIC">OPT_ARITHMETIC</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</a></dt>
 <dd>
-<div class="block">This option will enable arithmetic entropy coding in the JPEG image
- generated by this particular transform.</div>
+<div class="block">Enable arithmetic entropy coding in the destination image.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransform.html#OPT_COPYNONE">OPT_COPYNONE</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</a></dt>
 <dd>
-<div class="block">This option will prevent <a href="org/libjpegturbo/turbojpeg/TJTransformer.html#transform(byte%5B%5D%5B%5D,org.libjpegturbo.turbojpeg.TJTransform%5B%5D)"><code>TJTransformer.transform()</code></a> from copying any extra markers (including EXIF
- and ICC profile data) from the source image to the destination image.</div>
+<div class="block">Do not copy any extra markers (including Exif and ICC profile data) from
+ the source image to the destination image.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransform.html#OPT_CROP">OPT_CROP</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</a></dt>
 <dd>
-<div class="block">This option will enable lossless cropping.</div>
+<div class="block">Enable lossless cropping.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransform.html#OPT_GRAY">OPT_GRAY</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</a></dt>
 <dd>
-<div class="block">This option will discard the color data in the source image and produce a
- grayscale destination image.</div>
+<div class="block">Discard the color data in the source image, and generate a grayscale
+ destination image.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransform.html#OPT_NOOUTPUT">OPT_NOOUTPUT</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</a></dt>
 <dd>
-<div class="block">This option will prevent <a href="org/libjpegturbo/turbojpeg/TJTransformer.html#transform(byte%5B%5D%5B%5D,org.libjpegturbo.turbojpeg.TJTransform%5B%5D)"><code>TJTransformer.transform()</code></a> from outputting a JPEG image for this
- particular transform.</div>
+<div class="block">Do not generate a destination image.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransform.html#OPT_OPTIMIZE">OPT_OPTIMIZE</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</a></dt>
 <dd>
-<div class="block">This option will enable optimized baseline entropy coding in the JPEG
- image generated by this particular transform.</div>
+<div class="block">Enable Huffman table optimization for the destination image.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransform.html#OPT_PERFECT">OPT_PERFECT</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</a></dt>
 <dd>
-<div class="block">This option will cause <a href="org/libjpegturbo/turbojpeg/TJTransformer.html#transform(byte%5B%5D%5B%5D,org.libjpegturbo.turbojpeg.TJTransform%5B%5D)"><code>TJTransformer.transform()</code></a> to throw an exception if the transform is not
+<div class="block">This option causes <a href="org/libjpegturbo/turbojpeg/TJTransformer.html#transform(byte%5B%5D%5B%5D,org.libjpegturbo.turbojpeg.TJTransform%5B%5D)"><code>TJTransformer.transform()</code></a> to throw an exception if the transform is not
  perfect.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransform.html#OPT_PROGRESSIVE">OPT_PROGRESSIVE</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</a></dt>
 <dd>
-<div class="block">This option will enable progressive entropy coding in the JPEG image
- generated by this particular transform.</div>
+<div class="block">Generate a progressive destination image instead of a single-scan
+ destination image.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransform.html#OPT_TRIM">OPT_TRIM</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</a></dt>
 <dd>
-<div class="block">This option will discard any partial MCU blocks that cannot be
- transformed.</div>
+<div class="block">Discard any partial iMCUs that cannot be transformed.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransform.html#options">options</a></span> - Variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</a></dt>
 <dd>
@@ -779,15 +679,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_OPTIMIZE">PARAM_OPTIMIZE</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">Optimized baseline entropy coding [lossy compression only]</div>
+<div class="block">Huffman table optimization [lossy compression, lossless transformation]</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_PRECISION">PARAM_PRECISION</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">JPEG data precision (bits per sample) [decompression only, read-only]</div>
+<div class="block">Data precision (bits per sample)</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_PROGRESSIVE">PARAM_PROGRESSIVE</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">Progressive entropy coding</div>
+<div class="block">Progressive JPEG</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_QUALITY">PARAM_QUALITY</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
@@ -795,13 +695,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_RESTARTBLOCKS">PARAM_RESTARTBLOCKS</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">JPEG restart marker interval in MCU blocks (lossy) or samples (lossless)
- [compression only]</div>
+<div class="block">JPEG restart marker interval in MCUs [lossy compression only]</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_RESTARTROWS">PARAM_RESTARTROWS</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">JPEG restart marker interval in MCU rows (lossy) or sample rows (lossless)
- [compression only]</div>
+<div class="block">JPEG restart marker interval in MCU rows [compression only]</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_SAVEMARKERS">PARAM_SAVEMARKERS</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
+<dd>
+<div class="block">Marker copying behavior [decompression, lossless transformation]</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_SCANLIMIT">PARAM_SCANLIMIT</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
@@ -826,51 +728,59 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_ABGR">PF_ABGR</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">ABGR pixel format.</div>
+<div class="block">ABGR pixel format</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_ARGB">PF_ARGB</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">ARGB pixel format.</div>
+<div class="block">ARGB pixel format</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_BGR">PF_BGR</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">BGR pixel format.</div>
+<div class="block">BGR pixel format</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_BGRA">PF_BGRA</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">BGRA pixel format.</div>
+<div class="block">BGRA pixel format</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_BGRX">PF_BGRX</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">BGRX pixel format.</div>
+<div class="block">BGRX pixel format</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_CMYK">PF_CMYK</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">CMYK pixel format.</div>
+<div class="block">CMYK pixel format</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_GRAY">PF_GRAY</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">Grayscale pixel format.</div>
+<div class="block">Grayscale pixel format
+
+ Each 1-sample pixel represents a luminance (brightness) level from 0 to
+ the maximum sample value  (which is, for instance, 255 for 8-bit samples
+ or 4095 for 12-bit samples or 65535 for 16-bit samples.)</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_RGB">PF_RGB</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">RGB pixel format.</div>
+<div class="block">RGB pixel format</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_RGBA">PF_RGBA</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">RGBA pixel format.</div>
+<div class="block">RGBA pixel format</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_RGBX">PF_RGBX</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">RGBX pixel format.</div>
+<div class="block">RGBX pixel format</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_UNKNOWN">PF_UNKNOWN</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
+<dd>
+<div class="block">Unknown pixel format</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_XBGR">PF_XBGR</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">XBGR pixel format.</div>
+<div class="block">XBGR pixel format</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#PF_XRGB">PF_XRGB</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">XRGB pixel format.</div>
+<div class="block">XRGB pixel format</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#planeHeight(int,int,int)">planeHeight(int, int, int)</a></span> - Static method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
@@ -893,35 +803,40 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#SAMP_411">SAMP_411</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">4:1:1 chrominance subsampling.</div>
+<div class="block">4:1:1 chrominance subsampling</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#SAMP_420">SAMP_420</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">4:2:0 chrominance subsampling.</div>
+<div class="block">4:2:0 chrominance subsampling</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#SAMP_422">SAMP_422</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">4:2:2 chrominance subsampling.</div>
+<div class="block">4:2:2 chrominance subsampling</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#SAMP_440">SAMP_440</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">4:4:0 chrominance subsampling.</div>
+<div class="block">4:4:0 chrominance subsampling</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#SAMP_441">SAMP_441</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">4:4:1 chrominance subsampling.</div>
+<div class="block">4:4:1 chrominance subsampling</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#SAMP_444">SAMP_444</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">4:4:4 chrominance subsampling (no chrominance subsampling).</div>
+<div class="block">4:4:4 chrominance subsampling (no chrominance subsampling)</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#SAMP_GRAY">SAMP_GRAY</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">Grayscale.</div>
+<div class="block">Grayscale</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJ.html#SAMP_UNKNOWN">SAMP_UNKNOWN</a></span> - Static variable in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg">TJ</a></dt>
 <dd>
-<div class="block">Unknown subsampling.</div>
+<div class="block">Unknown subsampling</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#saveImage(java.lang.String,java.lang.Object,int,int,int,int,int,int)">saveImage(String, Object, int, int, int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
+<dd>
+<div class="block">Save a packed-pixel image with 2 to 16 bits of data precision per sample
+ from memory to disk.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#set(int,int)">set(int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
 <dd>
@@ -944,12 +859,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Set the cropping region for partially decompressing a lossy JPEG image
  into a packed-pixel image.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#setJPEGQuality(int)">setJPEGQuality(int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#setICCProfile(byte%5B%5D)">setICCProfile(byte[])</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
 <dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use
- <code><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#set(int,int)"><code>set</code></a>(<a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_QUALITY"><code>TJ.PARAM_QUALITY</code></a>, ...)</code> instead.</div>
-</div>
+<div class="block">Embed an ICC (International Color Consortium) color management profile in
+ JPEG images generated by subsequent compression operations.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransformer.html#setICCProfile(byte%5B%5D)">setICCProfile(byte[])</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransformer.html" title="class in org.libjpegturbo.turbojpeg">TJTransformer</a></dt>
+<dd>
+<div class="block">Embed an ICC (International Color Consortium) color management profile in
+ JPEG images generated by subsequent transform operations.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#setScalingFactor(org.libjpegturbo.turbojpeg.TJScalingFactor)">setScalingFactor(TJScalingFactor)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg">TJDecompressor</a></dt>
 <dd>
@@ -963,12 +881,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(byte%5B%5D,int,int,int,int,int,int)">setSourceImage(byte[], int, int, int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
 <dd>
-<div class="block">Associate an 8-bit-per-sample packed-pixel RGB, grayscale, or CMYK source
- image with this compressor instance.</div>
+<div class="block">Associate a packed-pixel RGB, grayscale, or CMYK source image with 2 to 8
+ bits of data precision per sample with this compressor instance.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(java.awt.image.BufferedImage,int,int,int,int)">setSourceImage(BufferedImage, int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
 <dd>
-<div class="block">Associate an 8-bit-per-pixel packed-pixel RGB or grayscale source image
+<div class="block">Associate an 8-bit-per-sample packed-pixel RGB or grayscale source image
  with this compressor instance.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(org.libjpegturbo.turbojpeg.YUVImage)">setSourceImage(YUVImage)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
@@ -983,20 +901,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage12(short%5B%5D,int,int,int,int,int,int)">setSourceImage12(short[], int, int, int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
 <dd>
-<div class="block">Associate a 12-bit-per-sample packed-pixel RGB, grayscale, or CMYK source
- image with this compressor instance.</div>
+<div class="block">Associate a packed-pixel RGB, grayscale, or CMYK source image with 9 to 12
+ bits of data precision per sample with this compressor instance.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage16(short%5B%5D,int,int,int,int,int,int)">setSourceImage16(short[], int, int, int, int, int, int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
 <dd>
-<div class="block">Associate a 16-bit-per-sample packed-pixel RGB, grayscale, or CMYK source
- image with this compressor instance.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#setSubsamp(int)">setSubsamp(int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use
- <code><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#set(int,int)"><code>set</code></a>(<a href="org/libjpegturbo/turbojpeg/TJ.html#PARAM_SUBSAMP"><code>TJ.PARAM_SUBSAMP</code></a>, ...)</code> instead.</div>
-</div>
+<div class="block">Associate a packed-pixel RGB, grayscale, or CMYK source image with 13 to
+ 16 bits of data precision per sample with this compressor instance.</div>
 </dd>
 </dl>
 <a id="I:T">
@@ -1018,9 +929,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#%3Cinit%3E(byte%5B%5D,int,int,int,int,int,int)">TJCompressor(byte[], int, int, int, int, int, int)</a></span> - Constructor for class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
 <dd>
-<div class="block">Create a TurboJPEG compressor instance and associate the 8-bit-per-sample
- packed-pixel source image stored in <code>srcImage</code> with the newly
- created instance.</div>
+<div class="block">Create a TurboJPEG compressor instance and associate the packed-pixel
+ source image, stored in <code>srcImage</code> with 2 to 8 bits of data
+ precision per sample, with the newly created instance.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJCompressor.html#%3Cinit%3E(java.awt.image.BufferedImage,int,int,int,int)">TJCompressor(BufferedImage, int, int, int, int)</a></span> - Constructor for class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg">TJCompressor</a></dt>
 <dd>
@@ -1121,25 +1032,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  transformer instance into one or more JPEG images stored in the given
  destination buffers.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransformer.html#transform(byte%5B%5D%5B%5D,org.libjpegturbo.turbojpeg.TJTransform%5B%5D,int)">transform(byte[][], TJTransform[], int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransformer.html" title="class in org.libjpegturbo.turbojpeg">TJTransformer</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#set(int,int)"><code>TJDecompressor.set()</code></a> and
- <a href="org/libjpegturbo/turbojpeg/TJTransformer.html#transform(byte%5B%5D%5B%5D,org.libjpegturbo.turbojpeg.TJTransform%5B%5D)"><code>TJTransformer.transform(byte[][], TJTransform[])</code></a> instead.</div>
-</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransformer.html#transform(org.libjpegturbo.turbojpeg.TJTransform%5B%5D)">transform(TJTransform[])</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransformer.html" title="class in org.libjpegturbo.turbojpeg">TJTransformer</a></dt>
 <dd>
 <div class="block">Losslessly transform the JPEG source image associated with this
  transformer instance and return an array of <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg"><code>TJDecompressor</code></a>
  instances, each of which has a transformed JPEG image associated with it.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/libjpegturbo/turbojpeg/TJTransformer.html#transform(org.libjpegturbo.turbojpeg.TJTransform%5B%5D,int)">transform(TJTransform[], int)</a></span> - Method in class org.libjpegturbo.turbojpeg.<a href="org/libjpegturbo/turbojpeg/TJTransformer.html" title="class in org.libjpegturbo.turbojpeg">TJTransformer</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="org/libjpegturbo/turbojpeg/TJDecompressor.html#set(int,int)"><code>TJDecompressor.set()</code></a> and
- <a href="org/libjpegturbo/turbojpeg/TJTransformer.html#transform(org.libjpegturbo.turbojpeg.TJTransform%5B%5D)"><code>TJTransformer.transform(TJTransform[])</code></a> instead.</div>
-</div>
 </dd>
 </dl>
 <a id="I:U">
@@ -1188,7 +1085,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  and allocate memory for the buffer.</div>
 </dd>
 </dl>
-<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a></div>
+<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a></div>
 </main>
 <footer role="contentinfo">
 <nav role="navigation">

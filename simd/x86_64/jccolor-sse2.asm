@@ -1,5 +1,5 @@
 ;
-; jccolor.asm - colorspace conversion (64-bit SSE2)
+; Colorspace conversion (64-bit SSE2)
 ;
 ; Copyright (C) 2009, 2016, 2024, D. R. Commander.
 ;
@@ -7,11 +7,7 @@
 ; Copyright (C) 1999-2006, MIYASAKA Masaru.
 ; For conditions of distribution and use, see copyright notice in jsimdext.inc
 ;
-; This file should be assembled with NASM (Netwide Assembler),
-; can *not* be assembled with Microsoft's MASM or any compatible
-; assembler (including Borland's Turbo Assembler).
-; NASM is available from http://nasm.sourceforge.net/ or
-; http://sourceforge.net/project/showfiles.php?group_id=6208
+; This file should be assembled with NASM (Netwide Assembler) or Yasm.
 
 %include "jsimdext.inc"
 

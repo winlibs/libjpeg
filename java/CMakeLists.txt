@@ -25,7 +25,9 @@ set(JAVA_SOURCES org/libjpegturbo/turbojpeg/TJ.java
   org/libjpegturbo/turbojpeg/TJTransformer.java
   org/libjpegturbo/turbojpeg/YUVImage.java
   TJUnitTest.java
-  TJExample.java
+  TJComp.java
+  TJDecomp.java
+  TJTran.java
   TJBench.java)
 
 set(TURBOJPEG_DLL_NAME "turbojpeg")
@@ -50,7 +52,7 @@ if(MSYS)
   set(CMAKE_HOST_SYSTEM_NAME "MSYS")
 endif()
 add_jar(turbojpeg-java ${JAVA_SOURCES} OUTPUT_NAME turbojpeg
-  ENTRY_POINT TJExample)
+  ENTRY_POINT TJBench)
 if(MSYS)
   set(CMAKE_HOST_SYSTEM_NAME ${CMAKE_HOST_SYSTEM_NAME_BAK})
 endif()
@@ -90,9 +92,9 @@ set(CMAKE_INSTALL_JAVADIR ${CMAKE_INSTALL_JAVADIR} PARENT_SCOPE)
 set(CMAKE_INSTALL_FULL_JAVADIR ${CMAKE_INSTALL_FULL_JAVADIR} PARENT_SCOPE)
 report_directory(JAVADIR)
 if(CMAKE_VERSION VERSION_EQUAL "3.4" OR CMAKE_VERSION VERSION_GREATER "3.4")
-  install_jar(turbojpeg-java DESTINATION ${CMAKE_INSTALL_JAVADIR}
+  install_jar(turbojpeg-java DESTINATION ${CMAKE_INSTALL_FULL_JAVADIR}
     COMPONENT java)
 else()
-  install_jar(turbojpeg-java ${CMAKE_INSTALL_JAVADIR})
+  install_jar(turbojpeg-java ${CMAKE_INSTALL_FULL_JAVADIR})
 endif()
 mark_as_advanced(CLEAR CMAKE_INSTALL_JAVADIR)

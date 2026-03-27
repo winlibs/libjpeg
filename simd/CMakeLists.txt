@@ -270,48 +270,33 @@ endif()
 check_c_source_compiles("
   #include <arm_neon.h>
   int main(int argc, char **argv) {
-    int16_t input[] = {
-      (int16_t)argc, (int16_t)argc, (int16_t)argc, (int16_t)argc,
-      (int16_t)argc, (int16_t)argc, (int16_t)argc, (int16_t)argc,
-      (int16_t)argc, (int16_t)argc, (int16_t)argc, (int16_t)argc
-    };
-    int16x4x3_t output = vld1_s16_x3(input);
+    int16_t input[12];
+    int16x4x3_t output;
+    int i;
+    for (i = 0; i < 12; i++) input[i] = (int16_t)argc;
+    output = vld1_s16_x3(input);
     vst3_s16(input, output);
     return (int)input[0];
   }" HAVE_VLD1_S16_X3)
 check_c_source_compiles("
   #include <arm_neon.h>
   int main(int argc, char **argv) {
-    uint16_t input[] = {
-      (uint16_t)argc, (uint16_t)argc, (uint16_t)argc, (uint16_t)argc,
-      (uint16_t)argc, (uint16_t)argc, (uint16_t)argc, (uint16_t)argc
-    };
-    uint16x4x2_t output = vld1_u16_x2(input);
+    uint16_t input[8];
+    uint16x4x2_t output;
+    int i;
+    for (i = 0; i < 8; i++) input[i] = (uint16_t)argc;
+    output = vld1_u16_x2(input);
     vst2_u16(input, output);
     return (int)input[0];
   }" HAVE_VLD1_U16_X2)
 check_c_source_compiles("
   #include <arm_neon.h>
   int main(int argc, char **argv) {
-    uint8_t input[] = {
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc,
-      (uint8_t)argc, (uint8_t)argc, (uint8_t)argc, (uint8_t)argc
-    };
-    uint8x16x4_t output = vld1q_u8_x4(input);
+    uint8_t input[64];
+    uint8x16x4_t output;
+    int i;
+    for (i = 0; i < 64; i++) input[i] = (uint8_t)argc;
+    output = vld1q_u8_x4(input);
     vst4q_u8(input, output);
     return (int)input[0];
   }" HAVE_VLD1Q_U8_X4)
@@ -336,7 +321,7 @@ else()
   set(DEFAULT_NEON_INTRINSICS 0)
 endif()
 option(NEON_INTRINSICS
-  "Because GCC (as of this writing) and some older versions of Clang do not have a full or optimal set of Neon intrinsics, for performance reasons, the default when building libjpeg-turbo with those compilers is to continue using the older GAS implementation of the Neon SIMD extensions for certain algorithms.  Setting this option forces the full Neon intrinsics implementation to be used with all compilers.  Unsetting this option forces the hybrid GAS/intrinsics implementation to be used with all compilers."
+  "Because GCC (as of this writing) and some older versions of Clang do not have a full or optimal set of Neon intrinsics, for performance reasons, the default when building ${CMAKE_PROJECT_NAME} with those compilers is to continue using the older GAS implementation of the Neon SIMD extensions for certain algorithms.  Setting this option forces the full Neon intrinsics implementation to be used with all compilers.  Unsetting this option forces the hybrid GAS/intrinsics implementation to be used with all compilers."
   ${DEFAULT_NEON_INTRINSICS})
 if(NOT NEON_INTRINSICS)
   enable_language(ASM)
@@ -366,7 +351,8 @@ if(NOT NEON_INTRINSICS)
   separate_arguments(CMAKE_ASM_FLAGS_SEP UNIX_COMMAND "${CMAKE_ASM_FLAGS}")
   execute_process(COMMAND ${CMAKE_ASM_COMPILER} ${CMAKE_ASM_FLAGS_SEP}
       -x assembler-with-cpp -c ${CMAKE_CURRENT_BINARY_DIR}/gastest.S
-    RESULT_VARIABLE RESULT OUTPUT_VARIABLE OUTPUT ERROR_VARIABLE ERROR)
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} RESULT_VARIABLE RESULT
+    OUTPUT_VARIABLE OUTPUT ERROR_VARIABLE ERROR)
   if(NOT RESULT EQUAL 0)
     message(WARNING "GAS appears to be broken.  Using the full Neon SIMD intrinsics implementation.")
     set(NEON_INTRINSICS 1 CACHE INTERNAL "" FORCE)
@@ -402,6 +388,20 @@ if(NOT NEON_INTRINSICS)
   message(STATUS "CMAKE_ASM_FLAGS = ${EFFECTIVE_ASM_FLAGS}")
 
   set(SIMD_SOURCES ${SIMD_SOURCES} arm/aarch${BITS}/jsimd_neon.S)
+endif()
+
+if(UNIX AND BITS EQUAL 32)
+  include(CheckSymbolExists)
+  check_symbol_exists(getauxval sys/auxv.h HAVE_GETAUXVAL)
+  if(HAVE_GETAUXVAL)
+    set_source_files_properties(arm/aarch${BITS}/jsimd.c PROPERTIES
+      COMPILE_DEFINITIONS HAVE_GETAUXVAL)
+  endif()
+  check_symbol_exists(elf_aux_info sys/auxv.h HAVE_ELF_AUX_INFO)
+  if(HAVE_ELF_AUX_INFO)
+    set_source_files_properties(arm/aarch${BITS}/jsimd.c PROPERTIES
+      COMPILE_DEFINITIONS HAVE_ELF_AUX_INFO)
+  endif()
 endif()
 
 add_library(simd OBJECT ${SIMD_SOURCES} arm/aarch${BITS}/jsimd.c)
@@ -462,7 +462,7 @@ set(CMAKE_REQUIRED_FLAGS -Wa,-mloongson-mmi,-mloongson-ext)
 
 check_c_source_compiles("
   #if !(defined(__mips__) && __mips_isa_rev < 6)
-  #error Loongson MMI can't work with MIPS Release 6+
+  #error \"Loongson MMI can't work with MIPS Release 6+\"
   #endif
   int main(void) {
     int c = 0, a = 0, b = 0;
@@ -537,6 +537,20 @@ set(SIMD_SOURCES powerpc/jccolor-altivec.c powerpc/jcgray-altivec.c
 set_source_files_properties(${SIMD_SOURCES} PROPERTIES
   COMPILE_FLAGS -maltivec)
 
+if(UNIX)
+  include(CheckSymbolExists)
+  check_symbol_exists(getauxval sys/auxv.h HAVE_GETAUXVAL)
+  if(HAVE_GETAUXVAL)
+    set_source_files_properties(powerpc/jsimd.c PROPERTIES
+      COMPILE_DEFINITIONS HAVE_GETAUXVAL)
+  endif()
+  check_symbol_exists(elf_aux_info sys/auxv.h HAVE_ELF_AUX_INFO)
+  if(HAVE_ELF_AUX_INFO)
+    set_source_files_properties(powerpc/jsimd.c PROPERTIES
+      COMPILE_DEFINITIONS HAVE_ELF_AUX_INFO)
+  endif()
+endif()
+
 add_library(simd OBJECT ${SIMD_SOURCES} powerpc/jsimd.c)
 
 if(CMAKE_POSITION_INDEPENDENT_CODE OR ENABLE_SHARED)
@@ -553,3 +567,8 @@ else()
 simd_fail("SIMD extensions not available for this CPU (${CMAKE_SYSTEM_PROCESSOR})")
 
 endif() # CPU_TYPE
+
+if(WITH_SIMD AND ENABLE_STATIC)
+  add_executable(simdcoverage simdcoverage.c)
+  target_link_libraries(simdcoverage jpeg-static)
+endif()

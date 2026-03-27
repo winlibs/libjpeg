@@ -43,6 +43,7 @@ configure_file(release/makerpm.in pkgscripts/makerpm)
 configure_file(release/rpm.spec.in pkgscripts/rpm.spec @ONLY)
 
 add_custom_target(rpm pkgscripts/makerpm
+  DEPENDS rdjpgcom wrjpgcom cjpeg djpeg jpegtran
   SOURCES pkgscripts/makerpm)
 
 configure_file(release/makesrpm.in pkgscripts/makesrpm)
@@ -66,7 +67,7 @@ endif() # Linux
 
 if(WIN32)
 
-if(MSVC)
+if(MSVC_LIKE)
   set(INST_PLATFORM "Visual C++")
   set(INST_ID vc)
   set(INST_NAME ${CMAKE_PROJECT_NAME}-${VERSION}-${INST_ID})
@@ -81,9 +82,17 @@ endif()
 
 if(BITS EQUAL 64)
   set(INST_PLATFORM "${INST_PLATFORM} 64-bit")
-  set(INST_NAME ${INST_NAME}64)
+  if(CPU_TYPE STREQUAL "arm64")
+    set(INST_NAME ${INST_NAME}-arm64)
+  elseif(CPU_TYPE STREQUAL "x86_64")
+    set(INST_NAME ${INST_NAME}-x64)
+  else()
+    set(INST_NAME ${INST_NAME}64)
+  endif()
   set(INST_REG_NAME ${INST_REG_NAME}64)
   set(INST_DEFS ${INST_DEFS} -DWIN64)
+elseif(CPU_TYPE STREQUAL "i386")
+  set(INST_NAME ${INST_NAME}-x86)
 endif()
 
 if(WITH_JAVA)
@@ -96,7 +105,7 @@ else()
   set(INST_DEFS ${INST_DEFS} "-DBUILDDIR=")
 endif()
 
-string(REGEX REPLACE "/" "\\\\" INST_DIR ${CMAKE_INSTALL_PREFIX})
+string(REGEX REPLACE "/" "\\\\" INST_DIR "${CMAKE_INSTALL_PREFIX}")
 
 configure_file(release/installer.nsi.in installer.nsi @ONLY)
 # TODO: It would be nice to eventually switch to CPack and eliminate this mess,
@@ -127,13 +136,13 @@ endif() # WIN32
 
 if(APPLE)
 
-set(ARMV8_BUILD "" CACHE PATH
-  "Directory containing Armv8 iOS or macOS build to include in universal binaries")
+set(SECONDARY_BUILD "" CACHE PATH
+  "Directory containing cross-compiled x86-64 or Armv8 (64-bit) iOS or macOS build to include in universal binaries")
 
 set(MACOS_APP_CERT_NAME "" CACHE STRING
-  "Name of the Developer ID Application certificate (in the macOS keychain) that should be used to sign the libjpeg-turbo DMG.  Leave this blank to generate an unsigned DMG.")
+  "Name of the Developer ID Application certificate (in the macOS keychain) that should be used to sign the ${CMAKE_PROJECT_NAME} DMG.  Leave this blank to generate an unsigned DMG.")
 set(MACOS_INST_CERT_NAME "" CACHE STRING
-  "Name of the Developer ID Installer certificate (in the macOS keychain) that should be used to sign the libjpeg-turbo installer package.  Leave this blank to generate an unsigned package.")
+  "Name of the Developer ID Installer certificate (in the macOS keychain) that should be used to sign the ${CMAKE_PROJECT_NAME} installer package.  Leave this blank to generate an unsigned package.")
 
 configure_file(release/makemacpkg.in pkgscripts/makemacpkg)
 configure_file(release/Distribution.xml.in pkgscripts/Distribution.xml)
